@@ -32,7 +32,7 @@ function getLocalIPAddress() {
 app.listen(PORT, '0.0.0.0', () => {
     const localIP = getLocalIPAddress();
     console.log('\n╔════════════════════════════════════════════════════════════╗');
-    console.log('║     🌐 Networking Learning Hub Server Started! 🌐        ║');
+    console.log('║     🌐 Networking Learning Hub Server Started! 🌐          ║');
     console.log('╚════════════════════════════════════════════════════════════╝\n');
     console.log('📡 Server is running on:');
     console.log(`   └─ Local:   http://localhost:${PORT}`);

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Cyber Security? - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .toc h3 {
+            font-size: 1.6rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .toc ol { padding-left: 25px; }
+        .toc li { margin-bottom: 10px; }
+        .toc a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: color 0.2s;
+        }
+        .toc a:hover { color: #667eea; }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '🔐';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.03;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: left;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box h3 { margin-top: 0; }
+
+        /* Animation Box */
+        .animation-box {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CIA Triad */
+        .cia-triad {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 40px 20px;
+            flex-wrap: wrap;
+        }
+
+        .cia-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            animation: pulse 3s infinite;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .cia-circle.conf {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .cia-circle.integ {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 0 40px rgba(240, 147, 251, 0.5);
+            animation-delay: 0.5s;
+        }
+
+        .cia-circle.avail {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 0 40px rgba(79, 172, 254, 0.5);
+            animation-delay: 1s;
+        }
+
+        .cia-circle .cia-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .cia-circle .cia-label { font-size: 0.9rem; opacity: 0.9; }
+
+        /* AAA */
+        .aaa-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 30px 10px;
+            flex-wrap: wrap;
+        }
+
+        .aaa-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            min-width: 160px;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .aaa-box:nth-child(3) { animation-delay: 0.3s; }
+        .aaa-box:nth-child(5) { animation-delay: 0.6s; }
+        .aaa-box .aaa-icon { font-size: 2.5rem; }
+        .aaa-box .aaa-title { font-size: 1.1rem; font-weight: bold; margin-top: 8px; }
+        .aaa-box .aaa-sub { font-size: 0.85rem; opacity: 0.8; }
+        .aaa-arrow { font-size: 2rem; color: #667eea; }
+
+        /* Threat Cards */
+        .threat-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(245, 87, 108, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .threat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.2);
+            border-color: #f5576c;
+        }
+
+        .threat-card h4 {
+            font-size: 1.3rem;
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+
+        /* Hacker Cards */
+        .hacker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .hacker-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .hacker-card.white { border: 1px solid rgba(255,255,255,0.3); }
+        .hacker-card.white:hover { box-shadow: 0 10px 30px rgba(255,255,255,0.15); border-color: white; }
+        .hacker-card.white h4 { color: #ffffff; }
+
+        .hacker-card.black { border: 1px solid rgba(245, 87, 108, 0.3); }
+        .hacker-card.black:hover { box-shadow: 0 10px 30px rgba(245, 87, 108, 0.2); border-color: #f5576c; }
+        .hacker-card.black h4 { color: #f5576c; }
+
+        .hacker-card.grey { border: 1px solid rgba(102, 126, 234, 0.3); }
+        .hacker-card.grey:hover { box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2); border-color: #667eea; }
+        .hacker-card.grey h4 { color: #667eea; }
+
+        .hacker-card .hacker-icon { font-size: 3.5rem; display: block; margin-bottom: 15px; }
+        .hacker-card p { font-size: 1rem; color: #b0b0b0; text-align: left; }
+
+        /* Lists */
+        ul, ol { margin: 20px 0; padding-left: 30px; }
+        li { margin-bottom: 12px; color: #d0d0d0; font-size: 1.05rem; }
+        li strong { color: #667eea; }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .badge-green { background: rgba(79, 172, 254, 0.2); color: #4facfe; border: 1px solid #4facfe; }
+        .badge-red { background: rgba(245, 87, 108, 0.2); color: #f5576c; border: 1px solid #f5576c; }
+        .badge-grey { background: rgba(102, 126, 234, 0.2); color: #667eea; border: 1px solid #667eea; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(30, 30, 30, 0.8);
+            color: #b0b0b0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(102,126,234,0.5)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 35px rgba(102,126,234,0.9)); }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section { padding: 25px; }
+            .section h2 { font-size: 1.8rem; }
+            .cia-circle { width: 130px; height: 130px; }
+            .aaa-arrow { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">🔐 CyberSec Hub</a>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>🛡️ What is Cyber Security?</h1>
+            <p class="hero-subtitle">Your Complete Guide to Understanding Digital Protection — From Basics to Real-World Examples</p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc" id="toc">
+            <h3>📋 Table of Contents</h3>
+            <ol>
+                <li><a href="#infosec">What is Information Security?</a></li>
+                <li><a href="#cybersec">What is Cyber Security?</a></li>
+                <li><a href="#cia">CIA Triad</a></li>
+                <li><a href="#aaa">AAA Security</a></li>
+                <li><a href="#threats">Types of Threats</a></li>
+                <li><a href="#hackers">Types of Hackers</a></li>
+            </ol>
+        </div>
+
+        <!-- 1. INFORMATION SECURITY -->
+        <section class="section" id="infosec">
+            <h2>🔒 What is Information Security?</h2>
+            <p>
+                <strong>Information Security (InfoSec)</strong> is the practice of protecting information — belonging to an organization or individual — from all kinds of threats. This includes not just digital data, but also <strong>physical information</strong> such as printed documents, paper files, and verbal communication.
+            </p>
+            <p>
+                In simple terms, Information Security ensures that your personal details, bank account numbers, passwords, and business secrets never fall into the wrong hands — regardless of the format they are stored in.
+            </p>
+
+            <div class="animation-box">
+                <div style="display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap; padding:20px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:5rem; animation: shieldPulse 2s infinite;">🛡️</div>
+                        <p style="color:#667eea; margin-top:10px; font-weight:bold;">Information Security</p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:15px;">
+                        <div style="background:rgba(102,126,234,0.1); border:1px solid rgba(102,126,234,0.4); border-radius:10px; padding:12px 20px; text-align:center;">📄 Physical Documents</div>
+                        <div style="background:rgba(102,126,234,0.1); border:1px solid rgba(102,126,234,0.4); border-radius:10px; padding:12px 20px; text-align:center;">💻 Digital Files</div>
+                        <div style="background:rgba(102,126,234,0.1); border:1px solid rgba(102,126,234,0.4); border-radius:10px; padding:12px 20px; text-align:center;">🗣️ Verbal Information</div>
+                        <div style="background:rgba(102,126,234,0.1); border:1px solid rgba(102,126,234,0.4); border-radius:10px; padding:12px 20px; text-align:center;">☁️ Cloud Data</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📌 3 Core Principles of Information Security</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔏</span>
+                    <h4>Prevention</h4>
+                    <p>Stopping unauthorized access before it happens. Uses passwords, firewalls, and encryption as the first line of defense against potential threats.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔍</span>
+                    <h4>Detection</h4>
+                    <p>Quickly identifying when a breach has occurred. Tools like log monitoring, security alerts, and intrusion detection systems help spot threats in real time.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Recovery</h4>
+                    <p>Restoring systems to normal after an attack. Involves using backups, disaster recovery plans, and documented incident response procedures.</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                In 2023, AIIMS Delhi hospital was hit by a ransomware attack. Millions of patient records — critical medical information — were encrypted, and hospital operations were disrupted for several days. Proper Information Security practices could have significantly reduced or even prevented this damage entirely.
+            </div>
+        </section>
+
+        <!-- 2. CYBER SECURITY -->
+        <section class="section" id="cybersec">
+            <h2>🌐 What is Cyber Security?</h2>
+            <p>
+                <strong>Cyber Security</strong> is the practice of protecting computers, servers, mobile devices, networks, and data from <strong>digital attacks, unauthorized access, and damage</strong>. It is a subset of Information Security — but it focuses specifically on threats that exist in the <strong>digital and online world</strong>.
+            </p>
+            <p>
+                While Information Security covers all types of data (including physical), Cyber Security is concerned specifically with what happens when you connect to the internet — and how to stay safe from the threats lurking in cyberspace.
+            </p>
+
+            <div class="animation-box">
+                <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap; padding:20px;">
+                    <div style="text-align:center; animation: float 3s ease-in-out infinite;">
+                        <div style="font-size:4rem;">🏠</div>
+                        <div style="color:#b0b0b0; font-size:0.9rem; margin-top:5px;">Your Device</div>
+                    </div>
+                    <div style="color:#667eea; font-size:2rem;">⟷</div>
+                    <div style="text-align:center; animation: shieldPulse 2s infinite;">
+                        <div style="font-size:4rem;">🔐</div>
+                        <div style="color:#667eea; font-size:0.9rem; margin-top:5px; font-weight:bold;">Cyber Security</div>
+                    </div>
+                    <div style="color:#667eea; font-size:2rem;">⟷</div>
+                    <div style="text-align:center; animation: float 3s ease-in-out 1s infinite;">
+                        <div style="font-size:4rem;">🌐</div>
+                        <div style="color:#b0b0b0; font-size:0.9rem; margin-top:5px;">Internet</div>
+                    </div>
+                </div>
+                <p style="text-align:center; color:#b0b0b0; margin-top:10px;">Cyber Security acts as a shield between your devices and threats on the internet</p>
+            </div>
+
+            <h3>🏛️ Key Domains of Cyber Security</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🖥️</span>
+                    <h4>Network Security</h4>
+                    <p>Protecting computer networks from intruders, targeted attacks, and unauthorized access using firewalls, VPNs, and intrusion prevention systems.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">📱</span>
+                    <h4>Application Security</h4>
+                    <p>Finding and fixing vulnerabilities in software applications. Security is embedded into the development process to prevent exploits before they happen.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">☁️</span>
+                    <h4>Cloud Security</h4>
+                    <p>Protecting data stored on cloud platforms like Google Drive, AWS, and Azure from breaches, unauthorized access, and data leaks.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">👤</span>
+                    <h4>Identity Security</h4>
+                    <p>Verifying who is accessing systems through Multi-Factor Authentication (MFA), biometrics, and Single Sign-On (SSO) solutions.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔑</span>
+                    <h4>Endpoint Security</h4>
+                    <p>Protecting end-user devices like laptops, mobiles, and desktops from malware, ransomware, and unauthorized access attempts.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Disaster Recovery</h4>
+                    <p>Planning how to maintain business continuity after a cyber attack. Covers backup strategies and documented recovery procedures.</p>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                When you make a UPI payment, your data travels from your phone all the way to the bank's server. Cyber Security ensures that hackers cannot intercept this data in transit, that fake apps are detected, and that OTP systems remain tamper-proof. NPCI (National Payments Corporation of India) enforces strict cyber security protocols to make this possible every day.
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 InfoSec vs Cyber Security — What is the Difference?</h3>
+                <p><strong>Information Security</strong> → Protects all types of information — physical and digital (broader concept)</p>
+                <p><strong>Cyber Security</strong> → Protects only digital/online assets from cyber threats (specific to cyberspace)</p>
+                <p style="color:#b0b0b0; font-style:italic;">Think of it this way: InfoSec is the security of an entire building. Cyber Security is specifically the digital lock and alarm system protecting that building.</p>
+            </div>
+        </section>
+
+        <!-- 3. CIA TRIAD -->
+        <section class="section" id="cia">
+            <h2>🔺 CIA Triad</h2>
+            <p>
+                The CIA Triad represents the <strong>three fundamental pillars</strong> of Cyber Security and Information Security. Every security system, policy, and tool is ultimately designed around these three core principles. Note: CIA here has nothing to do with the spy agency! It stands for <strong>Confidentiality, Integrity, and Availability</strong>.
+            </p>
+
+            <div class="animation-box">
+                <div class="cia-triad">
+                    <div class="cia-circle conf">
+                        <span class="cia-icon">🔏</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color: black;">Confidentiality</span>
+                        <span class="cia-label" style="color: black;">Keep it Secret</span>
+                    </div>
+                    <div class="cia-circle integ">
+                        <span class="cia-icon">✅</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color: black;">Integrity</span>
+                        <span class="cia-label" style="color: black;">Keep it Accurate</span>
+                    </div>
+                    <div class="cia-circle avail">
+                        <span class="cia-icon">⚡</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color: black;">Availability</span>
+                        <span class="cia-label" style="color: black;">Keep it Accessible</span>
+                    </div>
+                </div>
+                <p style="text-align:center; color:#b0b0b0; font-size:1rem;">CIA Triad — The Three Pillars of Information Security</p>
+            </div>
+
+            <h3>🔏 1. Confidentiality</h3>
+            <p>
+                Confidentiality ensures that information is accessible <strong>only to those who are authorized</strong> to view it. Unauthorized individuals should not be able to read, access, or use the data — even if they somehow obtain a copy of it.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔐</span>
+                    <h4>Encryption</h4>
+                    <p>Data is converted into an unreadable format. Without the correct decryption key, no one can interpret it. WhatsApp's End-to-End Encryption is a widely used example of this.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🎭</span>
+                    <h4>Access Control</h4>
+                    <p>Defines who can access what data. For example, only HR staff can view employee salary details — other departments cannot access that information at all.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🙈</span>
+                    <h4>Data Masking</h4>
+                    <p>Sensitive data is partially hidden. Your credit card number appears as ****1234 — only the last four digits are visible, protecting the full number from exposure.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                Google does not store your Gmail password in plain text. They use a technique called "hashing" — a one-way transformation that makes it impossible to reverse-engineer your actual password, even if their database is ever leaked. This is Confidentiality in action.
+            </div>
+
+            <h3>✅ 2. Integrity</h3>
+            <p>
+                Integrity ensures that data remains <strong>accurate, complete, and unmodified</strong>. It guarantees that no one has tampered with the data without authorization — and that any unauthorized changes can be detected and flagged immediately.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">#️⃣</span>
+                    <h4>Hashing</h4>
+                    <p>After downloading a file, you can verify its MD5 or SHA256 hash. If the hash does not match the original, the file was tampered with during download or transit.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">✍️</span>
+                    <h4>Digital Signatures</h4>
+                    <p>Documents can be digitally signed to verify the sender's identity and confirm the document has not been altered since the signature was applied.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">📋</span>
+                    <h4>Audit Logs</h4>
+                    <p>A complete, timestamped record of who changed what and when. Essential for detecting unauthorized modifications and tracing them back to their source.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                During online banking, you initiate a transfer of ₹5,000. A hacker intercepts the transaction and attempts to change the amount to ₹50,000. Integrity controls — such as checksums and secure transport protocols — detect this alteration and automatically reject the tampered transaction before it is processed.
+            </div>
+
+            <h3>⚡ 3. Availability</h3>
+            <p>
+                Availability ensures that information and systems are <strong>accessible to authorized users whenever they need them</strong>. Systems must not go down, become unresponsive, or be inaccessible — especially during critical operations when uptime matters most.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Redundancy</h4>
+                    <p>If one server fails, a backup server automatically takes over without any disruption to users. Major exam portals and banking systems use this approach to stay online at all times.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">⚖️</span>
+                    <h4>Load Balancing</h4>
+                    <p>Traffic is distributed across multiple servers so no single server gets overwhelmed. Amazon and Flipkart rely heavily on load balancing during high-traffic sale events.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>DDoS Protection</h4>
+                    <p>Prevents attackers from crashing websites by flooding them with fake traffic. Services like Cloudflare absorb and filter these attacks before they reach the origin server.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                During IRCTC Tatkal booking windows, millions of users attempt to log in simultaneously. If the server crashes, no one can book tickets — that is a direct Availability failure. IRCTC uses multiple redundant servers and a Content Delivery Network (CDN) to handle these massive surges in traffic without going offline.
+            </div>
+        </section>
+
+        <!-- 4. AAA SECURITY -->
+        <section class="section" id="aaa">
+            <h2>🔑 AAA Security</h2>
+            <p>
+                AAA Security is a foundational framework used in network security. It stands for <strong>Authentication, Authorization, and Accounting</strong>. These three steps describe exactly what happens from the moment a user tries to access a system — proving who they are, determining what they are allowed to do, and recording everything they actually did.
+            </p>
+
+            <div class="animation-box">
+                <div class="aaa-flow">
+                    <div class="aaa-box">
+                        <div class="aaa-icon">🪪</div>
+                        <div class="aaa-title">Authentication</div>
+                        <div class="aaa-sub">Who are you?</div>
+                    </div>
+                    <div class="aaa-arrow">→</div>
+                    <div class="aaa-box">
+                        <div class="aaa-icon">🎫</div>
+                        <div class="aaa-title">Authorization</div>
+                        <div class="aaa-sub">What can you do?</div>
+                    </div>
+                    <div class="aaa-arrow">→</div>
+                    <div class="aaa-box">
+                        <div class="aaa-icon">📊</div>
+                        <div class="aaa-title">Accounting</div>
+                        <div class="aaa-sub">What did you do?</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🪪 1. Authentication — Who Are You?</h3>
+            <p>
+                Authentication verifies that the user attempting to access a system is <strong>genuinely who they claim to be</strong>. It is the identity verification step — the digital equivalent of showing an ID card at a security gate before being allowed inside.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔑</span>
+                    <h4>Password (Something You Know)</h4>
+                    <p>Secret information only the user should know — like a Gmail password or an ATM PIN. The simplest and most common form of authentication.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">📱</span>
+                    <h4>OTP / Token (Something You Have)</h4>
+                    <p>A one-time password sent to your registered phone, or a physical hardware security key. Even if an attacker knows your password, they cannot log in without your physical device.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">👆</span>
+                    <h4>Biometrics (Something You Are)</h4>
+                    <p>Uses your unique physical characteristics — fingerprint, Face ID, or retina scan. Extremely difficult to spoof and uniquely tied to you as an individual.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example — Multi-Factor Authentication (MFA):</strong>
+                When logging into your Google Account, you need both your password and an OTP sent to your registered phone. This is Multi-Factor Authentication. Even if someone steals your password, they still cannot get in without physical access to your phone. MFA is the most effective authentication method widely available today.
+            </div>
+
+            <h3>🎫 2. Authorization — What Can You Do?</h3>
+            <p>
+                Authorization happens right after authentication. Once the system knows who you are, it must determine <strong>what actions you are permitted to perform</strong>. Authentication answers "Who are you?" — Authorization answers "What are you allowed to do?"
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">👑</span>
+                    <h4>Admin Role</h4>
+                    <p>Full system access — creating and deleting users, changing settings, viewing all data. This role should be assigned to as few people as absolutely necessary.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">👷</span>
+                    <h4>User Role</h4>
+                    <p>Access limited to standard operations. Can create and view their own files but cannot delete or access other users' data or change system settings.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">👁️</span>
+                    <h4>Read-Only Role</h4>
+                    <p>Can view data but cannot make any modifications. Typically assigned to auditors, external reviewers, or guests who need visibility without editing rights.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                In a hospital management system: a Doctor can view and edit a patient's medical records. A Nurse can only read them. A Receptionist can book appointments but cannot access medical records at all. This is Role-Based Access Control (RBAC) — a real-world implementation of Authorization in action every day.
+            </div>
+
+            <h3>📊 3. Accounting — What Did You Do?</h3>
+            <p>
+                Accounting (also called Auditing) keeps a <strong>complete, detailed log of everything a user does</strong> within a system — when they logged in, which resources they accessed, what changes they made, and when they logged out. These logs are critical for investigating security incidents and proving compliance.
+            </p>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">📋</span>
+                    <h4>Login Logs</h4>
+                    <p>Records who logged in and out, at what time, and from which IP address. Tracks failed login attempts to detect and respond to brute-force attacks.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Activity Logs</h4>
+                    <p>Tracks every file read, written, or deleted — every email sent, every transaction completed. If data is stolen, logs reveal exactly who accessed it and when.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">⚠️</span>
+                    <h4>Alert Systems</h4>
+                    <p>Automatically notifies IT teams when unusual activity is detected. For example, if an admin account logs in at 3 AM from an unusual location, security teams receive an immediate alert.</p>
+                </div>
+            </div>
+            <div class="example-box">
+                <strong>🌍 Real Life Example:</strong>
+                Every ATM transaction is fully recorded — the time, location, amount, and card number. If a fraudulent transaction appears on your account, the bank uses these accounting logs to investigate exactly what happened, when it occurred, and from which ATM machine — making it possible to reverse the fraud and trace the attacker.
+            </div>
+        </section>
+
+        <!-- 5. TYPES OF THREATS -->
+        <section class="section" id="threats">
+            <h2>⚠️ Types of Threats</h2>
+            <p>
+                Cyber threats are any malicious attempts to damage, steal from, or disrupt digital systems and the people who use them. Understanding these threats in depth is the first and most important step toward defending against them effectively.
+            </p>
+
+            <div class="threat-card">
+                <h4>🦠 1. Malware (Malicious Software)</h4>
+                <p style="color:#d0d0d0;">Malware is any software specifically designed to damage a system, steal data, or gain unauthorized access. It comes in many forms, each with a different delivery method and goal.</p>
+                <div class="info-grid" style="margin-top:15px;">
+                    <div class="info-card">
+                        <span class="info-card-icon">🐛</span>
+                        <h4>Virus</h4>
+                        <p>Attaches itself to a legitimate file and spreads when that file is shared. Can corrupt or delete data and significantly degrade system performance.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🔒</span>
+                        <h4>Ransomware</h4>
+                        <p>Encrypts all your files and demands a ransom (usually in cryptocurrency) to unlock them. The WannaCry attack in 2017 affected over 150 countries and caused billions in damages worldwide.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🐴</span>
+                        <h4>Trojan Horse</h4>
+                        <p>Disguises itself as legitimate software but contains malicious code hidden inside. Once installed, it gives hackers silent remote access to your entire system.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🕵️</span>
+                        <h4>Spyware</h4>
+                        <p>Silently collects sensitive data without the user's knowledge. Keyloggers record every keystroke — capturing passwords, credit card numbers, and private messages.</p>
+                    </div>
+                </div>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    In 2017, the WannaCry Ransomware attack impacted computers in the Andhra Pradesh Police department in India. Files were locked and Bitcoin was demanded as ransom. This was a direct result of unpatched systems and no proper backup strategy in place.
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>🎣 2. Phishing Attack</h4>
+                <p style="color:#d0d0d0;">
+                    Phishing involves impersonating a trusted source — a bank, government agency, or well-known company — to deceive users. Through fake emails, SMS messages, or websites, attackers trick victims into revealing passwords, personal information, or credit card details.
+                </p>
+                <div class="info-grid" style="margin-top:15px;">
+                    <div class="info-card">
+                        <span class="info-card-icon">📧</span>
+                        <h4>Email Phishing</h4>
+                        <p>A fake email says: "Your account has been suspended! Click here immediately to verify." The link leads to a fake website that captures your login credentials the moment you enter them.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">📲</span>
+                        <h4>Smishing (SMS Phishing)</h4>
+                        <p>"Congratulations! You have won ₹50,000 in our lottery. Click here to claim." Clicking the link either installs malware or opens a form that harvests your personal information.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🎯</span>
+                        <h4>Spear Phishing</h4>
+                        <p>A highly targeted, personalized attack on a specific person or organization. A CEO might receive a convincing email that appears to be from their CFO, urgently requesting a wire transfer.</p>
+                    </div>
+                </div>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    "From SBI Bank: Your KYC is incomplete. Your account will be blocked unless you update it immediately. Click here: sbi-kyc-update.xyz" — This is a phishing attack. The real SBI website is sbi.co.in only. The suspicious domain extension (.xyz) is a clear red flag that most users miss under pressure.
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>🎭 3. Social Engineering</h4>
+                <p style="color:#d0d0d0;">
+                    Instead of hacking technology, social engineering exploits human psychology. Attackers use emotions like fear, urgency, greed, and trust to manipulate victims into voluntarily handing over sensitive information or access credentials.
+                </p>
+                <div class="info-grid" style="margin-top:15px;">
+                    <div class="info-card">
+                        <span class="info-card-icon">📞</span>
+                        <h4>Vishing (Voice Phishing)</h4>
+                        <p>A caller pretends to be a government official: "This is the CBI. Fraudulent activity has been detected on your account. Share your OTP immediately to secure it." One of the most common and effective scams today.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🎪</span>
+                        <h4>Pretexting</h4>
+                        <p>Creating a false but convincing scenario: "I am calling from the IT department — we need your password for scheduled maintenance tonight." No legitimate IT team ever asks for your password.</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-card-icon">🎁</span>
+                        <h4>Baiting</h4>
+                        <p>Luring victims with something free — like a USB drive left in a parking lot. Once plugged in, the drive silently installs malware and opens a backdoor into the victim's system.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>💥 4. DDoS Attack (Distributed Denial of Service)</h4>
+                <p style="color:#d0d0d0;">
+                    A DDoS attack uses thousands of compromised computers — forming what is called a botnet — to flood a target server with an overwhelming volume of fake traffic. The server becomes unable to handle legitimate requests, crashes, and goes offline. Real users cannot access the service at all.
+                </p>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    During the COVID-19 lockdown in 2020, video conferencing platforms faced massive simultaneous traffic surges that overwhelmed their servers. Government exam result websites regularly go offline when millions of students try to check their results at the same moment — a classic Availability failure driven by DDoS-like conditions.
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>🕴️ 5. Man-in-the-Middle Attack (MITM)</h4>
+                <p style="color:#d0d0d0;">
+                    In a MITM attack, the attacker secretly positions themselves between two parties who believe they are communicating directly with each other. The attacker intercepts, reads, and can even modify the data being exchanged — without either party knowing it is happening.
+                </p>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    When you connect to free public Wi-Fi at a coffee shop or airport, an attacker on the same network can intercept all your unencrypted internet traffic. If you log into your banking site over HTTP (not HTTPS), your credentials can be captured in real time. Always look for HTTPS, and avoid banking or sensitive transactions over public Wi-Fi networks.
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>💉 6. SQL Injection</h4>
+                <p style="color:#d0d0d0;">
+                    SQL Injection involves inserting malicious SQL code into a website's input fields — such as login forms or search boxes. If the website is poorly coded, this tricks the underlying database into executing unauthorized commands, allowing attackers to steal, delete, or modify data, or even bypass login authentication entirely.
+                </p>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    Typing <code style="background:rgba(102,126,234,0.2); padding:2px 8px; border-radius:4px;">admin' --</code> as a username in a vulnerable login form can completely bypass the password check. In 2008, the Heartland Payment Systems breach — caused by SQL injection — exposed 130 million credit card numbers in one of the largest data breaches ever recorded.
+                </div>
+            </div>
+
+            <div class="threat-card">
+                <h4>🕳️ 7. Zero-Day Attack</h4>
+                <p style="color:#d0d0d0;">
+                    A Zero-Day attack exploits a software vulnerability that the vendor is completely unaware of. The term "zero day" means developers have had zero days to develop and release a patch for it. These are among the most dangerous and valuable exploits in existence, often used in sophisticated targeted attacks.
+                </p>
+                <div class="example-box" style="margin-top:15px;">
+                    <strong>🌍 Real Life Example:</strong>
+                    The Stuxnet worm is the most famous zero-day attack in history. It exploited multiple Windows zero-day vulnerabilities to physically destroy Iran's nuclear centrifuges — without a single bullet being fired. It is widely believed to have been created by the USA and Israel as a nation-state cyber weapon, representing an entirely new era of digital warfare.
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. TYPES OF HACKERS -->
+        <section class="section" id="hackers">
+            <h2>🕵️ Types of Hackers</h2>
+            <p>
+                When most people hear the word "hacker," they immediately picture a criminal. But in reality, there are many types of hackers — classified by their <strong>intent, methods, and whether they have permission</strong> to access systems. The industry uses a hat color metaphor to distinguish them clearly.
+            </p>
+
+            <div class="hacker-grid">
+                <div class="hacker-card white">
+                    <span class="hacker-icon">🤍</span>
+                    <h4>White Hat Hacker <span class="badge badge-green">Ethical</span></h4>
+                    <p><strong>The good hackers.</strong> They are hired by organizations to legally test and probe systems for vulnerabilities — finding weaknesses before malicious hackers can exploit them. Also known as Ethical Hackers or Penetration Testers.</p>
+                    <br>
+                    <p><strong>What they do:</strong> With explicit written permission, they attempt to break into a company's systems, document every vulnerability they discover, and provide a detailed report so engineers can fix issues before real attackers strike.</p>
+                    <br>
+                    <p><strong>Career & Earnings:</strong> ₹5–50 Lakhs per year in India. Top professionals earn significantly more through Bug Bounty programs and consulting.</p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> Google, Facebook, and Microsoft all run "Bug Bounty Programs" that reward security researchers for responsibly disclosing vulnerabilities. Google has paid up to $30,000 for a single critical bug report. This is the legitimate, legal, and highly valued side of hacking.
+                    </div>
+                </div>
+
+                <div class="hacker-card black">
+                    <span class="hacker-icon">🖤</span>
+                    <h4>Black Hat Hacker <span class="badge badge-red">Malicious</span></h4>
+                    <p><strong>The bad hackers.</strong> They gain unauthorized access to systems for personal financial gain or malicious purposes — stealing data, causing damage, committing fraud, or selling stolen information on darknet marketplaces.</p>
+                    <br>
+                    <p><strong>What they do:</strong> Banking fraud, corporate data theft, deploying ransomware, espionage, and selling stolen credentials and personal records to other criminals on the dark web.</p>
+                    <br>
+                    <p><strong>Legal consequences:</strong> Under India's IT Act 2000, Section 66 — up to 3 years imprisonment and heavy fines. Cybercrime is a serious, prosecuted offense with significant penalties.</p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> In 2021, Air India suffered a major data breach in which the personal information of 4.5 million passengers was stolen — including passport details and credit card information. This was a direct black hat attack that resulted in significant legal and financial consequences for the airline and major distress for millions of affected passengers.
+                    </div>
+                </div>
+
+                <div class="hacker-card grey">
+                    <span class="hacker-icon">🩶</span>
+                    <h4>Grey Hat Hacker <span class="badge badge-grey">Ambiguous</span></h4>
+                    <p>A mix of White and Black Hat. They access systems <strong>without permission</strong> but without malicious intent. After finding a vulnerability, they typically notify the company — and may request a reward or public recognition in exchange for not publishing the details.</p>
+                    <br>
+                    <p><strong>The legal problem:</strong> Even with genuinely good intentions, accessing a system without prior written permission is illegal. Intent does not eliminate the legal violation — which puts Grey Hats in a legally precarious and risky position.</p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> A security researcher discovered a critical bug in Facebook. Even after reporting it through the Bug Bounty program, he posted unauthorized content on Mark Zuckerberg's personal profile to prove the severity of the flaw. Facebook initially threatened legal action before eventually reaching a compromise — a perfect illustration of the grey hat dilemma.
+                    </div>
+                </div>
+
+                <div class="hacker-card" style="border: 1px solid rgba(240,147,251,0.3);">
+                    <span class="hacker-icon" style="font-size:3.5rem; display:block; margin-bottom:15px;">👦</span>
+                    <h4 style="color:#f093fb; font-size:1.3rem; margin-bottom:10px;">Script Kiddie <span class="badge" style="background:rgba(240,147,251,0.2); color:#f093fb; border-color:#f093fb;">Novice</span></h4>
+                    <p style="font-size:1rem; color:#b0b0b0; text-align:left;">
+                        Inexperienced individuals who use pre-written hacking tools, scripts, or software found online to carry out attacks — without truly understanding how the tools work or what they are actually doing. "Script" refers to the ready-made programs they run; "Kiddie" reflects their lack of genuine skill. They are dangerous not because of expertise, but because of recklessness and ignorance of consequences.
+                    </p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> Teenagers who watch "how to hack Wi-Fi" tutorials on YouTube and blindly run Kali Linux tools without understanding what the commands actually execute. They may accidentally cause real damage to systems — and can face serious criminal charges — without ever intending to cause harm.
+                    </div>
+                </div>
+
+                <div class="hacker-card" style="border: 1px solid rgba(79,172,254,0.3);">
+                    <span class="hacker-icon" style="font-size:3.5rem; display:block; margin-bottom:15px;">✊</span>
+                    <h4 style="color:#4facfe; font-size:1.3rem; margin-bottom:10px;">Hacktivist <span class="badge" style="background:rgba(79,172,254,0.2); color:#4facfe; border-color:#4facfe;">Political</span></h4>
+                    <p style="font-size:1rem; color:#b0b0b0; text-align:left;">
+                        Hackers who use their technical skills to advance a political or social cause. Their activities include defacing government websites, leaking sensitive internal documents, and launching DDoS attacks as a form of digital protest — targeting institutions they consider unjust, corrupt, or oppressive.
+                    </p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> The Anonymous collective is the most well-known hacktivist group in the world. Operating across dozens of countries, they have targeted governments, corporations, and institutions they consider corrupt or abusive — conducting operations in the name of transparency, human rights, and freedom of information.
+                    </div>
+                </div>
+
+                <div class="hacker-card" style="border: 1px solid rgba(245,87,108,0.5);">
+                    <span class="hacker-icon" style="font-size:3.5rem; display:block; margin-bottom:15px;">🏛️</span>
+                    <h4 style="color:#f5576c; font-size:1.3rem; margin-bottom:10px;">State-Sponsored Hacker <span class="badge badge-red">Nation State</span></h4>
+                    <p style="font-size:1rem; color:#b0b0b0; text-align:left;">
+                        Hackers who are funded, equipped, and directed by a government to conduct offensive cyber operations against other nations. They target critical infrastructure, military systems, intelligence agencies, and strategic corporations. These are the digital soldiers of modern warfare.
+                    </p>
+                    <div class="example-box" style="margin-top:15px;">
+                        <strong>🌍 Example:</strong> The Stuxnet worm is the most sophisticated known state-sponsored cyberattack in history. Widely believed to have been developed by the USA and Israel, it exploited multiple zero-day vulnerabilities to physically destroy Iran's nuclear centrifuges — making it the first cyberweapon ever to cause real-world physical destruction at a nation-state level.
+                    </div>
+                </div>
+            </div>
+
+            <h3>📊 Quick Comparison Table</h3>
+            <div style="overflow-x:auto; margin-top:20px;">
+                <table style="width:100%; border-collapse:collapse; background:rgba(30,30,30,0.6); border-radius:10px; overflow:hidden;">
+                    <thead>
+                        <tr style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <th style="padding:15px; text-align:left;">Type</th>
+                            <th style="padding:15px; text-align:left;">Permission</th>
+                            <th style="padding:15px; text-align:left;">Intent</th>
+                            <th style="padding:15px; text-align:left;">Legal?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:15px; color:#fff;">🤍 White Hat</td>
+                            <td style="padding:15px; color:#4facfe;">✅ Yes</td>
+                            <td style="padding:15px; color:#d0d0d0;">Protect systems</td>
+                            <td style="padding:15px; color:#4facfe;">✅ Legal</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,0,0,0.2);">
+                            <td style="padding:15px; color:#fff;">🖤 Black Hat</td>
+                            <td style="padding:15px; color:#f5576c;">❌ No</td>
+                            <td style="padding:15px; color:#d0d0d0;">Personal gain / damage</td>
+                            <td style="padding:15px; color:#f5576c;">❌ Criminal</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:15px; color:#fff;">🩶 Grey Hat</td>
+                            <td style="padding:15px; color:#f093fb;">⚠️ No</td>
+                            <td style="padding:15px; color:#d0d0d0;">Mixed (no harm intended)</td>
+                            <td style="padding:15px; color:#f093fb;">⚠️ Gray area</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(0,0,0,0.2);">
+                            <td style="padding:15px; color:#fff;">👦 Script Kiddie</td>
+                            <td style="padding:15px; color:#f5576c;">❌ No</td>
+                            <td style="padding:15px; color:#d0d0d0;">Show-off / curiosity</td>
+                            <td style="padding:15px; color:#f5576c;">❌ Illegal</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:15px; color:#fff;">✊ Hacktivist</td>
+                            <td style="padding:15px; color:#f5576c;">❌ No</td>
+                            <td style="padding:15px; color:#d0d0d0;">Political / social change</td>
+                            <td style="padding:15px; color:#f5576c;">❌ Illegal</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:15px; color:#fff;">🏛️ State-Sponsored</td>
+                            <td style="padding:15px; color:#f5576c;">❌ No (by target)</td>
+                            <td style="padding:15px; color:#d0d0d0;">National interest</td>
+                            <td style="padding:15px; color:#f093fb;">⚠️ Geopolitical</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Information Security</strong> → Broad concept covering protection of all types of information — both physical and digital</li>
+                    <li><strong>Cyber Security</strong> → A focused subset of InfoSec that specifically protects digital assets and systems from online threats</li>
+                    <li><strong>CIA Triad</strong> → Confidentiality (keep it secret), Integrity (keep it accurate), Availability (keep it accessible) — the three core pillars of security</li>
+                    <li><strong>AAA Security</strong> → Authentication (who are you?), Authorization (what can you do?), Accounting (what did you do?) — the three-step access control framework</li>
+                    <li><strong>Threats</strong> → Malware, Phishing, Social Engineering, DDoS, MITM, SQL Injection, Zero-Day — knowing them is the first step to defending against them</li>
+                    <li><strong>Hackers</strong> → White Hat (ethical/legal), Black Hat (malicious/criminal), Grey Hat (unauthorized but non-malicious) — intent and permission are the key differentiators</li>
+                    <li>Cyber Security is one of the fastest-growing career fields in India — certifications like CEH, OSCP, and CompTIA Security+ can open major professional doors</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Next Steps -->
+        <section class="section">
+            <h2>🚀 Ready to Learn More?</h2>
+            <p>
+                Now that you have a solid foundation in Cyber Security fundamentals, you are ready to go deeper. Head back to the dashboard to continue your learning journey:
+            </p>
+            <ul>
+                <li>Network Security — Firewalls, IDS/IPS, VPNs</li>
+                <li>Cryptography — Encryption algorithms, PKI</li>
+                <li>Ethical Hacking — Penetration testing techniques</li>
+                <li>Incident Response — How to handle a breach</li>
+                <li>Compliance — GDPR, ISO 27001, India's PDPB</li>
+            </ul>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="dashboard.html" class="back-btn" style="display: inline-block; padding: 15px 40px; font-size: 1.1rem;">
+                    🎓 Continue Learning →
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>© 2024 CyberSec Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Stay curious, stay secure! 🔐</p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Networking Concepts | Network Learning Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1e1e1e 0%,#2d2d2d 100%);color:#e0e0e0;line-height:1.8;}
+.navbar{background:rgba(30,30,30,0.95);padding:15px 0;position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);}
+.nav-container{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
+.nav-logo{font-size:1.5rem;font-weight:bold;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;}
+.back-btn{padding:10px 25px;background:rgba(102,126,234,0.2);color:#667eea;border:1px solid #667eea;border-radius:25px;text-decoration:none;transition:all 0.3s;}
+.back-btn:hover{background:rgba(102,126,234,0.4);transform:translateY(-2px);}
+.container{max-width:1200px;margin:0 auto;padding:40px 20px;}
+.progress-bar-top{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#667eea,#764ba2);z-index:9999;width:0%;transition:width 0.2s;}
+
+/* HERO */
+.hero{text-align:center;padding:60px 20px;margin-bottom:50px;background:rgba(45,45,45,0.6);border-radius:20px;border:1px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(102,126,234,0.1),transparent 70%);pointer-events:none;}
+.hero h1{font-size:3.2rem;margin-bottom:20px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:fadeInDown 0.8s ease;}
+.hero-sub{font-size:1.2rem;color:#b0b0b0;margin-bottom:16px;}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);padding:6px 20px;border-radius:20px;font-size:0.9rem;font-weight:bold;color:#fff;}
+
+/* TOC */
+.toc{background:rgba(30,30,30,0.7);border:1px solid rgba(102,126,234,0.3);border-radius:14px;padding:25px 30px;margin-bottom:40px;}
+.toc h3{color:#a5b4fc;margin-bottom:14px;font-size:1.05rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.toc-link{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:8px;color:#c0c0c0;font-size:0.88rem;text-decoration:none;transition:all 0.2s;}
+.toc-link:hover{background:rgba(102,126,234,0.15);color:#a5b4fc;}
+.toc-num{width:22px;height:22px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:bold;color:#fff;flex-shrink:0;}
+
+/* SECTION */
+.section{background:rgba(45,45,45,0.6);border-radius:15px;padding:40px;margin-bottom:40px;border:1px solid rgba(255,255,255,0.1);}
+.section h2{font-size:2rem;margin-bottom:22px;color:#fff;border-left:4px solid #667eea;padding-left:18px;}
+.section h3{font-size:1.4rem;margin:28px 0 14px;color:#667eea;}
+.section p{font-size:1.05rem;color:#d0d0d0;margin-bottom:16px;text-align:justify;}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:22px 0;}
+.info-card{background:rgba(30,30,30,0.6);border:1px solid rgba(102,126,234,0.3);border-radius:12px;padding:20px;transition:all 0.3s;}
+.info-card:hover{transform:translateY(-4px);border-color:#667eea;box-shadow:0 8px 24px rgba(102,126,234,0.25);}
+.info-card-icon{font-size:2rem;display:block;margin-bottom:10px;}
+.info-card h4{color:#667eea;font-size:1.05rem;margin-bottom:8px;}
+.info-card p{font-size:0.93rem;line-height:1.7;color:#c0c0c0;margin:0;}
+
+/* HIGHLIGHT */
+.highlight-box{background:rgba(102,126,234,0.1);border-left:4px solid #667eea;border-radius:8px;padding:20px 24px;margin:20px 0;}
+.highlight-box ul{list-style:none;padding:0;color:#d0d0d0;}
+.highlight-box li{margin:8px 0;padding-left:2px;}
+
+/* CODE / EXAMPLE */
+.code-box{background:rgba(10,10,20,0.97);border-radius:10px;padding:20px;margin:16px 0;font-family:'Courier New',monospace;font-size:0.88rem;color:#86efac;border:1px solid rgba(102,126,234,0.2);white-space:pre-wrap;line-height:1.8;overflow-x:auto;}
+.example-box{background:rgba(20,20,35,0.8);border:2px dashed rgba(102,126,234,0.35);border-radius:10px;padding:20px;margin:18px 0;font-family:'Courier New',monospace;color:#d0d0d0;font-size:0.88rem;line-height:1.9;white-space:pre-wrap;}
+
+/* TABLE */
+.cmp-table{width:100%;border-collapse:collapse;margin:18px 0;background:rgba(18,18,30,0.9);border-radius:12px;overflow:hidden;font-size:0.88rem;}
+.cmp-table th{background:rgba(102,126,234,0.2);color:#a5b4fc;padding:12px 13px;text-align:left;}
+.cmp-table td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.06);color:#d0d0d0;vertical-align:top;}
+.cmp-table tr:hover td{background:rgba(102,126,234,0.06);}
+
+/* BADGE */
+.badge{padding:2px 9px;border-radius:12px;font-size:0.74rem;font-weight:bold;display:inline-block;margin:2px;}
+.badge.purple{background:rgba(102,126,234,0.2);color:#a5b4fc;border:1px solid rgba(102,126,234,0.4);}
+.badge.green{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.4);}
+.badge.orange{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.4);}
+.badge.red{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.4);}
+.badge.yellow{background:rgba(234,179,8,0.15);color:#fbbf24;border:1px solid rgba(234,179,8,0.4);}
+.badge.teal{background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.4);}
+
+/* STEPS */
+.steps-box{margin:20px 0;}
+.step{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px;padding:16px;background:rgba(30,30,30,0.6);border-radius:12px;border:1px solid rgba(102,126,234,0.2);transition:all 0.3s;}
+.step:hover{border-color:#667eea;background:rgba(102,126,234,0.07);}
+.step-num{width:38px;height:38px;min-width:38px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:bold;color:#fff;}
+.step-content h5{color:#a5b4fc;font-size:0.98rem;margin-bottom:4px;}
+.step-content p{font-size:0.92rem;color:#c0c0c0;margin:0;}
+.step-content code{display:block;font-family:'Courier New',monospace;background:rgba(0,0,0,0.4);padding:6px 12px;border-radius:6px;margin-top:6px;font-size:0.85rem;color:#86efac;border-left:3px solid #22c55e;}
+
+/* ADV GRID */
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+@media(max-width:700px){.adv-grid{grid-template-columns:1fr;}}
+.adv-card{border-radius:12px;padding:20px;border:1px solid;}
+.adv-card.green{background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.3);}
+.adv-card.red{background:rgba(248,113,113,0.07);border-color:rgba(248,113,113,0.3);}
+.adv-card h4{margin-bottom:10px;font-size:1rem;}
+.adv-card h4.gt{color:#4ade80;}.adv-card h4.rt{color:#f87171;}
+.adv-card ul{list-style:none;padding:0;}
+.adv-card ul li{padding:4px 0;color:#d0d0d0;font-size:0.92rem;}
+.adv-card.green ul li::before{content:"✅ ";}
+.adv-card.red ul li::before{content:"❌ ";}
+
+/* CMD CARDS */
+.cmd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin:20px 0;}
+.cmd-card{background:rgba(12,12,22,0.9);border:1px solid rgba(102,126,234,0.25);border-radius:12px;padding:18px;transition:all 0.3s;}
+.cmd-card:hover{border-color:#667eea;box-shadow:0 6px 20px rgba(102,126,234,0.2);}
+.cmd-card h4{color:#a5b4fc;font-size:0.98rem;margin-bottom:10px;}
+.cmd-card .cmd{font-family:'Courier New',monospace;font-size:0.83rem;background:rgba(0,0,0,0.5);color:#86efac;padding:7px 11px;border-radius:5px;display:block;margin:5px 0;border-left:3px solid #22c55e;}
+.cmd-card p{font-size:0.86rem;color:#94a3b8;margin-top:8px;line-height:1.6;}
+
+/* ANIMATION BOX */
+.anim-box{background:rgba(10,10,20,0.97);border-radius:14px;padding:24px;margin:22px 0;border:2px solid rgba(102,126,234,0.3);position:relative;}
+.anim-pill{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(102,126,234,0.15);border:1px solid rgba(102,126,234,0.4);border-radius:20px;padding:4px 14px;font-size:0.74rem;color:#a5b4fc;z-index:30;white-space:nowrap;}
+.anim-canvas{position:relative;width:100%;height:360px;}
+.anim-svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+
+/* NODES */
+.nd{position:absolute;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:20;border:2px solid;transform:translate(-50%,-50%);transition:border-color 0.3s,box-shadow 0.3s;cursor:default;width:52px;height:52px;}
+.nd.sm{width:42px;height:42px;font-size:0.95rem;}
+.nd.lg{width:62px;height:62px;font-size:1.3rem;}
+.nd.rv{background:linear-gradient(135deg,#667eea,#764ba2);border-color:rgba(102,126,234,0.5);box-shadow:0 0 14px rgba(102,126,234,0.35);}
+.nd.gv{background:linear-gradient(135deg,#22c55e,#15803d);border-color:rgba(34,197,94,0.5);box-shadow:0 0 12px rgba(34,197,94,0.3);}
+.nd.ov{background:linear-gradient(135deg,#f97316,#c2410c);border-color:rgba(249,115,22,0.5);box-shadow:0 0 12px rgba(249,115,22,0.3);}
+.nd.yv{background:linear-gradient(135deg,#eab308,#92400e);border-color:rgba(234,179,8,0.5);box-shadow:0 0 12px rgba(234,179,8,0.3);}
+.nd.xv{background:linear-gradient(135deg,#ef4444,#b91c1c);border-color:rgba(239,68,68,0.5);box-shadow:0 0 12px rgba(239,68,68,0.3);}
+.nd.tv{background:linear-gradient(135deg,#14b8a6,#0f766e);border-color:rgba(20,184,166,0.5);box-shadow:0 0 12px rgba(20,184,166,0.3);}
+.nd.bv{background:linear-gradient(135deg,#8b5cf6,#4c1d95);border-color:rgba(139,92,246,0.5);box-shadow:0 0 12px rgba(139,92,246,0.3);}
+.nd.src{border-color:#00ff88!important;box-shadow:0 0 32px rgba(0,255,136,0.9)!important;animation:aSrc 0.55s infinite;}
+.nd.dst{border-color:#a78bfa!important;box-shadow:0 0 32px rgba(167,139,250,0.9)!important;animation:aDst 0.55s infinite;}
+.nd.fwd{border-color:#f8b400!important;box-shadow:0 0 28px rgba(248,180,0,0.9)!important;animation:aFwd 0.55s infinite;}
+.nd.blk{border-color:#ef4444!important;box-shadow:0 0 28px rgba(239,68,68,0.9)!important;animation:aBlk 0.55s infinite;}
+.nd.fail{opacity:0.25!important;filter:grayscale(80%)!important;animation:none!important;}
+.nlbl{position:absolute;font-size:0.6rem;color:#94a3b8;font-weight:bold;white-space:nowrap;pointer-events:none;z-index:25;text-align:center;}
+.pk{opacity:0;position:absolute;pointer-events:none;z-index:40;}
+.lnk{fill:none;stroke:rgba(102,126,234,0.18);stroke-width:2.5;stroke-linecap:round;transition:all 0.3s;}
+.lnk.on{stroke:#00ff88;stroke-width:3.5;filter:drop-shadow(0 0 5px #00ff88);}
+.lnk.off{stroke:#ef4444;stroke-width:2.5;stroke-dasharray:6 4;opacity:0.7;}
+.lnk.sec{stroke:#a78bfa;stroke-width:3;filter:drop-shadow(0 0 5px #a78bfa);}
+.lnk.wrn{stroke:#f8b400;stroke-width:3;filter:drop-shadow(0 0 4px #f8b400);}
+.abadge{position:absolute;background:rgba(20,20,40,0.97);border:1px solid rgba(102,126,234,0.5);border-radius:7px;padding:3px 9px;font-family:'Courier New',monospace;font-size:0.7rem;color:#a5b4fc;pointer-events:none;z-index:35;white-space:nowrap;opacity:0;transition:opacity 0.3s;}
+.abadge.show{opacity:1;}
+
+/* CONTROLS */
+.a-ctrls{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;align-items:center;}
+.ab{padding:8px 16px;border:none;border-radius:22px;color:#fff;font-size:0.82rem;cursor:pointer;font-weight:bold;transition:all 0.3s;}
+.ab:hover{transform:translateY(-2px);}
+.ab:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.ab.p{background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:0 3px 12px rgba(102,126,234,0.3);}
+.ab.g{background:linear-gradient(135deg,#22c55e,#15803d);}
+.ab.r{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+.ab.o{background:linear-gradient(135deg,#f97316,#c2410c);}
+.ab.y{background:linear-gradient(135deg,#eab308,#92400e);}
+.ab.t{background:linear-gradient(135deg,#14b8a6,#0f766e);}
+.ab.b{background:linear-gradient(135deg,#8b5cf6,#4c1d95);}
+.ab.gh{background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.18);}
+.astat{flex:1;min-width:180px;background:rgba(0,0,0,0.3);border:1px solid rgba(102,126,234,0.25);border-radius:9px;padding:8px 13px;font-size:0.83rem;color:#a5b4fc;}
+
+/* PKT DIAGRAM */
+.pkt-row{display:flex;margin:16px 0;border-radius:9px;overflow:hidden;flex-wrap:wrap;}
+.pkt-f{padding:10px 8px;text-align:center;border-right:2px solid rgba(0,0,0,0.4);flex:1;min-width:70px;}
+.pkt-f:last-child{border-right:none;}
+.pkt-f .fn{font-size:0.62rem;color:rgba(255,255,255,0.55);margin-bottom:3px;font-family:'Courier New',monospace;}
+.pkt-f .fv{font-size:0.72rem;font-weight:bold;font-family:'Courier New',monospace;}
+.pkt-f .fb{font-size:0.58rem;color:rgba(255,255,255,0.35);margin-top:2px;}
+
+footer{background:rgba(30,30,30,0.95);text-align:center;padding:26px 20px;margin-top:60px;border-top:1px solid rgba(255,255,255,0.1);}
+footer p{color:#b0b0b0;}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes aSrc{0%,100%{box-shadow:0 0 22px rgba(0,255,136,0.6);}50%{box-shadow:0 0 52px rgba(0,255,136,1);}}
+@keyframes aDst{0%,100%{box-shadow:0 0 22px rgba(167,139,250,0.7);}50%{box-shadow:0 0 52px rgba(167,139,250,1);}}
+@keyframes aFwd{0%,100%{box-shadow:0 0 18px rgba(248,180,0,0.6);}50%{box-shadow:0 0 44px rgba(248,180,0,1);}}
+@keyframes aBlk{0%,100%{box-shadow:0 0 18px rgba(239,68,68,0.6);}50%{box-shadow:0 0 44px rgba(239,68,68,1);}}
+@media(max-width:768px){.hero h1{font-size:2rem;}.section{padding:22px;}.anim-canvas{height:260px;}}
+</style>
+</head>
+<body>
+<div class="progress-bar-top" id="pgBar"></div>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+    <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+  </div>
+</nav>
+<div class="container">
+
+<section class="hero">
+  <h1>⚡ Advanced Networking Concepts</h1>
+  <p class="hero-sub">Routing Protocols · NAT · Firewall · IDS/IPS · TCP Deep Dive · MTU · DNS · Load Balancing · Troubleshooting</p>
+  <span class="hero-badge">🚀 Intermediate → Advanced | Real-World Focus | Live Animations</span>
+</section>
+
+<div class="toc">
+  <h3>📋 Quick Navigation</h3>
+  <div class="toc-grid">
+    <a href="#routing" class="toc-link"><span class="toc-num">1</span>Routing Protocols</a>
+    <a href="#nat" class="toc-link"><span class="toc-num">2</span>NAT Types</a>
+    <a href="#firewall" class="toc-link"><span class="toc-num">3</span>Firewall Logic</a>
+    <a href="#ids" class="toc-link"><span class="toc-num">4</span>IDS / IPS</a>
+    <a href="#tcp" class="toc-link"><span class="toc-num">5</span>TCP 3-Way Handshake</a>
+    <a href="#mtu" class="toc-link"><span class="toc-num">6</span>MTU & Fragmentation</a>
+    <a href="#dns" class="toc-link"><span class="toc-num">7</span>DNS Internal Flow</a>
+    <a href="#lb" class="toc-link"><span class="toc-num">8</span>Load Balancing</a>
+    <a href="#cmd" class="toc-link"><span class="toc-num">9</span>Troubleshooting</a>
+  </div>
+</div>
+
+<!-- ═══ 1. ROUTING PROTOCOLS ═══ -->
+<section class="section" id="routing">
+  <h2>🗺️ Routing Protocols — RIP, OSPF, BGP</h2>
+  <p>A <strong>routing protocol</strong> is a set of rules routers use to dynamically discover the best path to every network. Instead of manually configuring every route, routing protocols let routers talk to each other, share topology information, and automatically adapt when links fail or new networks appear. Two major types: <strong>IGP</strong> (Interior Gateway Protocol) — used inside one organization, and <strong>EGP</strong> (Exterior Gateway Protocol) — used between different organizations on the internet.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">🌊</span>
+      <h4>RIP — Routing Information Protocol</h4>
+      <p><strong>Type:</strong> Distance Vector (IGP)<br>
+      <strong>Algorithm:</strong> Bellman-Ford<br>
+      <strong>Metric:</strong> Hop count only (max 15 hops — 16 = unreachable!)<br>
+      <strong>Updates:</strong> Full routing table broadcast every 30 seconds<br>
+      <strong>Convergence:</strong> Very slow — minutes after link failure<br>
+      <strong>Transport:</strong> UDP port 520<br>
+      <strong>Versions:</strong> RIPv1 (classful), RIPv2 (VLSM support, multicast 224.0.0.9)<br>
+      <strong>Use:</strong> Legacy small networks only. Never use in modern production.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🦋</span>
+      <h4>OSPF — Open Shortest Path First</h4>
+      <p><strong>Type:</strong> Link State (IGP)<br>
+      <strong>Algorithm:</strong> Dijkstra's SPF (Shortest Path First)<br>
+      <strong>Metric:</strong> Cost = 10⁸ / bandwidth (higher BW = lower cost)<br>
+      <strong>Updates:</strong> LSAs (Link State Advertisements) sent only on change<br>
+      <strong>Convergence:</strong> Fast — seconds after topology change<br>
+      <strong>Transport:</strong> IP Protocol 89 (not TCP/UDP)<br>
+      <strong>Areas:</strong> Hierarchical — Area 0 (backbone) + stub areas<br>
+      <strong>Use:</strong> Industry-standard IGP for enterprise and ISP core networks.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🌍</span>
+      <h4>BGP — Border Gateway Protocol</h4>
+      <p><strong>Type:</strong> Path Vector (EGP)<br>
+      <strong>Algorithm:</strong> Best-Path Selection (policy-driven)<br>
+      <strong>Metric:</strong> AS_PATH, MED, Local Preference, Communities<br>
+      <strong>Updates:</strong> Incremental over persistent TCP:179 session<br>
+      <strong>Convergence:</strong> Slow by design — stability over speed<br>
+      <strong>Types:</strong> iBGP (within same AS), eBGP (between ASes)<br>
+      <strong>Scale:</strong> Handles 1M+ internet routes (full BGP table)<br>
+      <strong>Use:</strong> THE protocol of the internet. Every ISP runs eBGP.</p>
+    </div>
+  </div>
+
+  <h3>📊 RIP vs OSPF vs BGP — Full Comparison</h3>
+  <table class="cmp-table">
+    <tr><th>Feature</th><th>🌊 RIP</th><th>🦋 OSPF</th><th>🌍 BGP</th></tr>
+    <tr><td><strong>Category</strong></td><td>IGP / Distance Vector</td><td>IGP / Link State</td><td>EGP / Path Vector</td></tr>
+    <tr><td><strong>Algorithm</strong></td><td>Bellman-Ford</td><td>Dijkstra SPF</td><td>Best-Path (policy)</td></tr>
+    <tr><td><strong>Metric</strong></td><td>Hop count (max 15)</td><td>Cost (BW-based)</td><td>AS_PATH + attributes</td></tr>
+    <tr><td><strong>Convergence</strong></td><td>❌ Minutes</td><td>✅ Seconds</td><td>⚠️ Minutes (intentional)</td></tr>
+    <tr><td><strong>Scalability</strong></td><td>❌ 15 hop limit</td><td>✅ Large enterprise</td><td>⭐ Internet-scale</td></tr>
+    <tr><td><strong>Transport</strong></td><td>UDP 520</td><td>IP Protocol 89</td><td>TCP 179</td></tr>
+    <tr><td><strong>Update Type</strong></td><td>Full table every 30s</td><td>LSA on topology change</td><td>Incremental NLRI updates</td></tr>
+    <tr><td><strong>Auth Support</strong></td><td>Optional (v2)</td><td>MD5 / SHA</td><td>MD5 / TCP-AO</td></tr>
+    <tr><td><strong>Real World Use</strong></td><td>Legacy lab networks</td><td>Enterprise core, ISP IGP</td><td>Internet routing, ISP peering</td></tr>
+  </table>
+
+  <h3>🦋 OSPF — How It Works Step by Step</h3>
+  <div class="steps-box">
+    <div class="step"><div class="step-num">1</div><div class="step-content">
+      <h5>Hello Packets — Neighbor Discovery</h5>
+      <p>OSPF routers multicast Hello packets every 10s to 224.0.0.5. Routers with matching Hello/Dead timers, Area ID, and subnet form a neighbor relationship (adjacency).</p>
+      <code>R1 → 224.0.0.5: OSPF Hello (RouterID=1.1.1.1, Area=0, Hello=10s, Dead=40s)</code>
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">
+      <h5>DR/BDR Election — Designated Router</h5>
+      <p>On multi-access (Ethernet) segments, routers elect a DR and BDR to reduce flooding. All routers form adjacency only with DR/BDR — not with each other.</p>
+      <code>Election: Highest OSPF Priority wins → Tie: Highest Router-ID wins → DR elected</code>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">
+      <h5>LSA Flooding — Share Link State Database</h5>
+      <p>Each router floods LSAs (Link State Advertisements) describing its connected links. All routers in the same area collect identical LSAs → identical LSDB (network map).</p>
+      <code>R1 LSA: "I connect to 10.0.1.0/30 (cost=10) and 192.168.1.0/24 (cost=1)"</code>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">
+      <h5>SPF Calculation — Find Best Paths</h5>
+      <p>Each router independently runs Dijkstra's algorithm on its LSDB to compute the shortest (lowest-cost) path to every destination. Result is installed in the routing table.</p>
+      <code>SPF result → "To reach 172.16.0.0/24: next-hop 10.0.0.2 via Gi0/0, cost=20"</code>
+    </div></div>
+  </div>
+
+  <!-- ROUTING ANIMATION -->
+  <h3>⚡ Live Routing Animation</h3>
+  <div class="anim-box" id="rBox">
+    <div class="anim-pill" id="rPill">🗺️ Routing Simulator — Click to begin</div>
+    <div class="anim-canvas" id="rCanvas">
+      <svg class="anim-svg" id="rSvg" viewBox="0 0 760 360" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="fg"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="fr"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="fy"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <circle class="pk" id="rp0" r="9" fill="#00ff88" filter="url(#fg)"/>
+        <circle class="pk" id="rp1" r="9" fill="#a78bfa" filter="url(#fr)"/>
+        <circle class="pk" id="rp2" r="9" fill="#f8b400" filter="url(#fy)"/>
+        <circle class="pk" id="rp3" r="8" fill="#ef4444" filter="url(#fr)"/>
+      </svg>
+      <!-- routers -->
+      <div class="nd rv" id="rn-A">🌐<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">R-A</div></div>
+      <div class="nd rv" id="rn-B">🌐<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">R-B</div></div>
+      <div class="nd rv" id="rn-C">🌐<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">R-C</div></div>
+      <div class="nd rv" id="rn-D">🌐<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">R-D</div></div>
+      <div class="nd gv sm" id="rn-PC">💻<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Host</div></div>
+      <div class="nd ov sm" id="rn-SV">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Server</div></div>
+      <!-- cost labels on links -->
+      <div class="abadge" id="rb0"></div>
+      <div class="abadge" id="rb1"></div>
+    </div>
+    <div class="a-ctrls">
+      <button class="ab g" onclick="rDemo('ospf')">🦋 OSPF Normal</button>
+      <button class="ab r" onclick="rDemo('fail')">💥 Link Fail</button>
+      <button class="ab o" onclick="rDemo('rip')">🌊 RIP Hop Count</button>
+      <button class="ab b" onclick="rDemo('bgp')">🌍 BGP Inter-AS</button>
+      <button class="ab gh" onclick="rReset()">↺ Reset</button>
+      <div class="astat" id="rStat">👆 Click a button to simulate routing!</div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>🌍 Real World — BGP is the internet's nervous system:</strong>
+    <ul>
+      <li>Internet = ~80,000 Autonomous Systems. Jio = AS55836, Google = AS15169, Airtel = AS9498, TATA = AS6453</li>
+      <li>BGP hijack: Pakistan Telecom (2008) accidentally announced YouTube's IP prefix → took YouTube offline globally for 2 hours</li>
+      <li>Facebook Outage (Oct 2021): BGP withdrawal of Facebook's own prefixes → Facebook, Instagram, WhatsApp all went down for 6 hours</li>
+      <li>Every time you stream Netflix in Chennai, BGP selects the path through Tata/Airtel/Jio peering to Netflix's CDN servers</li>
+      <li>OSPF cost: Cisco defaults to 10⁸/bandwidth. GigabitEthernet cost = 1, FastEthernet = 10, Serial 64kbps = 1562</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 2. NAT ═══ -->
+<section class="section" id="nat">
+  <h2>🔀 NAT Types — Static, Dynamic, PAT & CGNAT</h2>
+  <p><strong>NAT (Network Address Translation)</strong> modifies IP address information in packet headers as they pass through a router — typically translating between private (RFC 1918) internal addresses and public internet addresses. NAT was invented as a temporary fix for IPv4 exhaustion and is now a permanent, fundamental part of every network.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">📌</span>
+      <h4>Static NAT (1:1 Permanent)</h4>
+      <p>One private IP permanently maps to one public IP. Bidirectional — inbound and outbound both work.<br><br>
+      <strong>Example:</strong> Internal server 192.168.1.10 always appears as public IP 203.0.113.10 on the internet.<br><br>
+      <strong>Use case:</strong> Web servers, mail servers that need a consistent public IP.<br>
+      <strong>Cost:</strong> One public IP per server — expensive at scale.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🎲</span>
+      <h4>Dynamic NAT (Pool)</h4>
+      <p>A pool of public IPs dynamically assigned to private hosts when needed. Released back to pool after session ends.<br><br>
+      <strong>Example:</strong> Pool: 203.0.113.1–203.0.113.20. When PC-A connects → gets 203.0.113.5. After disconnect, .5 returns to pool.<br><br>
+      <strong>Problem:</strong> If 21 hosts try to connect simultaneously and pool has only 20 IPs → connection #21 fails!</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🚀</span>
+      <h4>PAT / NAT Overload (Most Common)</h4>
+      <p>Many private IPs → ONE public IP, differentiated by port numbers. This is what your home router does.<br><br>
+      PC1 (192.168.1.5:4500) → 49.205.10.15:<strong>52341</strong><br>
+      PC2 (192.168.1.8:3200) → 49.205.10.15:<strong>52342</strong><br>
+      Phone (192.168.1.12:8800) → 49.205.10.15:<strong>52343</strong><br><br>
+      One public IP can serve ~65,000 simultaneous connections!</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🏢</span>
+      <h4>CGNAT — Carrier Grade NAT</h4>
+      <p>Double NAT — ISP performs NAT on top of your home router's NAT.<br><br>
+      Your device: 192.168.1.5<br>
+      Home Router: 100.64.x.x (CGNAT range RFC 6598)<br>
+      ISP CGNAT: 49.205.10.15 (public)<br><br>
+      <strong>Jio/Airtel mobile:</strong> Millions of phones share limited public IPs via CGNAT.<br>
+      <strong>Problem:</strong> Port forwarding breaks, gaming NAT Type 3, P2P issues.</p>
+    </div>
+  </div>
+
+  <h3>🔬 PAT Translation Table — Exact Example</h3>
+  <div class="example-box">Inside Local IP:Port    ←→   Inside Global IP:Port   ←→   Outside IP:Port      Proto
+192.168.1.5:4500    ←→   49.205.10.15:52341   ←→   142.250.0.1:443      TCP
+192.168.1.8:3200    ←→   49.205.10.15:52342   ←→   142.250.0.1:443      TCP
+192.168.1.12:8800   ←→   49.205.10.15:52343   ←→   157.240.0.1:443      TCP
+192.168.1.5:5500    ←→   49.205.10.15:52344   ←→   8.8.8.8:53           UDP
+
+Reply arrives at 49.205.10.15:52341
+→ Router checks NAT table → finds 192.168.1.5:4500
+→ Forwards to PC1. PC2 and Phone untouched.
+
+3 devices, 1 public IP, all working simultaneously ✅</div>
+
+  <div class="highlight-box">
+    <strong>🔥 Real World NAT Problems:</strong>
+    <ul>
+      <li><strong>PS5/Xbox NAT Type:</strong> Type 1 = direct (no NAT), Type 2 = PAT (fine), Type 3 = CGNAT (breaks multiplayer voice chat)</li>
+      <li><strong>Google Meet / WebRTC:</strong> Uses STUN/TURN/ICE servers to punch through NAT — without them, video calls fail behind strict NAT</li>
+      <li><strong>Port Forwarding:</strong> Home router rule "forward external port 25565 → internal 192.168.1.10:25565" — needed to host Minecraft server behind PAT</li>
+      <li><strong>SIP/VoIP:</strong> SIP headers contain private IPs in SDP body — NAT breaks SIP unless router has SIP ALG or you use STUN</li>
+      <li><strong>Law enforcement:</strong> CGNAT makes it impossible to identify individual user from public IP alone — ISPs must maintain subscriber mapping logs</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 3. FIREWALL ═══ -->
+<section class="section" id="firewall">
+  <h2>🛡️ Firewall — Packet Filtering Logic</h2>
+  <p>A <strong>firewall</strong> is a network security system that monitors and controls traffic based on predefined security rules. It creates a barrier between trusted internal and untrusted external networks. Firewalls have evolved from simple stateless packet filters (1988) to AI-driven Next-Gen Firewalls that understand application identity and user context.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">📋</span>
+      <h4>Generation 1 — Stateless Packet Filter</h4>
+      <p>Inspects each packet in isolation. Matches against ACL rules based on: Src IP, Dst IP, Protocol, Src Port, Dst Port. No memory of previous packets — every packet evaluated independently. Fast but easily bypassed. Used in router ACLs. Cannot detect port scanning or fragmented attacks.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🧠</span>
+      <h4>Generation 2 — Stateful Inspection</h4>
+      <p>Tracks every TCP/UDP connection in a <strong>State Table</strong>. Knows if a packet is NEW, ESTABLISHED, or RELATED. Automatically allows return traffic for established connections. Blocks packets that don't match any connection in state table. Standard in most modern firewalls (iptables, pfSense, Windows Firewall).</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔬</span>
+      <h4>Generation 3 — NGFW (Application Aware)</h4>
+      <p>Inspects all the way to <strong>Layer 7</strong>. Identifies applications regardless of port — Facebook traffic on port 443 is identified as "Facebook", not just "HTTPS". Features: Deep Packet Inspection, SSL/TLS decryption and inspection, URL filtering, user identity-based rules, sandboxing. Products: Palo Alto PA, Fortinet FortiGate, Cisco Firepower.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">☁️</span>
+      <h4>WAF — Web Application Firewall</h4>
+      <p>Specialized firewall protecting web apps against Layer 7 attacks. Inspects HTTP/HTTPS request content — detects SQLi, XSS, CSRF, path traversal, OWASP Top 10 attacks. Can work in detection mode (log only) or prevention mode (block). Products: AWS WAF, Cloudflare WAF, ModSecurity (open-source), F5 BIG-IP ASM.</p>
+    </div>
+  </div>
+
+  <h3>📋 ACL Rule Processing — How Firewall Decides</h3>
+  <div class="steps-box">
+    <div class="step"><div class="step-num">1</div><div class="step-content">
+      <h5>Extract 5-Tuple from packet</h5>
+      <p>Parse incoming packet for: Source IP, Destination IP, Protocol, Source Port, Destination Port.</p>
+      <code>Packet: SRC=203.0.113.5:54321  DST=192.168.1.10:80  Protocol=TCP</code>
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">
+      <h5>State Table Lookup (Stateful FW)</h5>
+      <p>Check if packet belongs to an already-established connection. If YES → fast-path ALLOW (skip ACL rules). Return traffic automatically allowed.</p>
+      <code>State Table hit: 192.168.1.10:45000↔203.0.113.5:80 ESTABLISHED → ALLOW ✅</code>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">
+      <h5>Match ACL rules top-to-bottom</h5>
+      <p>Evaluate rules sequentially. First matching rule wins. If no rule matches → implicit DENY ALL (default deny is best practice).</p>
+      <code>Rule 10: PERMIT TCP any host 192.168.1.10 eq 80    ← MATCH! → ALLOW
+Rule 20: PERMIT TCP any host 192.168.1.10 eq 443
+Rule 30: DENY   TCP any any eq 23   (block Telnet)
+Rule 99: DENY   ip  any any         (default deny)</code>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">
+      <h5>PERMIT or DENY + Log</h5>
+      <p>PERMIT: forward packet, create state entry for new TCP connections. DENY: drop silently (or send TCP RST). Log event if logging configured → SIEM ingestion.</p>
+      <code>Action: PERMIT → forward to 192.168.1.10:80 + create state entry + log</code>
+    </div></div>
+  </div>
+
+  <!-- FIREWALL ANIMATION -->
+  <h3>⚡ Live Firewall Simulation</h3>
+  <div class="anim-box" id="fBox">
+    <div class="anim-pill" id="fPill">🛡️ Firewall — Default Deny | PERMIT 80, 443 only</div>
+    <div class="anim-canvas" id="fCanvas" style="height:300px;">
+      <svg class="anim-svg" id="fSvg" viewBox="0 0 760 300" preserveAspectRatio="xMidYMid meet">
+        <circle class="pk" id="fp0" r="9" fill="#00ff88" filter="url(#fg)"/>
+        <circle class="pk" id="fp1" r="9" fill="#ef4444" filter="url(#fr)"/>
+        <circle class="pk" id="fp2" r="9" fill="#a78bfa" filter="url(#fr)"/>
+      </svg>
+      <div class="nd gv sm" id="fn-cli">💻<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Client</div></div>
+      <div class="nd xv sm" id="fn-atk">☠️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Attacker</div></div>
+      <div class="nd yv lg" id="fn-fw">🛡️<div class="nlbl" style="bottom:-20px;left:50%;transform:translateX(-50%)">Firewall</div></div>
+      <div class="nd ov" id="fn-web">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Web :80</div></div>
+      <div class="nd ov sm" id="fn-db">🗄️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">DB :3306</div></div>
+      <div class="abadge" id="fb0"></div>
+      <div class="abadge" id="fb1"></div>
+    </div>
+    <div class="a-ctrls">
+      <button class="ab g" onclick="fDemo('http')">✅ HTTP :80 Allow</button>
+      <button class="ab b" onclick="fDemo('https')">🔒 HTTPS :443 Allow</button>
+      <button class="ab r" onclick="fDemo('telnet')">🚫 Telnet :23 Block</button>
+      <button class="ab o" onclick="fDemo('db')">🗄️ DB :3306 Block</button>
+      <button class="ab y" onclick="fDemo('attack')">☠️ Attack Blocked</button>
+      <button class="ab gh" onclick="fReset()">↺ Reset</button>
+      <div class="astat" id="fStat">👆 Click to simulate firewall filtering!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. IDS/IPS ═══ -->
+<section class="section" id="ids">
+  <h2>🚨 IDS / IPS — Intrusion Detection & Prevention</h2>
+  <p><strong>IDS (Intrusion Detection System)</strong> monitors traffic, detects suspicious patterns, and sends <em>alerts</em> — but does NOT block traffic. <strong>IPS (Intrusion Prevention System)</strong> is placed inline and actively <em>blocks</em> detected threats. IDS = burglar alarm that rings. IPS = security guard who physically stops the intruder.</p>
+
+  <div class="adv-grid">
+    <div class="adv-card green">
+      <h4 class="gt">🔍 IDS — Passive Detection</h4>
+      <ul>
+        <li>Receives traffic copy via SPAN port/network tap</li>
+        <li>Out-of-band — not in traffic path</li>
+        <li>ALERT only — does not block traffic</li>
+        <li>Zero performance impact on network</li>
+        <li>False positive = annoying alert, not disruption</li>
+        <li>Good for forensics, compliance, logging</li>
+        <li>Tools: Snort (IDS mode), Suricata, Zeek/Bro</li>
+        <li>Alerts sent to SIEM for correlation</li>
+      </ul>
+    </div>
+    <div class="adv-card red">
+      <h4 class="rt">🛡️ IPS — Active Prevention</h4>
+      <ul>
+        <li>Sits inline — all traffic passes through IPS</li>
+        <li>DETECT + BLOCK in real time</li>
+        <li>Adds small latency (microseconds)</li>
+        <li>False positive = legitimate traffic BLOCKED!</li>
+        <li>Must be tuned carefully before inline deployment</li>
+        <li>Failure = network outage (needs fail-open mode)</li>
+        <li>Tools: Snort (inline), Palo Alto NGFW, Cisco Firepower</li>
+        <li>Can auto-update firewall rules when attack detected</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">📝</span>
+      <h4>Signature-Based Detection</h4>
+      <p>Compares traffic against a database of known attack patterns. Like antivirus for network traffic. Very accurate and fast for known attacks. Completely blind to zero-day exploits (no signature yet). Requires frequent signature updates. Example Snort rule:<br>
+      <code style="font-family:monospace;font-size:0.82rem;color:#86efac;">alert tcp any any → any 80 (content:"../../../etc/passwd"; msg:"Path Traversal";)</code></p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📊</span>
+      <h4>Anomaly-Based Detection</h4>
+      <p>Baselines normal traffic patterns (avg packets/sec, typical ports used, usual connection counts). Alerts when deviation exceeds threshold. Normal: 100 DNS queries/min → Sudden: 10,000/min → ALERT (possible DNS DDoS or tunneling). Can detect zero-days. High false positive rate — network changes look like attacks. ML/AI improves accuracy (Darktrace, Vectra).</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🎯</span>
+      <h4>False Positive vs False Negative</h4>
+      <p><strong>False Positive (FP):</strong> Legitimate traffic flagged as attack → SOC team investigates, wastes time, IPS blocks good users. Aggressive tuning reduces FPs.<br><br>
+      <strong>False Negative (FN):</strong> Real attack NOT detected → worst possible outcome — attackers inside the network undetected!<br><br>
+      IPS is typically tuned conservatively — tolerate some FNs to avoid FPs that block production traffic.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🏗️</span>
+      <h4>NIDS vs HIDS</h4>
+      <p><strong>NIDS (Network-based):</strong> Monitors all traffic at network level. Deployed at perimeter or SPAN port on core switch. Single point to monitor all hosts. Cannot see encrypted traffic unless decryption is configured.<br><br>
+      <strong>HIDS (Host-based):</strong> Agent installed on each server. Monitors file system changes (new files in /tmp), suspicious processes, login attempts, log file integrity. OSSEC, Wazuh, AIDE. Sees what NIDS misses inside TLS.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>🌍 Real World IDS/IPS Stories:</strong>
+    <ul>
+      <li><strong>Log4Shell (Dec 2021):</strong> IPS vendors pushed emergency signatures within hours of CVE publication. Organisations with updated IPS were protected before patches existed. Those without IPS were compromised within minutes of PoC release</li>
+      <li><strong>SIEM + IDS Pipeline:</strong> IDS alert → Syslog → Splunk/IBM QRadar → Correlation rules → Incident ticket → SOC analyst investigation → Response playbook</li>
+      <li><strong>Honeypot + IDS:</strong> Fake server deployed to attract attackers. Any traffic to honeypot is by definition malicious — zero false positives. Combined with IDS = pure attack intelligence</li>
+      <li><strong>India CERT-In 2022 mandate:</strong> All critical infrastructure (banks, power, telecom) must report cyber incidents within 6 hours. IDS/IPS logs are primary evidence for incident reporting</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 5. TCP HANDSHAKE ═══ -->
+<section class="section" id="tcp">
+  <h2>🤝 TCP 3-Way Handshake — Deep Packet Structure</h2>
+  <p>TCP establishes a reliable, full-duplex connection using a <strong>3-way handshake</strong> before any data flows. This ensures both sides are synchronized on sequence numbers, window sizes, and connection parameters. Every web page load, SSH session, and database query starts with this precise exchange.</p>
+
+  <h3>📦 TCP Header Structure</h3>
+  <div class="pkt-row">
+    <div class="pkt-f" style="background:rgba(102,126,234,0.2);flex:2;">
+      <div class="fn">Source Port</div><div class="fv" style="color:#a5b4fc;">54321</div><div class="fb">16 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(102,126,234,0.2);flex:2;">
+      <div class="fn">Dest Port</div><div class="fv" style="color:#a5b4fc;">443</div><div class="fb">16 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(34,197,94,0.15);flex:4;">
+      <div class="fn">Sequence Number</div><div class="fv" style="color:#4ade80;">2847361 (ISN)</div><div class="fb">32 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(249,115,22,0.15);flex:4;">
+      <div class="fn">Acknowledgment Number</div><div class="fv" style="color:#fb923c;">0 (SYN has no ACK)</div><div class="fb">32 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(234,179,8,0.15);flex:1;">
+      <div class="fn">Flags</div><div class="fv" style="color:#fbbf24;">SYN</div><div class="fb">9 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(139,92,246,0.15);flex:2;">
+      <div class="fn">Window</div><div class="fv" style="color:#c4b5fd;">65535</div><div class="fb">16 bits</div>
+    </div>
+    <div class="pkt-f" style="background:rgba(20,184,166,0.12);flex:2;">
+      <div class="fn">Checksum</div><div class="fv" style="color:#2dd4bf;">0x4a2f</div><div class="fb">16 bits</div>
+    </div>
+  </div>
+
+  <h3>🤝 Full 3-Way Handshake — Byte Level Detail</h3>
+  <div class="example-box">Step 1 — SYN  (Client → Server):
+  Flags: SYN=1 ACK=0
+  Seq=2847361   ← Client randomly chosen ISN (Initial Sequence Number)
+  Ack=0         ← Nothing to acknowledge yet
+  Window=65535  ← "I can receive 65535 bytes without ACK"
+  → "I want to connect! My starting sequence is 2847361"
+
+Step 2 — SYN-ACK  (Server → Client):
+  Flags: SYN=1 ACK=1
+  Seq=9182736   ← Server's own random ISN
+  Ack=2847362   ← Client's ISN + 1 = "Got your seq, send 2847362 next"
+  Window=8192   ← Server receive buffer size
+  → "OK! I acknowledge you. My starting sequence is 9182736"
+
+Step 3 — ACK  (Client → Server):
+  Flags: SYN=0 ACK=1  ← SYN cleared! Connection established
+  Seq=2847362   ← Client's next expected send byte
+  Ack=9182737   ← Server's ISN + 1 = "Got your 9182736, send 9182737 next"
+  → "Acknowledged. CONNECTION ESTABLISHED. Ready to send data!"
+
+Data Transfer begins → every segment increments Seq by bytes sent, Ack confirms receipt</div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">🚩</span>
+      <h4>TCP Flags Explained</h4>
+      <p><strong>SYN:</strong> Synchronize — initiate connection, exchange ISN<br>
+      <strong>ACK:</strong> Acknowledge — confirms received data<br>
+      <strong>FIN:</strong> Finish — graceful half-close<br>
+      <strong>RST:</strong> Reset — abrupt abort (port closed / error)<br>
+      <strong>PSH:</strong> Push — deliver to app immediately, no buffering<br>
+      <strong>URG:</strong> Urgent data pointer active (rarely used)<br>
+      <strong>ECE/CWR:</strong> Explicit Congestion Notification (RFC 3168)</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔢</span>
+      <h4>Why Random ISN? (Security)</h4>
+      <p>ISNs are cryptographically random. If predictable, attacker can forge packets with correct sequence numbers (TCP Sequence Prediction Attack). Kevin Mitnick used this in 1994 to compromise Tsutomu Shimomura's workstation — a legendary early hacker attack. Modern OS uses CSPRNG for ISN. Wireshark displays "relative" seq numbers (starting from 0) for human readability.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔄</span>
+      <h4>4-Way FIN — Connection Close</h4>
+      <p>1. Client → Server: FIN "Done sending"<br>
+      2. Server → Client: ACK "Got your FIN"<br>
+      3. Server → Client: FIN "I'm also done"<br>
+      4. Client → Server: ACK "Confirmed, closing"<br><br>
+      Client enters <strong>TIME_WAIT</strong> (2×MSL ≈ 2 min) to handle delayed packets. RST closes immediately — no TIME_WAIT. <code>netstat -an | grep TIME_WAIT</code> shows lingering connections.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">💥</span>
+      <h4>SYN Flood — DoS via Handshake</h4>
+      <p>Attacker sends thousands of SYN packets with <strong>spoofed source IPs</strong>. Server allocates state for each SYN (half-open connection), replies SYN-ACK — but final ACK never comes. Half-open queue fills up → server drops legitimate connections → DoS!<br><br>
+      <strong>Defense:</strong> SYN Cookies (RFC 4987) — server encodes state in SYN-ACK, allocates no memory until ACK received. Rate limiting. Firewall SYN proxy.</p>
+    </div>
+  </div>
+
+  <!-- TCP ANIMATION -->
+  <h3>⚡ Live TCP Lifecycle Animation</h3>
+  <div class="anim-box" id="tBox">
+    <div class="anim-pill" id="tPill">🤝 TCP — Click to simulate</div>
+    <div class="anim-canvas" id="tCanvas" style="height:280px;">
+      <svg class="anim-svg" id="tSvg" viewBox="0 0 760 280" preserveAspectRatio="xMidYMid meet">
+        <circle class="pk" id="tp0" r="9" fill="#00ff88" filter="url(#fg)"/>
+        <circle class="pk" id="tp1" r="9" fill="#a78bfa" filter="url(#fr)"/>
+        <circle class="pk" id="tp2" r="9" fill="#f8b400" filter="url(#fy)"/>
+        <circle class="pk" id="tp3" r="8" fill="#ef4444" filter="url(#fr)"/>
+      </svg>
+      <div class="nd gv" id="tn-cli">💻<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Client</div></div>
+      <div class="nd ov" id="tn-srv">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Server</div></div>
+      <div class="nd xv sm" id="tn-atk">☠️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Attacker</div></div>
+      <div class="abadge" id="tb0"></div>
+      <div class="abadge" id="tb1"></div>
+    </div>
+    <div class="a-ctrls">
+      <button class="ab g" onclick="tDemo('shake')">🤝 3-Way Handshake</button>
+      <button class="ab b" onclick="tDemo('data')">📦 Data Transfer</button>
+      <button class="ab o" onclick="tDemo('close')">🔚 FIN Close</button>
+      <button class="ab r" onclick="tDemo('synflood')">💥 SYN Flood</button>
+      <button class="ab gh" onclick="tReset()">↺ Reset</button>
+      <div class="astat" id="tStat">👆 Click to simulate TCP!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. MTU ═══ -->
+<section class="section" id="mtu">
+  <h2>📦 MTU & IP Fragmentation</h2>
+  <p><strong>MTU (Maximum Transmission Unit)</strong> is the largest packet size (bytes) a network link can carry without breaking it up. Standard Ethernet MTU = <strong>1500 bytes</strong>. If an IP packet exceeds the MTU of an outgoing link, the router must <strong>fragment</strong> it into smaller pieces — or drop it if the DF (Don't Fragment) bit is set.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">📏</span>
+      <h4>Common MTU Values</h4>
+      <p><strong>Ethernet:</strong> 1500 bytes (standard, most common)<br>
+      <strong>WiFi 802.11:</strong> 2304 bytes (but uses 1500 for compat)<br>
+      <strong>PPPoE (DSL):</strong> 1492 bytes (8-byte PPPoE overhead)<br>
+      <strong>VXLAN overlay:</strong> 1450 bytes (50-byte tunnel header)<br>
+      <strong>IPsec VPN:</strong> ~1400 bytes (variable overhead)<br>
+      <strong>Jumbo frames:</strong> 9000 bytes (data centre iSCSI/NFS)<br>
+      <strong>IPv6 minimum:</strong> 1280 bytes (RFC 8200)</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">✂️</span>
+      <h4>IP Fragmentation Process</h4>
+      <p>Router fragments when: packet > link MTU AND DF bit = 0.<br><br>
+      Each fragment gets same IP ID + sequential Fragment Offset + MF (More Fragments) flag set on all but last.<br><br>
+      <strong>Only the destination reassembles</strong> — intermediate routers do NOT reassemble (except stateful NAT).<br><br>
+      Loss of ANY fragment = entire original packet lost → TCP retransmits.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔍</span>
+      <h4>PMTUD — Path MTU Discovery</h4>
+      <p>TCP avoids fragmentation entirely using PMTUD:<br>
+      1. Send large packet with DF=1<br>
+      2. Router that can't forward → ICMP Type 3 Code 4 "Fragmentation Needed"<br>
+      3. Sender reduces size, retries<br>
+      4. Repeat until packet traverses entire path<br><br>
+      <strong>Black Hole Problem:</strong> Firewalls blocking ICMP break PMTUD → connections hang. Fix: Allow ICMP Type 3 code 4, or use TCP MSS clamping.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">⚡</span>
+      <h4>MSS — TCP Maximum Segment Size</h4>
+      <p>TCP negotiates MSS during SYN handshake. Limits TCP payload so IP packet never exceeds MTU.<br><br>
+      <strong>Formula:</strong><br>
+      MSS = MTU − IP header − TCP header<br>
+      MSS = 1500 − 20 − 20 = <strong>1460 bytes</strong><br><br>
+      By negotiating MSS = 1460, TCP segments are always sized to fit Ethernet MTU without fragmentation. <code style="font-family:monospace;color:#86efac;">ip tcp adjust-mss 1452</code> clamps MSS on router interface.</p>
+    </div>
+  </div>
+
+  <div class="example-box">Fragmentation Example: 3000-byte packet, MTU=1500, DF=0
+
+Original IP Packet: Total Length=3000, ID=4321, DF=0
+
+Fragment 1: ID=4321  Offset=0    MF=1  Length=1500  (bytes 0–1479)
+Fragment 2: ID=4321  Offset=185  MF=1  Length=1500  (bytes 1480–2959)
+Fragment 3: ID=4321  Offset=370  MF=0  Length=60    (bytes 2960–2999)
+
+Offset=185 means: 185 × 8 = 1480 bytes from start
+Offset unit = 8 bytes (Fragment Offset field is in 8-byte units)
+MF=0 on last fragment tells receiver "this is the last piece"
+
+Destination collects all fragments with ID=4321
+Reassembles using Offset → original 3000-byte packet recovered ✅</div>
+</section>
+
+<!-- ═══ 7. DNS ═══ -->
+<section class="section" id="dns">
+  <h2>🌐 DNS — Internal Resolution Flow</h2>
+  <p>Before your browser can connect to <strong>www.google.com</strong>, it must resolve the domain name to an IP address. This involves up to 8 steps across multiple DNS servers globally — yet completes in under 50ms typically due to aggressive caching at every level. DNS is the phonebook of the internet.</p>
+
+  <h3>🔄 Full DNS Resolution — Step by Step</h3>
+  <div class="steps-box">
+    <div class="step"><div class="step-num">1</div><div class="step-content">
+      <h5>Browser DNS Cache</h5>
+      <p>Browser checks its own cache first. Chrome keeps DNS entries for TTL duration. Cache hit → immediate resolution, zero network traffic.</p>
+      <code>chrome://net-internals/#dns → "google.com A 142.250.182.46 TTL=247s" → USE CACHE ⚡</code>
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">
+      <h5>OS Resolver Cache + /etc/hosts</h5>
+      <p>OS checks system DNS cache and /etc/hosts file. Hosts file entries override DNS entirely — used for ad-blocking and local dev.</p>
+      <code>/etc/hosts: 127.0.0.1 localhost | 192.168.1.10 myserver.local | 0.0.0.0 ads.facebook.com</code>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">
+      <h5>Query Recursive Resolver</h5>
+      <p>OS sends DNS query to configured recursive resolver (8.8.8.8 / 1.1.1.1 / ISP DNS). UDP port 53. Resolver does the heavy lifting on your behalf.</p>
+      <code>Your PC → 8.8.8.8:53 UDP: "Query: www.google.com Type=A Class=IN"</code>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">
+      <h5>Resolver → Root Name Server</h5>
+      <p>If not cached, resolver asks one of 13 Root Server clusters: "Who handles .com?" Root servers know only TLD delegations.</p>
+      <code>8.8.8.8 → a.root-servers.net: "Who handles .com?"
+Root → 8.8.8.8: "Try TLD servers: a.gtld-servers.net, b.gtld-servers.net ..."</code>
+    </div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content">
+      <h5>Resolver → .com TLD Server</h5>
+      <p>Resolver asks .com TLD server: "Who is authoritative for google.com?"</p>
+      <code>8.8.8.8 → a.gtld-servers.net: "Who handles google.com?"
+TLD → 8.8.8.8: "Authoritative NS: ns1.google.com, ns2.google.com, ns3.google.com"</code>
+    </div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content">
+      <h5>Resolver → Google's Authoritative NS</h5>
+      <p>Resolver asks Google's own name server for the actual A record.</p>
+      <code>8.8.8.8 → ns1.google.com: "What is the A record for www.google.com?"
+ns1.google.com → 8.8.8.8: "www.google.com A 142.250.182.46 TTL=300"</code>
+    </div></div>
+    <div class="step"><div class="step-num">7</div><div class="step-content">
+      <h5>Response Returned + Cached</h5>
+      <p>Resolver returns IP to browser. Both resolver and OS cache the result for TTL duration. Browser connects via TCP to 142.250.182.46:443.</p>
+      <code>8.8.8.8 → Your PC: "www.google.com = 142.250.182.46" (cache 300s)
+Browser: TCP SYN → 142.250.182.46:443 → TLS Handshake → HTTP GET / ✅</code>
+    </div></div>
+  </div>
+
+  <!-- DNS ANIMATION -->
+  <h3>⚡ Live DNS Resolution Animation</h3>
+  <div class="anim-box" id="dBox">
+    <div class="anim-pill" id="dPill">🌐 DNS — Full Resolution Flow</div>
+    <div class="anim-canvas" id="dCanvas" style="height:300px;">
+      <svg class="anim-svg" id="dSvg" viewBox="0 0 760 300" preserveAspectRatio="xMidYMid meet">
+        <circle class="pk" id="dp0" r="8" fill="#00ff88" filter="url(#fg)"/>
+        <circle class="pk" id="dp1" r="8" fill="#a78bfa" filter="url(#fr)"/>
+        <circle class="pk" id="dp2" r="8" fill="#f8b400" filter="url(#fy)"/>
+      </svg>
+      <div class="nd gv sm" id="dn-pc">💻<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Your PC</div></div>
+      <div class="nd bv" id="dn-res">🔄<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Resolver<br/>8.8.8.8</div></div>
+      <div class="nd rv sm" id="dn-root">🌍<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Root NS</div></div>
+      <div class="nd rv sm" id="dn-tld">📋<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">.com TLD</div></div>
+      <div class="nd ov sm" id="dn-auth">✅<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Auth NS<br/>(Google)</div></div>
+      <div class="nd ov" id="dn-web">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">google.com</div></div>
+      <div class="abadge" id="db0"></div>
+      <div class="abadge" id="db1"></div>
+    </div>
+    <div class="a-ctrls">
+      <button class="ab g" onclick="dDemo('full')">🌐 Full DNS Resolution</button>
+      <button class="ab b" onclick="dDemo('cache')">⚡ Cache Hit</button>
+      <button class="ab r" onclick="dDemo('poison')">☠️ Cache Poisoning</button>
+      <button class="ab gh" onclick="dReset()">↺ Reset</button>
+      <div class="astat" id="dStat">👆 Click to simulate DNS!</div>
+    </div>
+  </div>
+
+  <div class="info-grid" style="margin-top:20px;">
+    <div class="info-card">
+      <span class="info-card-icon">📋</span>
+      <h4>DNS Record Types</h4>
+      <p><strong>A:</strong> Domain → IPv4 (google.com → 142.250.x.x)<br>
+      <strong>AAAA:</strong> Domain → IPv6<br>
+      <strong>CNAME:</strong> Alias (www → google.com)<br>
+      <strong>MX:</strong> Mail server + priority<br>
+      <strong>NS:</strong> Authoritative name servers<br>
+      <strong>TXT:</strong> SPF, DKIM, DMARC records<br>
+      <strong>PTR:</strong> Reverse lookup (IP → domain)<br>
+      <strong>SOA:</strong> Zone metadata (serial, refresh, expire)</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔒</span>
+      <h4>DNS Security</h4>
+      <p><strong>DNSSEC:</strong> Cryptographic signatures on DNS records. Prevents cache poisoning. Root zone + most TLDs signed. Only ~30% of domains implement DNSSEC.<br><br>
+      <strong>DoH (DNS over HTTPS):</strong> DNS queries inside HTTPS port 443 — ISP cannot spy on lookups. Chrome, Firefox, Cloudflare 1.1.1.1 support it.<br><br>
+      <strong>DoT (DNS over TLS):</strong> DNS encrypted over TLS port 853. iOS/Android native support.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🎯</span>
+      <h4>DNS Attack Vectors</h4>
+      <p><strong>Cache Poisoning:</strong> Inject fake records into resolver — redirect users to attacker IP (Kaminsky Attack 2008)<br>
+      <strong>Amplification DDoS:</strong> Tiny query → huge response sent to spoofed victim IP (up to 70x amplification)<br>
+      <strong>DNS Tunneling:</strong> Encode C2 commands/data in DNS TXT/A queries — bypasses firewall<br>
+      <strong>NXDOMAIN Flood:</strong> Query millions of non-existent domains → overwhelm resolver</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 8. LOAD BALANCING ═══ -->
+<section class="section" id="lb">
+  <h2>⚖️ Load Balancing</h2>
+  <p>A <strong>load balancer</strong> distributes incoming traffic across multiple backend servers — ensuring no single server is overwhelmed, maximising availability, and providing automatic failover when servers fail. Without load balancing, a single server handles all traffic — one failure = total outage.</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">🔄</span>
+      <h4>Round Robin</h4>
+      <p>Requests distributed in sequence: S1 → S2 → S3 → S1 → ... Simple and fair distribution. <strong>Weighted Round Robin:</strong> Powerful servers get higher ratio — S1(weight=3) gets 3× requests vs S2(weight=1). <strong>Problem:</strong> Ignores actual server load — a slow request on S1 doesn't prevent S1 getting next request.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📊</span>
+      <h4>Least Connections</h4>
+      <p>New request → always sent to server with fewest active connections. Better for variable-duration requests. Long-running WebSocket connections don't starve fast HTTP handlers. <strong>Weighted Least Connections</strong> factors in server capacity. Default algorithm in HAProxy for TCP mode.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📍</span>
+      <h4>IP Hash (Sticky Sessions)</h4>
+      <p>Hash of client source IP determines which server handles the request. Same client → always same server. Maintains session state without shared session store. <strong>Problem:</strong> Many clients behind one corporate NAT IP → all hit same server → uneven load. Better alternative: Cookie-based session affinity.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">❤️</span>
+      <h4>Health Checks</h4>
+      <p><strong>Active:</strong> LB sends HTTP GET /health every 5-10 seconds. 200 OK = healthy, timeout/5xx = mark DOWN.<br>
+      <strong>Passive:</strong> Monitor real traffic — too many errors → mark DOWN.<br>
+      Server marked DOWN → traffic removed instantly. Auto-recovery when health checks pass again. Prevents routing to dead servers without manual intervention.</p>
+    </div>
+  </div>
+
+  <h3>🏗️ Layer 4 vs Layer 7 Load Balancing</h3>
+  <table class="cmp-table">
+    <tr><th>Feature</th><th>Layer 4 (Transport)</th><th>Layer 7 (Application)</th></tr>
+    <tr><td><strong>Operates On</strong></td><td>TCP/UDP packets</td><td>HTTP headers, URL, cookies, body</td></tr>
+    <tr><td><strong>Content Aware</strong></td><td>❌ Cannot read payload</td><td>✅ Reads full HTTP request</td></tr>
+    <tr><td><strong>Routing Logic</strong></td><td>IP + Port only</td><td>URL path, header, method, cookie</td></tr>
+    <tr><td><strong>SSL</strong></td><td>Passthrough (not terminated)</td><td>SSL termination at LB</td></tr>
+    <tr><td><strong>Speed</strong></td><td>⚡ Faster (less inspection)</td><td>🐢 Slightly slower (full parse)</td></tr>
+    <tr><td><strong>Examples</strong></td><td>AWS NLB, HAProxy TCP mode</td><td>AWS ALB, Nginx, HAProxy HTTP</td></tr>
+    <tr><td><strong>URL Routing</strong></td><td>❌ Not possible</td><td>✅ /api/* → API servers, /* → web</td></tr>
+    <tr><td><strong>Real Use</strong></td><td>Raw TCP, gaming servers, DB clusters</td><td>Web apps, microservices, REST APIs</td></tr>
+  </table>
+
+  <!-- LB ANIMATION -->
+  <h3>⚡ Live Load Balancer Simulation</h3>
+  <div class="anim-box" id="lBox">
+    <div class="anim-pill" id="lPill">⚖️ Load Balancer — Round Robin</div>
+    <div class="anim-canvas" id="lCanvas" style="height:300px;">
+      <svg class="anim-svg" id="lSvg" viewBox="0 0 760 300" preserveAspectRatio="xMidYMid meet">
+        <circle class="pk" id="lp0" r="9" fill="#00ff88" filter="url(#fg)"/>
+        <circle class="pk" id="lp1" r="9" fill="#a78bfa" filter="url(#fr)"/>
+        <circle class="pk" id="lp2" r="9" fill="#f8b400" filter="url(#fy)"/>
+      </svg>
+      <div class="nd gv" id="ln-net">🌐<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Internet</div></div>
+      <div class="nd tv lg" id="ln-lb">⚖️<div class="nlbl" style="bottom:-20px;left:50%;transform:translateX(-50%)">Load Balancer</div></div>
+      <div class="nd ov sm" id="ln-s1">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Server 1</div></div>
+      <div class="nd ov sm" id="ln-s2">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Server 2</div></div>
+      <div class="nd ov sm" id="ln-s3">🖥️<div class="nlbl" style="bottom:-18px;left:50%;transform:translateX(-50%)">Server 3</div></div>
+      <div class="abadge" id="lb0"></div>
+      <div class="abadge" id="lb1"></div>
+    </div>
+    <div class="a-ctrls">
+      <button class="ab g" onclick="lDemo('rr')">🔄 Round Robin</button>
+      <button class="ab b" onclick="lDemo('lc')">📊 Least Connections</button>
+      <button class="ab r" onclick="lDemo('fail')">💥 Server Failover</button>
+      <button class="ab y" onclick="lDemo('health')">❤️ Health Check</button>
+      <button class="ab gh" onclick="lReset()">↺ Reset</button>
+      <div class="astat" id="lStat">👆 Click to simulate load balancing!</div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>🌍 Real World Load Balancing:</strong>
+    <ul>
+      <li><strong>Google Maglev:</strong> Software LB handling millions req/sec. Uses consistent hashing on commodity servers. No expensive hardware LBs — pure software</li>
+      <li><strong>Netflix Zuul:</strong> API gateway LB routes based on device type, A/B test groups, user location. Open-sourced on GitHub. Handles 100% of Netflix API traffic</li>
+      <li><strong>Zomato / Swiggy IPL nights:</strong> 10× traffic spike during post-match ordering — auto-scaling + LB distributes surge across dynamically provisioned servers</li>
+      <li><strong>IRCTC Tatkal (10:00 AM):</strong> ~1.2 lakh concurrent users hit at exactly same second — needs aggressive LB + caching + queue management to not crash</li>
+      <li><strong>AWS ALB path routing:</strong> /api/* → ECS containers, /static/* → S3 origin, /ws → WebSocket servers — all handled by one ALB with target group rules</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 9. TROUBLESHOOTING ═══ -->
+<section class="section" id="cmd">
+  <h2>🔧 Network Troubleshooting Commands</h2>
+  <p>These commands are your first tools when "internet is down", "website is slow", or "I can't reach the server". Mastering what each output means separates junior engineers from senior ones. Always troubleshoot <strong>bottom-up: L1 → L2 → L3 → L4 → L7</strong>.</p>
+
+  <div class="cmd-grid">
+    <div class="cmd-card">
+      <h4>🏓 ping</h4>
+      <span class="cmd">ping google.com</span>
+      <span class="cmd">ping -c 4 8.8.8.8</span>
+      <span class="cmd">ping -s 1472 192.168.1.1   # MTU test</span>
+      <p>Tests L3 reachability via ICMP Echo. <strong>Timeout</strong> = no path or ICMP blocked. <strong>High RTT</strong> = congestion. <strong>Packet loss %</strong> = link quality. Ping 8.8.8.8 (IP, no DNS) — if it works but ping google.com fails → DNS issue, not routing.</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🛣️ traceroute / tracert</h4>
+      <span class="cmd">traceroute google.com         # Linux/Mac</span>
+      <span class="cmd">tracert google.com            # Windows</span>
+      <span class="cmd">traceroute -n 8.8.8.8         # no DNS resolve</span>
+      <p>Shows every router hop using TTL manipulation. <strong>* * *</strong> = hop doesn't respond to ICMP (may still forward!). Sudden latency jump at hop N = congested link. Where timeouts start = likely failure point. Use <code>-n</code> for faster output (skip reverse DNS).</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🔍 dig / nslookup</h4>
+      <span class="cmd">dig google.com A</span>
+      <span class="cmd">dig @8.8.8.8 google.com MX</span>
+      <span class="cmd">dig +trace google.com          # full resolution</span>
+      <span class="cmd">dig -x 8.8.8.8                 # reverse lookup</span>
+      <p><strong>dig</strong> is superior to nslookup — shows TTL, query time, authoritative flag. <code>+trace</code> shows every step from root to answer. Essential for DNS troubleshooting: verify propagation, check SPF/DKIM records, compare different resolvers.</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🔌 ss / netstat</h4>
+      <span class="cmd">ss -tulnp                      # listening ports</span>
+      <span class="cmd">ss -tnp state established      # active connections</span>
+      <span class="cmd">netstat -rn                    # routing table</span>
+      <span class="cmd">ss -s                          # socket summary</span>
+      <p><strong>ss</strong> is the modern netstat replacement (faster, more detail). Check LISTEN ports before configuring firewall rules. Find unexpected outbound connections from compromised hosts. <code>-p</code> shows which process owns each socket (needs root).</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🗺️ ip / ifconfig</h4>
+      <span class="cmd">ip addr show                   # all interfaces + IPs</span>
+      <span class="cmd">ip route show                  # routing table</span>
+      <span class="cmd">ip neigh show                  # ARP table</span>
+      <span class="cmd">ip link set eth0 up            # bring interface up</span>
+      <p>First step: verify IP, subnet, gateway are correct. <code>ip route show</code> — is default route present? <code>ip neigh show</code> — ARP table shows MAC→IP mappings. Duplicate IP? Two entries with same IP, different MACs → IP conflict!</p>
+    </div>
+    <div class="cmd-card">
+      <h4>📡 tcpdump</h4>
+      <span class="cmd">tcpdump -i eth0 port 80</span>
+      <span class="cmd">tcpdump host 8.8.8.8 -w cap.pcap</span>
+      <span class="cmd">tcpdump 'tcp[tcpflags] & tcp-syn != 0'</span>
+      <p>Captures raw packets on the wire — the ultimate debugging tool. Prove whether traffic reaches a server. Capture to .pcap → open in Wireshark for GUI analysis. Diagnose TLS failures, debug application protocols, forensic investigation of incidents. Only useful if you own/have permission on the host.</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🔭 nmap</h4>
+      <span class="cmd">nmap -sS 192.168.1.0/24        # SYN scan subnet</span>
+      <span class="cmd">nmap -sV -p 22,80,443 target   # version detect</span>
+      <span class="cmd">nmap -O target                  # OS fingerprint</span>
+      <p>Network scanner — discovers hosts, open ports, service versions, OS. <strong>Legitimate uses:</strong> Security audit of your own infra, verify firewall rules, find rogue devices, asset inventory. <strong>Only scan networks you own or have written permission for.</strong> nmap is also attacker's primary recon tool.</p>
+    </div>
+    <div class="cmd-card">
+      <h4>📊 mtr (My Traceroute)</h4>
+      <span class="cmd">mtr google.com                  # interactive live</span>
+      <span class="cmd">mtr --report --report-cycles 20 8.8.8.8</span>
+      <span class="cmd">mtr -n --tcp -P 443 google.com  # TCP mode</span>
+      <p>Combines ping + traceroute into real-time continuous display. Shows per-hop latency AND packet loss simultaneously. <strong>Best tool for intermittent issues</strong> — flapping link shows as periodic loss at specific hop. Essential for ISP troubleshooting and proving SLA violations.</p>
+    </div>
+    <div class="cmd-card">
+      <h4>🔑 curl / wget</h4>
+      <span class="cmd">curl -v https://google.com</span>
+      <span class="cmd">curl -I https://google.com      # headers only</span>
+      <span class="cmd">curl --resolve google.com:443:8.8.8.8 https://google.com</span>
+      <p>Tests full L7 HTTP/HTTPS stack. <code>-v</code> shows TLS handshake details, HTTP headers, response code. Essential for: checking if HTTPS cert is valid, testing API endpoints, verifying redirects, debugging load balancer behaviour. Use <code>--resolve</code> to test specific backend without DNS.</p>
+    </div>
+  </div>
+
+  <h3>🎯 Systematic L1→L7 Troubleshooting</h3>
+  <div class="steps-box">
+    <div class="step"><div class="step-num">1</div><div class="step-content">
+      <h5>L1 Physical — "Is it plugged in?"</h5>
+      <p>Check NIC link light, cable connection, interface state. Most issues are here!</p>
+      <code>ip link show → "state DOWN" → plug cable! | ethtool eth0 → "Link detected: no"</code>
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content">
+      <h5>L2 Data Link — "Can we reach the gateway?"</h5>
+      <p>Ping default gateway. Check ARP table has gateway MAC. Verify VLAN assignment.</p>
+      <code>ping 192.168.1.1 fails → arp -n | grep 192.168.1.1 → no entry → ARP issue / VLAN wrong</code>
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content">
+      <h5>L3 Network — "Can we reach destination IP?"</h5>
+      <p>Ping destination IP directly (bypass DNS). Check routing table. Verify firewall not blocking ICMP.</p>
+      <code>ping 8.8.8.8 SUCCESS → L3 fine | ping 8.8.8.8 FAIL → ip route show → missing default route?</code>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content">
+      <h5>L4 Transport — "Is the port open?"</h5>
+      <p>Test TCP connection to specific port. Verify service is listening. Check firewall rules.</p>
+      <code>nc -zv google.com 443 → "Connection to google.com 443 port [tcp/https] succeeded!"</code>
+    </div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content">
+      <h5>L7 Application — "Is the service responding?"</h5>
+      <p>Test DNS. Test HTTP response. Check SSL cert validity. Verify application logs.</p>
+      <code>curl -v https://mysite.com → TLS error? | dig mysite.com → DNS correct? | check app logs</code>
+    </div></div>
+  </div>
+
+  <div class="example-box">Real Scenario: "I can't access our company website (company.com)"
+
+Step 1: ip link show → eth0 UP ✅
+Step 2: ping 192.168.1.1 (gateway) → SUCCESS ✅
+Step 3: ping 8.8.8.8 → SUCCESS ✅  (internet reachable, routing fine)
+Step 4: ping company.com → REQUEST TIMEOUT ❌  (DNS failing!)
+Step 5: dig company.com @8.8.8.8 → Returns IP ✅  (public resolver works)
+Step 6: dig company.com @192.168.1.53 → SERVFAIL ❌  (internal DNS broken!)
+Step 7: Check internal DNS server:
+  - ssh 192.168.1.53 → systemctl status bind9 → "failed"
+  - journalctl -u bind9 → "zone transfer from primary failed: connection timeout"
+  - Primary DNS server 192.168.1.52 → unreachable (host down after power issue)
+Step 8: Fix → bring up primary DNS, zone transfer resumes, company.com resolves ✅
+
+ROOT CAUSE: Primary DNS server offline after power issue. Secondary failed to serve.
+Time with systematic approach: 9 minutes ⚡ vs hours of random guessing 🐢</div>
+</section>
+
+</div>
+<footer>
+  <p>⚡ Advanced Networking Concepts | Network Learning Hub | Built with 💜 for Learning</p>
+</footer>
+
+<script>
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('pgBar').style.width=pct+'%';
+});
+
+// ── FADE IN ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
+},{threshold:0.05,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.section').forEach(s=>{
+  s.style.opacity='0';s.style.transform='translateY(18px)';s.style.transition='opacity 0.55s ease,transform 0.55s ease';
+  obs.observe(s);
+});
+
+// ══════════════════════════════════════
+// SHARED ANIMATION UTILITIES
+// ══════════════════════════════════════
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+// Node positions [leftPct, topPct] per canvas
+const POS={
+  routing:{
+    'rn-A':[10,50],'rn-B':[35,20],'rn-C':[35,80],'rn-D':[60,50],
+    'rn-PC':[5,25],'rn-SV':[90,50]
+  },
+  fw:{
+    'fn-cli':[10,50],'fn-atk':[10,82],'fn-fw':[40,50],
+    'fn-web':[78,30],'fn-db':[78,75]
+  },
+  tcp:{
+    'tn-cli':[18,50],'tn-srv':[78,50],'tn-atk':[18,85]
+  },
+  dns:{
+    'dn-pc':[8,50],'dn-res':[30,50],'dn-root':[52,20],
+    'dn-tld':[72,20],'dn-auth':[92,20],'dn-web':[92,75]
+  },
+  lb:{
+    'ln-net':[8,50],'ln-lb':[38,50],
+    'ln-s1':[72,20],'ln-s2':[72,50],'ln-s3':[72,80]
+  }
+};
+
+function initCanvas(canvasId,posKey){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const pos=POS[posKey];
+  Object.entries(pos).forEach(([id,[lp,tp]])=>{
+    const el=document.getElementById(id);
+    if(el){el.style.left=lp+'%';el.style.top=tp+'%';}
+  });
+}
+
+function getSvgCoord(canvasId,svgId,nodeId,posKey){
+  const vb=document.getElementById(svgId)?.getAttribute('viewBox')?.split(' ')||[0,0,760,360];
+  const vw=+vb[2],vh=+vb[3];
+  const pos=POS[posKey][nodeId]||[50,50];
+  return [pos[0]/100*vw, pos[1]/100*vh];
+}
+
+function drawLink(svgId,id,fromKey,toKey,posKey,cls){
+  const svg=document.getElementById(svgId);
+  if(!svg)return;
+  let el=document.getElementById(id);
+  if(!el){el=document.createElementNS('http://www.w3.org/2000/svg','line');el.setAttribute('id',id);svg.insertBefore(el,svg.firstChild);}
+  el.setAttribute('class','lnk');
+  const [x1,y1]=getSvgCoord(null,svgId,fromKey,posKey);
+  const [x2,y2]=getSvgCoord(null,svgId,toKey,posKey);
+  el.setAttribute('x1',x1);el.setAttribute('y1',y1);el.setAttribute('x2',x2);el.setAttribute('y2',y2);
+  if(cls)el.classList.add(cls);
+}
+
+function setLink(id,cls){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.className='lnk';
+  if(cls)el.classList.add(cls);
+}
+
+function setNode(id,cls){
+  const el=document.getElementById(id);
+  if(!el)return;
+  ['src','dst','fwd','blk','fail'].forEach(c=>el.classList.remove(c));
+  if(cls)el.classList.add(cls);
+}
+
+function animPkt(svgId,pkId,fromKey,toKey,posKey,ms,color){
+  return new Promise(resolve=>{
+    const svg=document.getElementById(svgId);
+    const pkt=document.getElementById(pkId);
+    if(!pkt||!svg){resolve();return;}
+    const [fx,fy]=getSvgCoord(null,svgId,fromKey,posKey);
+    const [tx,ty]=getSvgCoord(null,svgId,toKey,posKey);
+    pkt.setAttribute('fill',color);
+    pkt.setAttribute('cx',fx);pkt.setAttribute('cy',fy);
+    pkt.style.opacity='1';
+    const start=performance.now();
+    const step=now=>{
+      const p=Math.min((now-start)/ms,1);
+      pkt.setAttribute('cx',fx+(tx-fx)*p);
+      pkt.setAttribute('cy',fy+(ty-fy)*p);
+      if(p<1)requestAnimationFrame(step);
+      else{pkt.style.opacity='0';resolve();}
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+function showBadge(id,txt,canvasId,posKey,nodeId,color){
+  const el=document.getElementById(id);
+  const canvas=document.getElementById(canvasId);
+  if(!el||!canvas)return;
+  const pos=POS[posKey]?.[nodeId]||[50,50];
+  el.style.left=pos[0]+'%';
+  el.style.top=Math.max(0,pos[1]-14)+'%';
+  el.style.transform='translateX(-50%)';
+  el.textContent=txt;
+  el.style.borderColor=color||'rgba(102,126,234,0.5)';
+  el.style.color=color||'#a5b4fc';
+  el.classList.add('show');
+}
+function hideBadge(id){document.getElementById(id)?.classList.remove('show');}
+function setStatus(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function setPill(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt;}
+function lockBtns(canvasId,v){document.querySelectorAll(`#${canvasId} ~ .a-ctrls .ab:not(.gh)`).forEach(b=>b.disabled=v);}
+
+let animBusy={r:false,f:false,t:false,d:false,l:false};
+
+// ══════════════════════════════════════
+// ROUTING ANIMATION
+// ══════════════════════════════════════
+function initRouting(){
+  initCanvas('rCanvas','routing');
+  const pairs=[['rn-PC','rn-A'],['rn-A','rn-B'],['rn-A','rn-C'],['rn-B','rn-D'],['rn-C','rn-D'],['rn-D','rn-SV']];
+  pairs.forEach(([a,b],i)=>drawLink('rSvg','rl'+i,a,b,'routing'));
+}
+
+async function rDemo(mode){
+  if(animBusy.r)return; animBusy.r=true;
+  rReset(true);
+  await sleep(100);
+  if(mode==='ospf'){
+    setPill('rPill','🦋 OSPF — Shortest Path (Lowest Cost)');
+    setStatus('rStat','🦋 OSPF: PC-A sends data to Server. SPF calculated best path...');
+    setNode('rn-PC','src');
+    await sleep(400);
+    setLink('rl0','on');setNode('rn-A','fwd');
+    await animPkt('rSvg','rp0','rn-PC','rn-A','routing',400,'#00ff88');
+    showBadge('rb0','OSPF Hello\nAdj formed','rCanvas','routing','rn-A','#667eea');
+    await sleep(300);hideBadge('rb0');
+    setLink('rl1','on');setNode('rn-B','fwd');
+    await animPkt('rSvg','rp0','rn-A','rn-B','routing',400,'#00ff88');
+    setLink('rl3','on');setNode('rn-D','fwd');
+    await animPkt('rSvg','rp0','rn-B','rn-D','routing',400,'#00ff88');
+    setLink('rl5','on');setNode('rn-SV','dst');
+    await animPkt('rSvg','rp0','rn-D','rn-SV','routing',400,'#00ff88');
+    showBadge('rb1','✅ Delivered!\nCost=20','rCanvas','routing','rn-SV','#22c55e');
+    setStatus('rStat','✅ OSPF delivered via R-A→R-B→R-D (lowest cost path). SPF algorithm chose cost=20 over cost=30 alternate path via R-C.');
+
+  }else if(mode==='fail'){
+    setPill('rPill','💥 Link Failure + OSPF Reconvergence');
+    setStatus('rStat','💥 Link R-A↔R-B fails! OSPF detects via dead timer expiry...');
+    setNode('rn-A','src');
+    setLink('rl1','off');
+    showBadge('rb0','💥 LINK FAIL\nR-A ↔ R-B','rCanvas','routing','rn-B','#ef4444');
+    await sleep(600);hideBadge('rb0');
+    setStatus('rStat','📡 OSPF floods LSA: "R-A→R-B link is down!" All routers recalculate SPF...');
+    await sleep(500);
+    showBadge('rb1','LSA Flood\nRecomputing SPF','rCanvas','routing','rn-A','#f8b400');
+    await sleep(700);hideBadge('rb1');
+    setStatus('rStat','🔄 New best path: R-A→R-C→R-D (cost=30). Traffic rerouted automatically!');
+    setLink('rl2','on');setNode('rn-C','fwd');
+    await animPkt('rSvg','rp0','rn-A','rn-C','routing',450,'#a78bfa');
+    setLink('rl4','on');setNode('rn-D','fwd');
+    await animPkt('rSvg','rp0','rn-C','rn-D','routing',450,'#a78bfa');
+    setLink('rl5','on');setNode('rn-SV','dst');
+    await animPkt('rSvg','rp0','rn-D','rn-SV','routing',400,'#a78bfa');
+    setStatus('rStat','✅ OSPF reconverged in ~5 seconds! Traffic flows via alternate path R-A→R-C→R-D. RIP would take 2–3 minutes for same recovery.');
+
+  }else if(mode==='rip'){
+    setPill('rPill','🌊 RIP — Hop Count Metric (Problematic)');
+    setStatus('rStat','🌊 RIP uses HOP COUNT only. Ignores bandwidth! Sending full routing table every 30s...');
+    setNode('rn-A','src');
+    showBadge('rb0','RIP Update\nFull table\nevery 30s','rCanvas','routing','rn-A','#f97316');
+    await sleep(500);
+    await animPkt('rSvg','rp2','rn-A','rn-B','routing',500,'#f8b400');
+    await animPkt('rSvg','rp2','rn-A','rn-C','routing',500,'#f8b400');
+    hideBadge('rb0');
+    showBadge('rb1','⚠️ Max 15 hops!\n>15 = unreachable','rCanvas','routing','rn-D','#ef4444');
+    await sleep(600);
+    setStatus('rStat','⚠️ RIP Problem: A 10Gbps link and 56kbps link both = 1 hop to RIP! RIP would choose 56kbps path if it has same hop count. OSPF correctly prefers the 10Gbps link (lower cost=1 vs 1562). This is why RIP is NEVER used in production networks.');
+
+  }else if(mode==='bgp'){
+    setPill('rPill','🌍 BGP — Inter-AS Routing');
+    setStatus('rStat','🌍 BGP eBGP session between AS100 (R-A) and AS200 (R-D). Advertising prefixes...');
+    setNode('rn-A','src');setNode('rn-D','dst');
+    showBadge('rb0','eBGP Session\nTCP:179\nAS100↔AS200','rCanvas','routing','rn-B','#667eea');
+    await sleep(500);
+    setLink('rl1','sec');setLink('rl3','sec');
+    await animPkt('rSvg','rp1','rn-A','rn-B','routing',400,'#a78bfa');
+    await animPkt('rSvg','rp1','rn-B','rn-D','routing',400,'#a78bfa');
+    hideBadge('rb0');
+    showBadge('rb1','BGP UPDATE\n10.0.0.0/8 via AS100','rCanvas','routing','rn-D','#22c55e');
+    await sleep(400);
+    await animPkt('rSvg','rp1','rn-D','rn-B','routing',400,'#a78bfa');
+    await animPkt('rSvg','rp1','rn-B','rn-A','routing',400,'#a78bfa');
+    hideBadge('rb1');
+    setStatus('rStat','✅ BGP UPDATE exchanged! AS200 now knows "reach 10.0.0.0/8 via AS100". AS path=[100]. BGP selects best path using: AS_PATH length, LOCAL_PREF, MED, Origin. This is how Jio, Airtel, Tata exchange routes to connect India to the global internet.');
+  }
+  animBusy.r=false;
+}
+
+function rReset(silent){
+  animBusy.r=false;
+  ['rn-A','rn-B','rn-C','rn-D','rn-PC','rn-SV'].forEach(id=>setNode(id,null));
+  for(let i=0;i<=5;i++)setLink('rl'+i,null);
+  ['rp0','rp1','rp2','rp3'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadge('rb0');hideBadge('rb1');
+  setPill('rPill','🗺️ Routing Simulator — Click to begin');
+  if(!silent)setStatus('rStat','👆 Click a button to simulate routing!');
+}
+
+// ══════════════════════════════════════
+// FIREWALL ANIMATION
+// ══════════════════════════════════════
+function initFW(){
+  initCanvas('fCanvas','fw');
+  drawLink('fSvg','fl0','fn-cli','fn-fw','fw');
+  drawLink('fSvg','fl1','fn-atk','fn-fw','fw');
+  drawLink('fSvg','fl2','fn-fw','fn-web','fw');
+  drawLink('fSvg','fl3','fn-fw','fn-db','fw');
+}
+
+async function fDemo(mode){
+  if(animBusy.f)return; animBusy.f=true;
+  fReset(true);await sleep(100);
+
+  if(mode==='http'){
+    setPill('fPill','✅ HTTP :80 — PERMIT (Rule 10 match)');
+    setNode('fn-cli','src');
+    setStatus('fStat','📋 Client requests HTTP:80. Firewall checks ACL...');
+    setLink('fl0','on');setNode('fn-fw','fwd');
+    await animPkt('fSvg','fp0','fn-cli','fn-fw','fw',430,'#00ff88');
+    showBadge('fb0','Rule 10: PERMIT\nTCP any :80 ✅','fCanvas','fw','fn-fw','#22c55e');
+    await sleep(400);hideBadge('fb0');
+    setLink('fl2','on');setNode('fn-web','dst');
+    await animPkt('fSvg','fp0','fn-fw','fn-web','fw',400,'#00ff88');
+    showBadge('fb1','200 OK\nHTTP Response','fCanvas','fw','fn-web','#4ade80');
+    await sleep(300);hideBadge('fb1');
+    await animPkt('fSvg','fp0','fn-web','fn-fw','fw',400,'#a78bfa');
+    setLink('fl0','sec');
+    await animPkt('fSvg','fp0','fn-fw','fn-cli','fw',400,'#a78bfa');
+    setStatus('fStat','✅ HTTP:80 allowed by Rule 10. State table entry created. Return traffic auto-allowed. Web server responded 200 OK.');
+
+  }else if(mode==='https'){
+    setPill('fPill','🔒 HTTPS :443 — PERMIT + TLS Inspection');
+    setNode('fn-cli','src');
+    setStatus('fStat','🔒 HTTPS:443 request. Firewall checks rule + optional TLS inspection...');
+    setLink('fl0','on');setNode('fn-fw','fwd');
+    await animPkt('fSvg','fp0','fn-cli','fn-fw','fw',430,'#a78bfa');
+    showBadge('fb0','TLS Inspect\nDecrypt→Check→Re-encrypt','fCanvas','fw','fn-fw','#8b5cf6');
+    await sleep(500);hideBadge('fb0');
+    setLink('fl2','on');setNode('fn-web','dst');
+    await animPkt('fSvg','fp0','fn-fw','fn-web','fw',400,'#a78bfa');
+    setStatus('fStat','✅ HTTPS:443 permitted. NGFW optionally does TLS inspection: decrypt → inspect payload for malware/SQLi → re-encrypt → forward. Certificate pinned apps (banking) may break with TLS inspection!');
+
+  }else if(mode==='telnet'){
+    setPill('fPill','🚫 Telnet :23 — DENY (Rule 30)');
+    setNode('fn-cli','src');
+    setStatus('fStat','⚠️ Client attempts Telnet:23 (cleartext remote shell). Firewall ACL check...');
+    setLink('fl0','on');
+    await animPkt('fSvg','fp1','fn-cli','fn-fw','fw',430,'#ef4444');
+    setNode('fn-fw','blk');
+    showBadge('fb0','Rule 30: DENY\nTCP :23 ❌\nDROPPED!','fCanvas','fw','fn-fw','#ef4444');
+    await sleep(600);hideBadge('fb0');
+    setStatus('fStat','🚫 Telnet:23 BLOCKED by Rule 30. Packet silently dropped. No TCP RST sent (stealth mode). Attacker gets timeout, not "connection refused". Telnet sends credentials in cleartext — should NEVER be allowed. Use SSH (port 22) instead.');
+
+  }else if(mode==='db'){
+    setPill('fPill','🗄️ MySQL :3306 from Internet — DENY (Default)');
+    setNode('fn-atk','src');
+    setStatus('fStat','☠️ Attacker attempts direct MySQL:3306 access from internet...');
+    setLink('fl1','on');
+    await animPkt('fSvg','fp1','fn-atk','fn-fw','fw',430,'#ef4444');
+    setNode('fn-fw','blk');
+    showBadge('fb0','Rule 99: DENY\nDefault deny all\n❌ DB Protected!','fCanvas','fw','fn-fw','#ef4444');
+    await sleep(600);hideBadge('fb0');
+    setStatus('fStat','✅ MySQL:3306 blocked by implicit DENY ALL (Rule 99). DB only accessible from app server IP on internal network. Internet → DB should ALWAYS be blocked. A misconfigured MySQL exposed to internet = RCE + full data breach in minutes.');
+
+  }else if(mode==='attack'){
+    setPill('fPill','☠️ Attacker probing — IPS detects + blocks');
+    setNode('fn-atk','src');
+    setStatus('fStat','☠️ Attacker sends SYN flood + port scan from internet...');
+    setLink('fl1','on');
+    for(let i=0;i<3;i++){
+      await animPkt('fSvg','fp1','fn-atk','fn-fw','fw',280,'#ef4444');
+      await sleep(80);
+    }
+    setNode('fn-fw','blk');
+    showBadge('fb0','IPS Alert!\nSYN Flood detect\nSrc IP Blacklisted 24h','fCanvas','fw','fn-fw','#f97316');
+    await sleep(700);hideBadge('fb0');
+    setLink('fl1','off');
+    setStatus('fStat','🚨 IPS detected SYN flood pattern (>500 SYNs/sec from same src). Attacker IP auto-blacklisted for 24 hours. SOC alert sent. Rate limiting applied. Firewall + IPS working together = layered defense (Defense in Depth).');
+  }
+  animBusy.f=false;
+}
+
+function fReset(silent){
+  animBusy.f=false;
+  ['fn-cli','fn-atk','fn-fw','fn-web','fn-db'].forEach(id=>setNode(id,null));
+  ['fl0','fl1','fl2','fl3'].forEach(id=>setLink(id,null));
+  ['fp0','fp1','fp2'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadge('fb0');hideBadge('fb1');
+  setPill('fPill','🛡️ Firewall — Default Deny | PERMIT 80, 443 only');
+  if(!silent)setStatus('fStat','👆 Click to simulate firewall filtering!');
+}
+
+// ══════════════════════════════════════
+// TCP ANIMATION
+// ══════════════════════════════════════
+function initTCP(){
+  initCanvas('tCanvas','tcp');
+  drawLink('tSvg','tl0','tn-cli','tn-srv','tcp');
+  drawLink('tSvg','tl1','tn-atk','tn-srv','tcp');
+}
+
+async function tDemo(mode){
+  if(animBusy.t)return; animBusy.t=true;
+  tReset(true);await sleep(100);
+
+  if(mode==='shake'){
+    setPill('tPill','🤝 TCP 3-Way Handshake — Packet Level');
+    setNode('tn-cli','src');
+    setStatus('tStat','Step 1: Client sends SYN (Seq=2847361, Flags=SYN)...');
+    setLink('tl0','on');
+    await animPkt('tSvg','tp0','tn-cli','tn-srv','tcp',500,'#00ff88');
+    showBadge('tb0','SYN\nSeq=2847361\nFlags=SYN','tCanvas','tcp','tn-srv','#667eea');
+    setNode('tn-srv','fwd');
+    await sleep(400);hideBadge('tb0');
+    setStatus('tStat','Step 2: Server sends SYN-ACK (Seq=9182736, Ack=2847362)...');
+    await animPkt('tSvg','tp1','tn-srv','tn-cli','tcp',500,'#a78bfa');
+    showBadge('tb1','SYN-ACK\nSeq=9182736\nAck=2847362','tCanvas','tcp','tn-cli','#8b5cf6');
+    await sleep(400);hideBadge('tb1');
+    setStatus('tStat','Step 3: Client sends ACK (Ack=9182737) → CONNECTION ESTABLISHED!');
+    await animPkt('tSvg','tp0','tn-cli','tn-srv','tcp',500,'#00ff88');
+    showBadge('tb0','ACK\nAck=9182737\n✅ CONNECTED!','tCanvas','tcp','tn-srv','#22c55e');
+    setNode('tn-srv','dst');
+    await sleep(400);hideBadge('tb0');
+    setStatus('tStat','✅ 3-Way Handshake complete! Both sides synchronized on sequence numbers. Full-duplex connection established. Data transfer can begin.');
+
+  }else if(mode==='data'){
+    setPill('tPill','📦 TCP Data Transfer — Sequence & Acknowledgment');
+    setNode('tn-cli','src');setNode('tn-srv','dst');
+    setLink('tl0','on');
+    setStatus('tStat','📦 Client sends data segment: Seq=2847362, 1460 bytes (1 MSS)...');
+    await animPkt('tSvg','tp0','tn-cli','tn-srv','tcp',450,'#00ff88');
+    showBadge('tb0','DATA\nSeq=2847362\nLen=1460','tCanvas','tcp','tn-srv','#4ade80');
+    await sleep(350);hideBadge('tb0');
+    setStatus('tStat','Server ACKs receipt: Ack=2848822 (2847362+1460). Client sends next segment...');
+    await animPkt('tSvg','tp1','tn-srv','tn-cli','tcp',450,'#a78bfa');
+    showBadge('tb1','ACK=2848822\n"Send more!"','tCanvas','tcp','tn-cli','#a78bfa');
+    await sleep(350);hideBadge('tb1');
+    await animPkt('tSvg','tp0','tn-cli','tn-srv','tcp',430,'#00ff88');
+    setStatus('tStat','✅ Sliding window allows multiple segments in-flight before ACK required. TCP window scaling (RFC 7323) allows window up to 1GB for high-BDP links. This is why TCP throughput depends on RTT — the smaller the RTT, the faster the window fills.');
+
+  }else if(mode==='close'){
+    setPill('tPill','🔚 TCP 4-Way FIN — Graceful Close');
+    setNode('tn-cli','src');
+    setLink('tl0','on');
+    setStatus('tStat','Client done sending → sends FIN (Seq=X, Flags=FIN+ACK)...');
+    await animPkt('tSvg','tp0','tn-cli','tn-srv','tcp',450,'#f8b400');
+    showBadge('tb0','FIN\n"I am done sending"','tCanvas','tcp','tn-srv','#eab308');
+    setNode('tn-srv','fwd');
+    await sleep(350);hideBadge('tb0');
+    setStatus('tStat','Server ACKs FIN. Half-closed — server can still send data...');
+    await animPkt('tSvg','tp1','tn-srv','tn-cli','tcp',450,'#a78bfa');
+    showBadge('tb1','ACK\n"Got your FIN"','tCanvas','tcp','tn-cli','#a78bfa');
+    await sleep(350);hideBadge('tb1');
+    setStatus('tStat','Server sends its own FIN (also done sending)...');
+    await animPkt('tSvg','tp0','tn-srv','tn-cli','tcp',450,'#f8b400');
+    showBadge('tb0','FIN\n"I am done too"','tCanvas','tcp','tn-cli','#eab308');
+    await sleep(350);hideBadge('tb0');
+    setStatus('tStat','Client sends final ACK → enters TIME_WAIT (2 min) to handle delayed packets...');
+    await animPkt('tSvg','tp1','tn-cli','tn-srv','tcp',450,'#a78bfa');
+    showBadge('tb1','ACK\n✅ Connection CLOSED\nTIME_WAIT=2min','tCanvas','tcp','tn-cli','#22c55e');
+    await sleep(400);hideBadge('tb1');
+    setStatus('tStat','✅ 4-way FIN complete. Both sides cleanly closed. TIME_WAIT prevents old delayed packets from interfering with new connections on same port. netstat -an | grep TIME_WAIT shows lingering closed connections.');
+
+  }else if(mode==='synflood'){
+    setPill('tPill','💥 SYN Flood DDoS — Half-Open Queue Attack');
+    setNode('tn-atk','src');setNode('tn-srv','blk');
+    setLink('tl1','on');
+    setStatus('tStat','☠️ Attacker sends thousands of SYN packets with SPOOFED source IPs...');
+    for(let i=0;i<5;i++){
+      await animPkt('tSvg','tp3','tn-atk','tn-srv','tcp',200,'#ef4444');
+      await sleep(60);
+    }
+    showBadge('tb0','Half-Open Queue FULL!\nSYN backlog exhausted\n→ Dropping legit SYNs!','tCanvas','tcp','tn-srv','#ef4444');
+    await sleep(700);hideBadge('tb0');
+    setNode('tn-cli','src');
+    await animPkt('tSvg','tp3','tn-cli','tn-srv','tcp',400,'#00ff88');
+    showBadge('tb1','Legit SYN DROPPED!\nQueue full → DoS','tCanvas','tcp','tn-srv','#f87171');
+    await sleep(500);hideBadge('tb1');
+    setStatus('tStat','💥 SYN Flood DoS! Server allocated state for each spoofed SYN (3-second timeout). Half-open queue (default 128-1024) fills up → legitimate connections dropped. Defense: SYN Cookies (RFC 4987) — server encodes state in SYN-ACK sequence number, no memory allocated until ACK received. AWS Shield, Cloudflare protect against this automatically.');
+  }
+  animBusy.t=false;
+}
+
+function tReset(silent){
+  animBusy.t=false;
+  ['tn-cli','tn-srv','tn-atk'].forEach(id=>setNode(id,null));
+  ['tl0','tl1'].forEach(id=>setLink(id,null));
+  ['tp0','tp1','tp2','tp3'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadge('tb0');hideBadge('tb1');
+  setPill('tPill','🤝 TCP — Click to simulate');
+  if(!silent)setStatus('tStat','👆 Click to simulate TCP!');
+}
+
+// ══════════════════════════════════════
+// DNS ANIMATION
+// ══════════════════════════════════════
+function initDNS(){
+  initCanvas('dCanvas','dns');
+  drawLink('dSvg','dl0','dn-pc','dn-res','dns');
+  drawLink('dSvg','dl1','dn-res','dn-root','dns');
+  drawLink('dSvg','dl2','dn-res','dn-tld','dns');
+  drawLink('dSvg','dl3','dn-res','dn-auth','dns');
+  drawLink('dSvg','dl4','dn-pc','dn-web','dns');
+}
+
+async function dDemo(mode){
+  if(animBusy.d)return; animBusy.d=true;
+  dReset(true);await sleep(100);
+
+  if(mode==='full'){
+    setPill('dPill','🌐 Full DNS Resolution — 7 Steps');
+    setNode('dn-pc','src');
+    setStatus('dStat','Step 1: Browser cache miss. OS asks resolver 8.8.8.8 for google.com...');
+    setLink('dl0','on');setNode('dn-res','fwd');
+    await animPkt('dSvg','dp0','dn-pc','dn-res','dns',430,'#00ff88');
+    showBadge('db0','Query: google.com A\nUDP:53','dCanvas','dns','dn-res','#667eea');
+    await sleep(350);hideBadge('db0');
+    setStatus('dStat','Step 2: Resolver asks Root NS: "Who handles .com?"');
+    setLink('dl1','on');setNode('dn-root','fwd');
+    await animPkt('dSvg','dp0','dn-res','dn-root','dns',430,'#00ff88');
+    showBadge('db0','→ Root NS\n"Who handles .com?"','dCanvas','dns','dn-root','#667eea');
+    await sleep(350);hideBadge('db0');
+    await animPkt('dSvg','dp1','dn-root','dn-res','dns',400,'#a78bfa');
+    setStatus('dStat','Root: "Try a.gtld-servers.net". Step 3: Resolver asks .com TLD...');
+    setLink('dl2','on');setNode('dn-tld','fwd');
+    await animPkt('dSvg','dp0','dn-res','dn-tld','dns',430,'#00ff88');
+    showBadge('db0','→ TLD .com\n"Who handles\ngoogle.com?"','dCanvas','dns','dn-tld','#8b5cf6');
+    await sleep(350);hideBadge('db0');
+    await animPkt('dSvg','dp1','dn-tld','dn-res','dns',400,'#a78bfa');
+    setStatus('dStat','TLD: "ns1.google.com". Step 4: Ask Google\'s authoritative NS...');
+    setLink('dl3','on');setNode('dn-auth','fwd');
+    await animPkt('dSvg','dp0','dn-res','dn-auth','dns',430,'#00ff88');
+    showBadge('db0','→ Auth NS\n"A record for\ngoogle.com?"','dCanvas','dns','dn-auth','#22c55e');
+    await sleep(350);hideBadge('db0');
+    await animPkt('dSvg','dp1','dn-auth','dn-res','dns',400,'#a78bfa');
+    showBadge('db1','A: 142.250.182.46\nTTL=300s','dCanvas','dns','dn-res','#4ade80');
+    await sleep(350);hideBadge('db1');
+    setStatus('dStat','Got IP! Resolver returns answer to browser. Cached for 300 seconds...');
+    await animPkt('dSvg','dp1','dn-res','dn-pc','dns',400,'#a78bfa');
+    showBadge('db0','142.250.182.46\nCached 300s ⚡','dCanvas','dns','dn-pc','#22c55e');
+    await sleep(400);hideBadge('db0');
+    setLink('dl4','on');setNode('dn-web','dst');
+    await animPkt('dSvg','dp0','dn-pc','dn-web','dns',450,'#00ff88');
+    setStatus('dStat','✅ DNS resolved in ~45ms! Browser connects TCP:443 to 142.250.182.46. Total: 7 steps across Root → TLD → Auth NS → Resolver → Browser. Next query within 300s hits cache instantly!');
+
+  }else if(mode==='cache'){
+    setPill('dPill','⚡ DNS Cache Hit — Zero Server Queries');
+    setNode('dn-pc','src');
+    setStatus('dStat','Browser asks OS for google.com. OS checks cache...');
+    showBadge('db0','Cache HIT!\ngoogle.com\n142.250.182.46\nTTL: 234s','dCanvas','dns','dn-pc','#22c55e');
+    await sleep(600);hideBadge('db0');
+    setLink('dl4','on');setNode('dn-web','dst');
+    await animPkt('dSvg','dp0','dn-pc','dn-web','dns',400,'#00ff88');
+    setStatus('dStat','⚡ Cache hit! Zero DNS queries sent. Browser connects directly to 142.250.182.46. This is why the 2nd page load is always faster than the 1st — DNS cached. Google TTL=300s means cache valid for 5 minutes. Low TTL = more DNS queries but faster IP changes (useful during failover).');
+
+  }else if(mode==='poison'){
+    setPill('dPill','☠️ DNS Cache Poisoning Attack');
+    setNode('dn-res','src');
+    setStatus('dStat','☠️ DNS Cache Poisoning: Attacker races to inject fake record before legitimate response...');
+    setLink('dl2','on');
+    await animPkt('dSvg','dp0','dn-res','dn-tld','dns',430,'#f8b400');
+    showBadge('db0','Legit query\nfor bank.com','dCanvas','dns','dn-tld','#667eea');
+    await sleep(300);hideBadge('db0');
+    setNode('dn-tld','blk');
+    await animPkt('dSvg','dp2','dn-tld','dn-res','dns',350,'#ef4444');
+    showBadge('db1','☠️ FAKE RESPONSE:\nbank.com=attacker.ip\n(before real answer!)','dCanvas','dns','dn-res','#ef4444');
+    await sleep(500);hideBadge('db1');
+    setLink('dl0','off');
+    await animPkt('dSvg','dp2','dn-res','dn-pc','dns',400,'#ef4444');
+    showBadge('db0','Poisoned cache!\nbank.com→attacker.ip\nPhishing site!','dCanvas','dns','dn-pc','#ef4444');
+    await sleep(500);hideBadge('db0');
+    setStatus('dStat','☠️ Cache poisoned! Users visiting bank.com now redirected to attacker\'s phishing site. Kaminsky Attack (2008) made this trivial using UDP transaction ID brute force. Fix: DNSSEC (cryptographic signatures on records), randomize source port + transaction ID, use DoH/DoT. Most major resolvers now implement these defenses.');
+  }
+  animBusy.d=false;
+}
+
+function dReset(silent){
+  animBusy.d=false;
+  ['dn-pc','dn-res','dn-root','dn-tld','dn-auth','dn-web'].forEach(id=>setNode(id,null));
+  ['dl0','dl1','dl2','dl3','dl4'].forEach(id=>setLink(id,null));
+  ['dp0','dp1','dp2'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadge('db0');hideBadge('db1');
+  setPill('dPill','🌐 DNS — Full Resolution Flow');
+  if(!silent)setStatus('dStat','👆 Click to simulate DNS!');
+}
+
+// ══════════════════════════════════════
+// LOAD BALANCER ANIMATION
+// ══════════════════════════════════════
+let rrIdx=0;
+
+function initLB(){
+  initCanvas('lCanvas','lb');
+  drawLink('lSvg','ll0','ln-net','ln-lb','lb');
+  drawLink('lSvg','ll1','ln-lb','ln-s1','lb');
+  drawLink('lSvg','ll2','ln-lb','ln-s2','lb');
+  drawLink('lSvg','ll3','ln-lb','ln-s3','lb');
+}
+
+async function lDemo(mode){
+  if(animBusy.l)return; animBusy.l=true;
+  lReset(true);await sleep(100);
+
+  if(mode==='rr'){
+    setPill('lPill','🔄 Round Robin — Sequential Distribution');
+    setNode('ln-net','src');setNode('ln-lb','fwd');
+    setLink('ll0','on');
+    const servers=[['ln-s1','ll1'],['ln-s2','ll2'],['ln-s3','ll3']];
+    const colors=['#00ff88','#a78bfa','#f8b400'];
+    const pkts=['lp0','lp1','lp2'];
+    for(let i=0;i<3;i++){
+      setStatus('lStat',`Request ${i+1}: LB sends to Server ${i+1} (Round Robin sequence)...`);
+      await animPkt('lSvg','lp0','ln-net','ln-lb','lb',380,'#00ff88');
+      setNode(servers[i][0],'dst');
+      setLink(servers[i][1],'on');
+      showBadge('lb0',`Req #${i+1} → Server ${i+1}`,'lCanvas','lb','ln-lb','#22c55e');
+      await animPkt('lSvg',pkts[i],'ln-lb',servers[i][0],'lb',380,colors[i]);
+      await sleep(200);hideBadge('lb0');
+    }
+    setStatus('lStat','✅ Round Robin: 3 requests distributed evenly. S1→S2→S3→S1→... Pattern repeats. Equal distribution but ignores actual server load. Weighted Round Robin assigns more requests to powerful servers.');
+
+  }else if(mode==='lc'){
+    setPill('lPill','📊 Least Connections — Send to Least Busy');
+    setNode('ln-net','src');setNode('ln-lb','fwd');
+    setLink('ll0','on');
+    showBadge('lb0','S1: 12 conns\nS2: 3 conns ← Least!\nS3: 8 conns','lCanvas','lb','ln-lb','#14b8a6');
+    setStatus('lStat','LB checks active connections: S1=12, S2=3 (least!), S3=8. Sending to S2...');
+    await sleep(600);hideBadge('lb0');
+    await animPkt('lSvg','lp0','ln-net','ln-lb','lb',380,'#00ff88');
+    setNode('ln-s2','dst');setLink('ll2','on');
+    await animPkt('lSvg','lp0','ln-lb','ln-s2','lb',380,'#00ff88');
+    showBadge('lb1','S2 now: 4 conns\nBest choice! ✅','lCanvas','lb','ln-s2','#22c55e');
+    await sleep(400);hideBadge('lb1');
+    setStatus('lStat','✅ Least Connections chose S2 (fewest active: 3). Next request checks again in real-time. Better than Round Robin when requests have variable processing time (some fast HTTP, some slow file uploads). HAProxy default algorithm for TCP.');
+
+  }else if(mode==='fail'){
+    setPill('lPill','💥 Server Failover — Health Check Triggers');
+    ['ln-s1','ln-s2','ln-s3'].forEach(id=>setNode(id,'dst'));
+    setLink('ll0','on');setLink('ll1','on');setLink('ll2','on');setLink('ll3','on');
+    setStatus('lStat','All 3 servers healthy. Distributing traffic normally...');
+    setNode('ln-net','src');setNode('ln-lb','fwd');
+    await animPkt('lSvg','lp0','ln-net','ln-lb','lb',350,'#00ff88');
+    await animPkt('lSvg','lp0','ln-lb','ln-s2','lb',350,'#00ff88');
+    await sleep(300);
+    setNode('ln-s1','fail');setLink('ll1','off');
+    showBadge('lb0','💥 S1 FAILED!\nHealth check: TIMEOUT\nRemoving from pool...','lCanvas','lb','ln-s1','#ef4444');
+    setStatus('lStat','💥 Server 1 fails health check (HTTP GET /health → timeout). LB marks S1 DOWN, removes from pool. Traffic automatically reroutes to S2 and S3!');
+    await sleep(700);hideBadge('lb0');
+    await animPkt('lSvg','lp1','ln-net','ln-lb','lb',350,'#a78bfa');
+    await animPkt('lSvg','lp1','ln-lb','ln-s3','lb',350,'#a78bfa');
+    await animPkt('lSvg','lp2','ln-net','ln-lb','lb',350,'#f8b400');
+    await animPkt('lSvg','lp2','ln-lb','ln-s2','lb',350,'#f8b400');
+    showBadge('lb1','✅ Failover!\nS2+S3 handling\nall traffic','lCanvas','lb','ln-lb','#22c55e');
+    await sleep(400);hideBadge('lb1');
+    setStatus('lStat','✅ Automatic failover! Users experience zero downtime (maybe 1-2 failed requests during detection). S1 auto-re-added when health checks pass again. This is High Availability (HA) in action — the entire reason to use a load balancer.');
+
+  }else if(mode==='health'){
+    setPill('lPill','❤️ Active Health Checks — Continuous Monitoring');
+    setNode('ln-lb','fwd');
+    setLink('ll1','on');setLink('ll2','on');setLink('ll3','on');
+    const checks=[['ln-s1','ll1'],['ln-s2','ll2'],['ln-s3','ll3']];
+    for(let i=0;i<3;i++){
+      setStatus('lStat',`Health check → Server ${i+1}: GET /health HTTP/1.1...`);
+      await animPkt('lSvg','lp0','ln-lb',checks[i][0],'lb',350,'#14b8a6');
+      if(i===1){
+        setNode('ln-s2','blk');
+        showBadge('lb0','⚠️ GET /health\n→ 500 Error!\nMarking DOWN','lCanvas','lb','ln-s2','#ef4444');
+        setLink('ll2','off');
+        await sleep(500);hideBadge('lb0');
+      } else {
+        setNode(checks[i][0],'dst');
+        showBadge('lb0',`✅ 200 OK\nHealthy!`,'lCanvas','lb',checks[i][0],'#22c55e');
+        await sleep(300);hideBadge('lb0');
+      }
+    }
+    setStatus('lStat','❤️ Health checks complete: S1✅ S2❌(marked DOWN) S3✅. S2 removed from rotation. Check runs every 5 seconds. S2 auto-restored when 3 consecutive health checks pass. Active health checks prevent "cascading failures" where LB sends traffic to dead servers.');
+  }
+  animBusy.l=false;
+}
+
+function lReset(silent){
+  animBusy.l=false;
+  ['ln-net','ln-lb','ln-s1','ln-s2','ln-s3'].forEach(id=>setNode(id,null));
+  ['ll0','ll1','ll2','ll3'].forEach(id=>setLink(id,null));
+  ['lp0','lp1','lp2'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadge('lb0');hideBadge('lb1');
+  setPill('lPill','⚖️ Load Balancer — Click to simulate');
+  if(!silent)setStatus('lStat','👆 Click to simulate load balancing!');
+}
+
+// ══════════════════════════════════════
+// INIT ALL
+// ══════════════════════════════════════
+window.addEventListener('load',()=>{
+  initRouting();
+  initFW();
+  initTCP();
+  initDNS();
+  initLB();
+});
+window.addEventListener('resize',()=>{
+  initRouting();initFW();initTCP();initDNS();initLB();
+});
+</script>
+</body>
+</html>
