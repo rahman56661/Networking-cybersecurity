@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAN - Wide Area Network | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 10000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10%, 10%) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #e4e5e7 0%, #d8d7da 100%);
+            -webkit-background-clip: text;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* WAN Global Illustration */
+        .wan-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 650px;
+        }
+
+        .globe-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .globe {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.2));
+            border: 3px solid rgba(102, 126, 234, 0.5);
+            position: relative;
+            animation: rotateGlobe 20s linear infinite;
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes rotateGlobe {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .continent {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.4);
+            border-radius: 50%;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .continent:nth-child(1) {
+            width: 60px;
+            height: 50px;
+            top: 80px;
+            left: 40px;
+            border-radius: 50% 50% 30% 40%;
+        }
+
+        .continent:nth-child(2) {
+            width: 70px;
+            height: 60px;
+            top: 100px;
+            right: 50px;
+            border-radius: 60% 40% 50% 50%;
+        }
+
+        .continent:nth-child(3) {
+            width: 50px;
+            height: 55px;
+            bottom: 90px;
+            left: 60px;
+            border-radius: 40% 60% 50% 50%;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            animation: dataFlow 3s infinite;
+            transform-origin: left center;
+        }
+
+        @keyframes dataFlow {
+            0% { opacity: 0; width: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; width: 100%; }
+        }
+
+        .network-node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            animation: nodePulse 2s infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .node-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #667eea;
+            white-space: nowrap;
+            background: rgba(30, 30, 30, 0.9);
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        /* Satellite */
+        .satellite {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 50px;
+            right: 100px;
+            animation: orbitSatellite 15s linear infinite;
+        }
+
+        @keyframes orbitSatellite {
+            from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+
+        .satellite::before {
+            content: '🛰️';
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.6));
+        }
+
+        /* Boxes */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .info-box:hover {
+            background: rgba(102, 126, 234, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .info-box p {
+            color: #d0d0d0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .info-box ul {
+            margin: 10px 0 0 20px;
+            color: #d0d0d0;
+        }
+
+        .info-box li {
+            margin: 8px 0;
+        }
+
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p, .highlight-box ul {
+            color: #d0d0d0;
+        }
+
+        .highlight-box ul {
+            margin-left: 25px;
+        }
+
+        .highlight-box li {
+            margin: 10px 0;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .example-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .example-box p {
+            color: #d0d0d0;
+            margin: 10px 0;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Technology Cards */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tech-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .tech-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tech-card p {
+            color: #b0b0b0;
+            font-size: 0.93rem;
+            margin: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+        }
+
+        footer p {
+            color: #b0b0b0;
+            margin: 5px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .globe {
+                width: 200px;
+                height: 200px;
+            }
+
+            .wan-illustration {
+                min-height: 450px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="nav-btn">📚 Dashboard</a>
+                <!--<a href="what-is-network.html" class="nav-btn">🔍 Network Basics</a>
+                <a href="man.html" class="nav-btn">← MAN</a>-->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🌍 WAN - Wide Area Network</h1>
+                <p class="hero-subtitle">Connecting the World: Global Network Infrastructure</p>
+                <div>
+                    <span class="hero-badge">🌐 Global Coverage</span>
+                    <span class="hero-badge">⚡ High-Speed Backbone</span>
+                    <span class="hero-badge">🔒 Enterprise-Grade</span>
+                    <span class="hero-badge">☁️ Cloud Connected</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- What is WAN -->
+        <section class="section">
+            <h2>📖 What is a Wide Area Network (WAN)?</h2>
+            <p>
+                A <strong>Wide Area Network (WAN)</strong> is the largest type of computer network that spans vast geographical 
+                areas - covering cities, countries, or even continents. Unlike LANs (limited to buildings) or MANs (limited to 
+                cities), WANs connect networks across unlimited distances, making global communication possible.
+            </p>
+            <p>
+                The most famous example of a WAN is the <strong>Internet</strong> itself - a massive WAN connecting billions 
+                of devices worldwide. Corporate WANs connect company offices across different countries, allowing employees 
+                in New York, London, and Tokyo to share resources and communicate seamlessly.
+            </p>
+
+            <div class="highlight-box">
+                <h3>🎯 Simple Definition:</h3>
+                <p>
+                    <strong>WAN</strong> = A network that connects computers and LANs over large geographic distances (countries, 
+                    continents). It's the "highway system" of networking that enables global connectivity through various 
+                    technologies like fiber optic cables, satellites, and leased lines.
+                </p>
+            </div>
+
+            <div class="wan-illustration">
+                <div class="globe-container">
+                    <div class="satellite"></div>
+                    <div class="globe">
+                        <div class="continent"></div>
+                        <div class="continent"></div>
+                        <div class="continent"></div>
+                    </div>
+                    
+                    <!-- Network Nodes Around Globe -->
+                    <div class="network-node" style="top: 100px; left: 150px;">
+                        <span class="node-label">New York</span>
+                    </div>
+                    <div class="network-node" style="top: 120px; right: 180px;">
+                        <span class="node-label">London</span>
+                    </div>
+                    <div class="network-node" style="bottom: 150px; left: 200px;">
+                        <span class="node-label">São Paulo</span>
+                    </div>
+                    <div class="network-node" style="bottom: 130px; right: 160px;">
+                        <span class="node-label">Singapore</span>
+                    </div>
+                    <div class="network-node" style="top: 180px; right: 120px;">
+                        <span class="node-label">Tokyo</span>
+                    </div>
+                    <div class="network-node" style="bottom: 180px; right: 220px;">
+                        <span class="node-label">Sydney</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <h3 style="color: #667eea;">🌐 Global WAN Infrastructure</h3>
+                    <p style="color: #b0b0b0; margin-top: 10px;">
+                        WANs connect major cities worldwide through undersea fiber cables, satellites, and terrestrial links
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practical Understanding -->
+        <section class="section">
+            <h2>💡 Practical Understanding of WAN</h2>
+            
+            <h3>🏢 How WAN Works in Real Life:</h3>
+            <p>
+                Imagine a multinational company like Google, Amazon, or Microsoft with offices in 50+ countries. Each office 
+                has its own Local Area Network (LAN) connecting computers within that building. But how do employees in the 
+                US office access files from the Japan office? That's where WAN comes in!
+            </p>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>🔗 Connection Methods</h3>
+                    <p><strong>How WANs Connect:</strong></p>
+                    <ul>
+                        <li><strong>Fiber Optic Cables:</strong> Undersea and underground cables spanning thousands of miles</li>
+                        <li><strong>Satellite Links:</strong> For remote areas and backup connectivity</li>
+                        <li><strong>Leased Lines:</strong> Dedicated private connections between locations</li>
+                        <li><strong>MPLS Networks:</strong> Efficient routing for corporate traffic</li>
+                        <li><strong>VPN Tunnels:</strong> Encrypted connections over the public Internet</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>⚙️ Core Components</h3>
+                    <p><strong>Essential WAN Equipment:</strong></p>
+                    <ul>
+                        <li><strong>Routers:</strong> Direct traffic across different networks</li>
+                        <li><strong>Modems:</strong> Convert signals for transmission</li>
+                        <li><strong>Switches:</strong> Manage data flow at connection points</li>
+                        <li><strong>CSU/DSU:</strong> Interface between LAN and WAN</li>
+                        <li><strong>Edge Devices:</strong> Gateway between LAN and WAN</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>🌐 WAN Technologies</h3>
+                    <p><strong>Modern WAN Solutions:</strong></p>
+                    <ul>
+                        <li><strong>MPLS:</strong> Multi-Protocol Label Switching for enterprise</li>
+                        <li><strong>SD-WAN:</strong> Software-Defined WAN for flexibility</li>
+                        <li><strong>Frame Relay:</strong> Traditional packet switching (legacy)</li>
+                        <li><strong>ATM:</strong> Asynchronous Transfer Mode (legacy)</li>
+                        <li><strong>Metro Ethernet:</strong> High-speed WAN connectivity</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>📊 Speed & Performance</h3>
+                    <p><strong>Typical WAN Speeds:</strong></p>
+                    <ul>
+                        <li><strong>T1 Line:</strong> 1.544 Mbps (legacy)</li>
+                        <li><strong>T3 Line:</strong> 45 Mbps (legacy)</li>
+                        <li><strong>Metro Ethernet:</strong> 100 Mbps - 10 Gbps</li>
+                        <li><strong>MPLS:</strong> 10 Mbps - 100 Gbps</li>
+                        <li><strong>Fiber Backbone:</strong> Up to 400 Gbps+</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>🎯 Real-World Example: Banking Network</h4>
+                <p>
+                    <strong>Scenario:</strong> ICICI Bank has 5,000+ branches across India and offices in 19 countries.
+                </p>
+                <p>
+                    <strong>WAN Implementation:</strong>
+                </p>
+                <p>
+                    • <strong>Core Backbone:</strong> High-speed MPLS network connecting all major cities<br>
+                    • <strong>Branch Connectivity:</strong> Each branch connects to regional data centers via leased lines<br>
+                    • <strong>International Links:</strong> Undersea fiber cables connect to global offices<br>
+                    • <strong>Backup Links:</strong> Satellite connections for disaster recovery<br>
+                    • <strong>Security:</strong> Encrypted VPN tunnels for all data transmission<br>
+                    • <strong>Performance:</strong> Sub-100ms latency between major cities for real-time transactions
+                </p>
+                <p>
+                    <strong>Result:</strong> Customers can withdraw money in Mumbai using an account opened in Delhi, 
+                    with instant balance updates. International transfers happen in seconds, not days!
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔍 Key Characteristics of WAN:</h3>
+                <ul>
+                    <li><strong>Geographic Scope:</strong> Unlimited - can span entire planet</li>
+                    <li><strong>Ownership:</strong> Usually owned by telecom providers (Airtel, Jio, AT&T, Verizon)</li>
+                    <li><strong>Speed Range:</strong> 1 Mbps to 400+ Gbps depending on technology</li>
+                    <li><strong>Cost:</strong> Very expensive - monthly fees from ₹10,000 to ₹10,00,000+</li>
+                    <li><strong>Latency:</strong> Higher than LAN/MAN due to distance (50-500ms typical)</li>
+                    <li><strong>Reliability:</strong> 99.5-99.99% uptime with redundant paths</li>
+                    <li><strong>Topology:</strong> Mesh, hybrid, or hierarchical for redundancy</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of WAN</h2>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>1️⃣ Global Connectivity</h3>
+                    <p>
+                        <strong>Unlimited Geographic Reach:</strong> Connect offices, data centers, and users anywhere in the 
+                        world. No distance limitations - from neighboring cities to opposite sides of the planet.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Microsoft has 200+ data centers globally, all connected via WAN to serve 
+                        users with minimal latency.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>2️⃣ Centralized Resources</h3>
+                    <p>
+                        <strong>Unified Infrastructure:</strong> Host applications, databases, and services in central 
+                        locations while making them accessible globally. Reduces duplication and maintenance costs.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Netflix stores content in central servers and delivers to 190+ countries 
+                        via its global WAN infrastructure.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>3️⃣ Business Continuity</h3>
+                    <p>
+                        <strong>Disaster Recovery:</strong> Replicate data across multiple geographic locations. If one site 
+                        fails, operations continue from backup sites with minimal disruption.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> When Hurricane Sandy hit NYC, banks continued operations using backup data 
+                        centers in Chicago via WAN.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>4️⃣ Remote Work Enablement</h3>
+                    <p>
+                        <strong>Work from Anywhere:</strong> Employees can securely access company resources from home, 
+                        coffee shops, or while traveling. Essential for modern distributed teams.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> During COVID-19, companies like TCS enabled 400,000+ employees to work from 
+                        home using VPN over WAN.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>5️⃣ Scalability</h3>
+                    <p>
+                        <strong>Easy Expansion:</strong> Add new office locations to the network without redesigning the 
+                        entire infrastructure. Pay for bandwidth as you grow.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Amazon adds new fulfillment centers to its WAN within weeks as it expands 
+                        to new markets.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>6️⃣ Collaboration Tools</h3>
+                    <p>
+                        <strong>Real-Time Cooperation:</strong> Video conferencing, shared documents, and instant messaging 
+                        work seamlessly across continents. Global teams work as if they're in the same room.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Google Meet and Zoom rely on WAN infrastructure for HD video calls between 
+                        users worldwide.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>7️⃣ Cost Efficiency (Long-term)</h3>
+                    <p>
+                        <strong>Shared Infrastructure:</strong> While expensive upfront, WANs eliminate the need for duplicate 
+                        servers, software licenses, and IT staff at every location.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Instead of 100 email servers globally, a company runs one centralized system 
+                        accessible via WAN.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>8️⃣ Enhanced Security</h3>
+                    <p>
+                        <strong>Centralized Protection:</strong> Implement security policies, firewalls, and monitoring at 
+                        central points rather than securing each location independently.
+                    </p>
+                    <p style="margin-top: 10px; color: #667eea;">
+                        <strong>Example:</strong> Banks monitor all transactions through centralized security operations centers 
+                        connected via WAN.
+                    </p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🎯 Bottom Line on Advantages:</h3>
+                <p>
+                    WANs are essential for any organization operating across multiple locations. They enable modern business 
+                    models like cloud computing, e-commerce, remote work, and global collaboration. Without WANs, companies 
+                    would operate as isolated islands unable to share information efficiently. The Internet itself - the 
+                    world's largest WAN - has revolutionized how humanity communicates, works, and lives!
+                </p>
+            </div>
+        </section>
+
+        <!-- Disadvantages -->
+        <section class="section">
+            <h2>❌ Disadvantages of WAN</h2>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>1️⃣ High Cost</h3>
+                    <p>
+                        <strong>Expensive Infrastructure:</strong> Setting up WAN connections costs lakhs to crores. Monthly 
+                        bandwidth charges, equipment costs, and maintenance add up significantly.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> A dedicated 10 Gbps MPLS link between Mumbai and London can cost 
+                        ₹5-10 lakhs per month!
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>2️⃣ Complex Setup & Management</h3>
+                    <p>
+                        <strong>Technical Complexity:</strong> Designing, deploying, and managing WANs requires specialized 
+                        expertise. Troubleshooting issues across continents is challenging.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> Configuring routing protocols, VPNs, and QoS policies across a multi-country 
+                        WAN requires certified network engineers.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>3️⃣ Higher Latency</h3>
+                    <p>
+                        <strong>Speed of Light Limits:</strong> Data traveling thousands of kilometers experiences delay. 
+                        Even at fiber optic speeds, distance creates noticeable lag.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> A video call between India and USA has 200-300ms delay, causing slight 
+                        conversation lag.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>4️⃣ Security Vulnerabilities</h3>
+                    <p>
+                        <strong>Extended Attack Surface:</strong> More connection points mean more potential entry points for 
+                        hackers. Data traveling across public networks faces interception risks.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> In 2020, SolarWinds hackers compromised corporate WANs to access sensitive 
+                        government data.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>5️⃣ Bandwidth Limitations</h3>
+                    <p>
+                        <strong>Congestion Issues:</strong> WAN links have limited bandwidth shared by all users. High traffic 
+                        periods cause slowdowns and bottlenecks.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> During work hours, video conferences may buffer if many employees are 
+                        simultaneously accessing the WAN.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>6️⃣ Dependency on Providers</h3>
+                    <p>
+                        <strong>Vendor Lock-in:</strong> Organizations rely on telecom providers for connectivity. Service 
+                        quality, pricing, and availability are beyond their control.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> If AT&T has an outage, thousands of businesses lose connectivity with no 
+                        immediate alternative.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>7️⃣ Maintenance Challenges</h3>
+                    <p>
+                        <strong>Difficult Troubleshooting:</strong> Identifying and fixing issues across global networks is 
+                        time-consuming. Physical cable repairs may take days or weeks.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> When an undersea cable breaks, repairs require specialized ships and can 
+                        take 2-4 weeks.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>8️⃣ Lower Reliability Than LAN</h3>
+                    <p>
+                        <strong>More Points of Failure:</strong> WANs pass through multiple routers, switches, and carriers. 
+                        Any component failure disrupts connectivity.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> A router failure in London can disconnect offices in entire European region 
+                        until backup routes activate.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>9️⃣ Regulatory Complications</h3>
+                    <p>
+                        <strong>Cross-Border Rules:</strong> Different countries have different data privacy laws, encryption 
+                        requirements, and content restrictions.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> GDPR in Europe requires special handling of EU citizen data, complicating 
+                        WAN data flows to other countries.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🔟 Implementation Time</h3>
+                    <p>
+                        <strong>Slow Deployment:</strong> Getting WAN connections to new locations takes months. Requires 
+                        coordination with multiple providers and regulatory approvals.
+                    </p>
+                    <p style="margin-top: 10px; color: #f87171;">
+                        <strong>Example:</strong> Setting up a new international office with dedicated WAN links can take 
+                        6-12 months from request to activation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px; background: rgba(248, 113, 113, 0.1); border-left-color: #f87171;">
+                <h3 style="color: #f87171;">⚠️ Critical Considerations:</h3>
+                <p>
+                    While WANs are essential for global business, organizations must carefully weigh these disadvantages. 
+                    Many companies are adopting <strong>SD-WAN</strong> (Software-Defined WAN) and <strong>cloud-based</strong> 
+                    solutions to mitigate costs and complexity. Additionally, implementing <strong>hybrid WAN architectures</strong> 
+                    with multiple connectivity options (MPLS + Internet + 4G/5G) helps overcome single points of failure and 
+                    vendor dependency issues.
+                </p>
+            </div>
+        </section>
+
+        <!-- Real-World Examples -->
+        <section class="section">
+            <h2>🌟 Real-World Examples of WAN</h2>
+
+            <div class="example-box">
+                <h4>1. 🌐 The Internet - World's Largest WAN</h4>
+                <p>
+                    <strong>Description:</strong> The Internet is a massive global WAN connecting billions of devices across 
+                    every continent through undersea cables, satellites, and terrestrial fiber networks.
+                </p>
+                <p>
+                    <strong>Infrastructure:</strong>
+                    • 400+ undersea fiber optic cables spanning 1.3 million kilometers<br>
+                    • 5,000+ Internet Exchange Points (IXPs) worldwide<br>
+                    • Backbone operated by Tier 1 ISPs (AT&T, Verizon, NTT, Tata Communications)<br>
+                    • Satellite links for remote areas and maritime connectivity
+                </p>
+                <p>
+                    <strong>Scale:</strong> 5+ billion users, 15+ billion connected devices, transferring 150,000+ GB of data 
+                    per second globally!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>2. 🏦 Banking Networks - SWIFT & ATM Networks</h4>
+                <p>
+                    <strong>SWIFT (Society for Worldwide Interbank Financial Telecommunication):</strong> Global WAN connecting 
+                    11,000+ banks in 200+ countries for secure financial messaging and international transactions.
+                </p>
+                <p>
+                    <strong>How it works:</strong>
+                    • Banks send encrypted payment instructions over SWIFT's secure WAN<br>
+                    • Average 42 million messages per day<br>
+                    • Multi-layered security with hardware encryption<br>
+                    • Redundant data centers in USA, Switzerland, and Netherlands
+                </p>
+                <p>
+                    <strong>ATM Networks:</strong> When you withdraw cash in Chennai using an HDFC card from an SBI ATM, 
+                    that transaction travels through multiple WAN connections for authorization!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>3. ✈️ Airline Reservation Systems</h4>
+                <p>
+                    <strong>Example:</strong> Amadeus, Sabre, and Galileo - Global Distribution Systems (GDS) used by airlines worldwide.
+                </p>
+                <p>
+                    <strong>Network Architecture:</strong>
+                    • Connect 90,000+ travel agencies globally<br>
+                    • Process 850+ million booking transactions annually<br>
+                    • Real-time inventory updates across all connected airlines<br>
+                    • Sub-second response times despite global distribution
+                </p>
+                <p>
+                    <strong>Real-world impact:</strong> When you book a flight from Bangalore to Paris on MakeMyTrip, your request 
+                    travels via WAN to multiple airline systems, compares prices, checks seat availability, and confirms booking 
+                    - all within 2-3 seconds!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>4. 🏢 Corporate WANs - TCS, Infosys, Wipro</h4>
+                <p>
+                    <strong>Tata Consultancy Services (TCS):</strong> 600,000+ employees across 55 countries connected via 
+                    private WAN.
+                </p>
+                <p>
+                    <strong>Infrastructure Components:</strong>
+                    • MPLS backbone connecting all major offices<br>
+                    • SD-WAN for branch offices and remote locations<br>
+                    • VPN access for 400,000+ work-from-home employees<br>
+                    • Private cloud data centers in India, USA, UK, Australia<br>
+                    • 99.95% network uptime SLA
+                </p>
+                <p>
+                    <strong>Use cases:</strong> Developers in Hyderabad collaborate with teams in New York on the same codebase, 
+                    video conferences happen seamlessly, and internal applications are accessed identically from anywhere in the world.
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>5. 📺 Content Delivery Networks (CDN)</h4>
+                <p>
+                    <strong>Example:</strong> Netflix, YouTube, Amazon CloudFront use WAN-based CDN infrastructure.
+                </p>
+                <p>
+                    <strong>How Netflix CDN works:</strong>
+                    • Original content stored in central data centers (WAN backbone)<br>
+                    • Content replicated to 17,000+ servers in 158 countries<br>
+                    • ISPs cache popular shows locally to reduce WAN traffic<br>
+                    • Viewers stream from nearest edge server
+                </p>
+                <p>
+                    <strong>Performance:</strong> Over 230 million subscribers streaming HD/4K video simultaneously, consuming 
+                    15% of global Internet bandwidth - all powered by massive WAN infrastructure!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>6. 🛒 E-Commerce Platforms</h4>
+                <p>
+                    <strong>Amazon's Global WAN:</strong> Connects fulfillment centers, data centers, and retail stores worldwide.
+                </p>
+                <p>
+                    <strong>Network Features:</strong>
+                    • 175+ fulfillment centers globally connected via WAN<br>
+                    • Real-time inventory synchronization<br>
+                    • Order routing to nearest warehouse<br>
+                    • AWS backbone for cloud services (400+ Gbps capacity)<br>
+                    • Sub-100ms latency for database queries across regions
+                </p>
+                <p>
+                    <strong>Customer experience:</strong> You order a product in Mumbai, Amazon's WAN checks inventory across 
+                    India, routes order to Pune warehouse, updates stock levels globally, and sends confirmation - all in 
+                    milliseconds!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>7. 🏥 Healthcare Networks - Telemedicine</h4>
+                <p>
+                    <strong>Apollo Hospitals WAN:</strong> Connects 70+ hospitals across India, Asia, and Middle East.
+                </p>
+                <p>
+                    <strong>Clinical Applications:</strong>
+                    • Shared Electronic Health Records (EHR) accessible from any hospital<br>
+                    • Real-time medical imaging transfer (X-rays, CT scans, MRIs)<br>
+                    • Telemedicine consultations between specialists and remote patients<br>
+                    • Emergency response coordination across facilities<br>
+                    • HIPAA-compliant encrypted data transmission
+                </p>
+                <p>
+                    <strong>Life-saving impact:</strong> A patient in Visakhapatnam can have their CT scan reviewed by a 
+                    specialist in Chennai within minutes via WAN, enabling faster diagnosis and treatment!
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4>8. 🎓 Educational Networks - Distance Learning</h4>
+                <p>
+                    <strong>NPTEL (National Programme on Technology Enhanced Learning):</strong> IIT/IISc initiative delivering 
+                    online courses via WAN infrastructure.
+                </p>
+                <p>
+                    <strong>Technical Setup:</strong>
+                    • Video lectures hosted on central servers<br>
+                    • WAN distribution to 1,000+ colleges via NKN (National Knowledge Network)<br>
+                    • Live streaming of classes to remote students<br>
+                    • 3 million+ registered learners accessing content simultaneously<br>
+                    • Bandwidth optimization for rural connectivity
+                </p>
+                <p>
+                    <strong>Impact:</strong> A student in a remote Assam village can attend a live quantum physics lecture by 
+                    an IIT professor in Delhi, ask questions in real-time, and submit assignments - all possible through WAN!
+                </p>
+            </div>
+
+            <div class="tech-grid" style="margin-top: 40px;">
+                <div class="tech-card">
+                    <div class="tech-icon">🏪</div>
+                    <h4>Retail Chains</h4>
+                    <p>Reliance, DMart, Walmart connect thousands of stores via WAN for inventory, sales, and payment processing</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🏭</div>
+                    <h4>Manufacturing</h4>
+                    <p>Maruti Suzuki coordinates production across plants in Haryana, Gujarat using WAN for supply chain</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🚛</div>
+                    <h4>Logistics</h4>
+                    <p>FedEx, DHL track millions of shipments globally in real-time through WAN-connected systems</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">⚡</div>
+                    <h4>Smart Grids</h4>
+                    <p>Power companies use WAN to monitor and control electricity distribution across cities and states</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🎯 Common Thread:</h3>
+                <p>
+                    All these examples share common WAN characteristics: <strong>geographic distribution, centralized data/services, 
+                    real-time access requirements,</strong> and <strong>mission-critical reliability</strong>. Modern society depends 
+                    on WAN infrastructure for finance, commerce, healthcare, education, entertainment, and communication. Without 
+                    WANs, our globalized, interconnected world simply wouldn't function!
+                </p>
+            </div>
+        </section>
+
+        <!-- WAN Technologies -->
+        <section class="section">
+            <h2>⚙️ WAN Technologies & Protocols</h2>
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🔀</div>
+                    <h4>MPLS</h4>
+                    <p>Multi-Protocol Label Switching - Fast, reliable routing used by enterprises for predictable performance</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">☁️</div>
+                    <h4>SD-WAN</h4>
+                    <p>Software-Defined WAN - Modern, flexible solution using Internet + MPLS with intelligent traffic routing</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🔒</div>
+                    <h4>VPN</h4>
+                    <p>Virtual Private Network - Encrypted tunnels over public Internet for secure remote access</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🌊</div>
+                    <h4>Leased Lines</h4>
+                    <p>Dedicated point-to-point connections with guaranteed bandwidth and low latency</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📡</div>
+                    <h4>Satellite</h4>
+                    <p>Coverage for remote areas where fiber isn't available - higher latency but global reach</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📶</div>
+                    <h4>4G/5G</h4>
+                    <p>Cellular WAN for mobile connectivity and backup links with increasing speeds</p>
+                    </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🚀 Future Trend - SD-WAN:</h3>
+                <p>
+                    Traditional MPLS is expensive and rigid. <strong>SD-WAN</strong> is revolutionizing WAN by:
+                </p>
+                <ul>
+                    <li>Using multiple connection types (MPLS + Internet + LTE) intelligently</li>
+                    <li>Automatically routing critical traffic over best path</li>
+                    <li>Reducing costs by 30-50% compared to pure MPLS</li>
+                    <li>Enabling cloud-first architectures</li>
+                    <li>Simplifying management through centralized software control</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    <strong>Adoption:</strong> 90% of enterprises are expected to deploy SD-WAN by 2025!
+                </p>
+            </div>
+        </section>
+
+        <!-- Network Comparison -->
+        <section class="section">
+            <h2>📊 Network Type Comparison</h2>
+            <p>Understanding how WAN fits into the broader network ecosystem:</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>PAN</th>
+                        <th>LAN</th>
+                        <th>MAN</th>
+                        <th>WAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Full Form</strong></td>
+                        <td>Personal Area Network</td>
+                        <td>Local Area Network</td>
+                        <td>Metropolitan Area Network</td>
+                        <td>Wide Area Network</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Geographic Area</strong></td>
+                        <td>Within 10 meters</td>
+                        <td>Within 1-2 km</td>
+                        <td>Within 5-50 km (city)</td>
+                        <td>Unlimited (global)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>1-25 Mbps</td>
+                        <td>100 Mbps - 10 Gbps</td>
+                        <td>10 Gbps - 100 Gbps</td>
+                        <td>1 Mbps - 400 Gbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technology</strong></td>
+                        <td>Bluetooth, USB, NFC</td>
+                        <td>Ethernet, Wi-Fi</td>
+                        <td>Fiber optic (SONET/Metro Ethernet)</td>
+                        <td>Fiber, Satellite, MPLS, SD-WAN</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Topology</strong></td>
+                        <td>Star (personal)</td>
+                        <td>Star, Tree</td>
+                        <td>Ring, Mesh</td>
+                        <td>Mesh, Hybrid, Hierarchical</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ownership</strong></td>
+                        <td>Individual</td>
+                        <td>Individual/Organization</td>
+                        <td>ISP/Telecom/Large org</td>
+                        <td>Telecom companies (AT&T, Verizon, Airtel)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Setup Cost</strong></td>
+                        <td>Very Low ($0-$50)</td>
+                        <td>Low-Medium ($100-$10K)</td>
+                        <td>Very High ($100K-$10M+)</td>
+                        <td>Extremely High ($500K-$100M+)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monthly Cost</strong></td>
+                        <td>Free</td>
+                        <td>₹500-₹5,000</td>
+                        <td>₹50,000-₹5,00,000</td>
+                        <td>₹1,00,000-₹50,00,000+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Latency</strong></td>
+                        <td>< 10 ms</td>
+                        <td>< 2 ms</td>
+                        <td>2-10 ms</td>
+                        <td>50-500 ms (distance dependent)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td>Minimal</td>
+                        <td>Low-Medium</td>
+                        <td>High (Professional required)</td>
+                        <td>Very High (24/7 NOC teams)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Users</strong></td>
+                        <td>1 person</td>
+                        <td>10-1,000</td>
+                        <td>1,000-1,000,000+</td>
+                        <td>Millions to Billions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reliability</strong></td>
+                        <td>Medium</td>
+                        <td>High (99%+)</td>
+                        <td>Very High (99.9%+)</td>
+                        <td>High (99.5-99.99%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error Rate</strong></td>
+                        <td>Low-Medium</td>
+                        <td>Very Low</td>
+                        <td>Very Low</td>
+                        <td>Low (improves with fiber)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deployment Time</strong></td>
+                        <td>Minutes</td>
+                        <td>Hours-Days</td>
+                        <td>Months-Years</td>
+                        <td>Months-Years (international)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security Level</strong></td>
+                        <td>Low-Medium</td>
+                        <td>High (controllable)</td>
+                        <td>Very High</td>
+                        <td>Medium-High (VPN recommended)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>Personal devices</td>
+                        <td>Office/Home/Building</td>
+                        <td>City-wide services</td>
+                        <td>Global connectivity, multi-site orgs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example</strong></td>
+                        <td>Phone to earbuds</td>
+                        <td>Office Wi-Fi</td>
+                        <td>Cable TV network, University campus</td>
+                        <td>Internet, Corporate global network</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>💡 The Network Hierarchy:</h3>
+                <p>
+                    Think of networks as building blocks: <strong>PANs</strong> connect your personal devices (phone, watch, 
+                    earbuds) → Multiple PANs connect to a <strong>LAN</strong> in your office → Multiple LANs connect through 
+                    a <strong>MAN</strong> across the city → Multiple MANs connect through <strong>WANs</strong> globally. 
+                    Each level serves a specific purpose and geographic scope. <strong>WAN is the top layer that enables 
+                    worldwide connectivity</strong>, making the Internet and global business possible!
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>WAN = Global:</strong> Covers unlimited geographic area - cities, countries, continents, entire planet</li>
+                    <li><strong>Largest Network Type:</strong> The Internet is the world's biggest WAN connecting billions of devices</li>
+                    <li><strong>Multiple Technologies:</strong> Uses fiber optics, satellites, leased lines, MPLS, SD-WAN, VPN for connectivity</li>
+                    <li><strong>Owned by Telecoms:</strong> Infrastructure owned and operated by service providers like Airtel, AT&T, Verizon</li>
+                    <li><strong>Common Examples:</strong> Internet, corporate networks, banking systems, airline reservation systems</li>
+                    <li><strong>Mesh/Hierarchical Topology:</strong> Redundant paths across multiple carriers and routes for reliability</li>
+                    <li><strong>High Latency:</strong> Distance creates delay (50-500ms) - slower than LAN/MAN but acceptable for most uses</li>
+                    <li><strong>Very Expensive:</strong> Costs lakhs to crores for setup and ongoing bandwidth charges</li>
+                    <li><strong>Business Critical:</strong> Enables global commerce, finance, communication, cloud computing, remote work</li>
+                    <li><strong>Future of Connectivity:</strong> SD-WAN, 5G, and satellite mega-constellations making WAN faster and cheaper</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🌍 Why WAN Matters:</h3>
+                <p>
+                    Without WAN, there would be no Internet, no international banking, no global e-commerce, no video calls 
+                    across continents, no cloud computing, and no remote work. WAN is the foundation of our modern connected 
+                    world. Every time you send a WhatsApp message, stream Netflix, make an online payment, or attend a Zoom 
+                    meeting, you're using WAN infrastructure. Understanding WAN helps you appreciate the incredible engineering 
+                    that makes our digital lifestyle possible! 🚀
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Progress bar on scroll
+        window.addEventListener('scroll', function() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Interactive hover effects
+        document.querySelectorAll('.network-node, .tech-card, .info-box').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05) translateY(-5px)';
+            });
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ring Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .navbar {
+            background: rgba(30,30,30,0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102,126,234,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #667eea; }
+        .section p  { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        .animation-box {
+            background: rgba(15,15,25,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102,126,234,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== RING TOPOLOGY CANVAS ===== */
+        .ring-canvas {
+            position: relative;
+            width: 100%;
+            height: 440px;
+        }
+        .ring-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* Ring cable paths */
+        .ring-cable {
+            fill: none;
+            stroke: rgba(102,126,234,0.3);
+            stroke-width: 3.5;
+            stroke-linecap: round;
+        }
+        .ring-cable.active-cw  { stroke: #00ff88; stroke-width: 4.5; filter: drop-shadow(0 0 7px #00ff88); }
+        .ring-cable.active-ccw { stroke: #a78bfa; stroke-width: 4.5; filter: drop-shadow(0 0 7px #a78bfa); }
+        .ring-cable.broken     { stroke: #ef4444; stroke-width: 3; stroke-dasharray: 7 5; filter: drop-shadow(0 0 5px #ef4444); }
+        .ring-cable.healed     { stroke: #f8b400; stroke-width: 4; filter: drop-shadow(0 0 7px #f8b400); }
+        .ring-cable.idle       { stroke: rgba(102,126,234,0.18); }
+
+        /* Token circle traveling on ring */
+        .ring-token {
+            r: 11;
+            opacity: 0;
+        }
+
+        /* Ring devices */
+        .ring-device {
+            position: absolute;
+            width: 68px;
+            height: 68px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            z-index: 20;
+            box-shadow: 0 0 18px rgba(102,126,234,0.45);
+            border: 2px solid rgba(102,126,234,0.35);
+            transition: all 0.3s;
+            transform: translate(-50%, -50%);
+            cursor: default;
+        }
+        .ring-device:hover { box-shadow: 0 0 32px rgba(102,126,234,0.85); transform: translate(-50%,-50%) scale(1.08); }
+        .ring-device.dev-hold    { border-color:#00ff88; box-shadow:0 0 45px rgba(0,255,136,0.9); animation:devHold 0.55s infinite; }
+        .ring-device.dev-send    { border-color:#00ccff; box-shadow:0 0 40px rgba(0,204,255,0.9); animation:devSend 0.55s infinite; }
+        .ring-device.dev-recv    { border-color:#764ba2; box-shadow:0 0 40px rgba(118,75,162,0.9); animation:devRecv 0.55s infinite; }
+        .ring-device.dev-relay   { border-color:#a78bfa; box-shadow:0 0 30px rgba(167,139,250,0.7); animation:devRelay 0.55s infinite; }
+        .ring-device.dev-fail    { background:linear-gradient(135deg,#374151,#1f2937); border-color:#6b7280; box-shadow:none; opacity:0.4; }
+        .ring-device.dev-recover { border-color:#f8b400; box-shadow:0 0 40px rgba(248,180,0,0.9); animation:devHeal 0.55s infinite; }
+
+        .rdev-label {
+            position: absolute;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Token badge floating near hub */
+        .token-badge {
+            position: absolute;
+            background: linear-gradient(135deg,#00ff88,#00ccff);
+            color: #000;
+            font-size: 0.62rem;
+            font-weight: bold;
+            padding: 3px 9px;
+            border-radius: 12px;
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 0 10px rgba(0,255,136,0.7);
+            transition: opacity 0.3s;
+        }
+
+        /* Direction indicator */
+        .direction-badge {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: rgba(102,126,234,0.15);
+            border: 1px solid rgba(102,126,234,0.35);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            color: #a5b4fc;
+        }
+
+        /* Controls */
+        .ring-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .ring-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .ring-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .ring-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .ring-btn.yellow { background: linear-gradient(135deg, #f59e0b, #b45309); }
+        .ring-btn.red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .ring-btn.green  { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .ring-btn.ghost  { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+
+        /* Ring mode toggle */
+        .ring-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ring-toggle span { color: #888; font-size: 0.9rem; }
+        .rtoggle-btn {
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.4);
+            background: rgba(102,126,234,0.08);
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .rtoggle-btn.active {
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 10px rgba(102,126,234,0.4);
+        }
+
+        .ring-status {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4   { color: #667eea; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p    { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card { border-radius: 12px; padding: 25px; border: 1px solid; }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        .highlight-box {
+            background: rgba(102,126,234,0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(102,126,234,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(102,126,234,0.2); color: #667eea; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(102,126,234,0.08); }
+
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#667eea,#764ba2); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#667eea; border:2px solid #764ba2; box-shadow:0 0 10px rgba(102,126,234,0.6); }
+        .timeline-item h4 { color: #a5b4fc; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p  { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        footer { background: rgba(30,30,30,0.95); text-align: center; padding: 30px 20px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); z-index:9999; width:0%; transition:width 0.2s; }
+
+        /* Keyframes */
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes fadeInUp   { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes devHold    { 0%,100%{box-shadow:0 0 25px rgba(0,255,136,0.6);}50%{box-shadow:0 0 55px rgba(0,255,136,1);} }
+        @keyframes devSend    { 0%,100%{box-shadow:0 0 25px rgba(0,204,255,0.6);}50%{box-shadow:0 0 55px rgba(0,204,255,1);} }
+        @keyframes devRecv    { 0%,100%{box-shadow:0 0 25px rgba(118,75,162,0.7);}50%{box-shadow:0 0 55px rgba(118,75,162,1);} }
+        @keyframes devRelay   { 0%,100%{box-shadow:0 0 20px rgba(167,139,250,0.5);}50%{box-shadow:0 0 40px rgba(167,139,250,0.9);} }
+        @keyframes devHeal    { 0%,100%{box-shadow:0 0 25px rgba(248,180,0,0.6);}50%{box-shadow:0 0 55px rgba(248,180,0,1);} }
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .section{padding:25px;}
+            .ring-canvas{height:360px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>🔄 Ring Topology</h1>
+        <p class="hero-subtitle">Every Device Connected in a Closed Loop — Data Travels the Ring with a Token!</p>
+        <span class="hero-badge">📡 OSI Layer 1 — Physical Topology | Token Ring & FDDI</span>
+    </section>
+
+    <!-- ============ LIVE ANIMATION ============ -->
+    <section class="section" id="animation">
+        <h2>⚡ Ring Topology — Live Interactive Visualization</h2>
+        <p>
+            Watch how a <strong>Token</strong> travels around the ring and how data passes hop-by-hop through each device.
+            Switch between <strong>Single Ring</strong> and <strong>Dual Ring</strong> mode, then simulate Token Passing,
+            a Device Failure, and the magical <strong>Self-Healing</strong> recovery of Dual Ring!
+        </p>
+
+        <!-- Single / Dual Ring toggle -->
+        <div class="ring-toggle">
+            <span>Ring Type:</span>
+            <button class="rtoggle-btn active" id="togSingle" onclick="setRingMode('single')">🔄 Single Ring</button>
+            <button class="rtoggle-btn" id="togDual"   onclick="setRingMode('dual')">🔁 Dual Ring (FDDI)</button>
+            <span id="ringModeLabel" style="color:#a5b4fc;font-size:0.85rem;margin-left:8px;">Single Ring: One direction, Token controls access</span>
+        </div>
+
+        <div class="animation-box">
+            <!-- Direction badge -->
+            <div class="direction-badge" id="dirBadge">🔄 Clockwise</div>
+
+            <div class="ring-canvas" id="ringCanvas">
+                <svg class="ring-svg" id="ringSvg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet">
+                    <!-- Outer ring cable (clockwise) -->
+                    <circle class="ring-cable" id="outerRing" cx="400" cy="220" r="160"/>
+                    <!-- Inner ring cable (counter-clockwise, dual mode) -->
+                    <circle class="ring-cable idle" id="innerRing" cx="400" cy="220" r="135" stroke-dasharray="8 5"/>
+
+                    <!-- Arc segments per device pair (for per-link highlighting) -->
+                    <!-- These will be drawn dynamically via JS -->
+
+                    <!-- Token dots (multiple for multi-hop) -->
+                    <circle class="ring-token" id="tok0" fill="#00ff88" filter="url(#glow-green)"/>
+                    <circle class="ring-token" id="tok1" fill="#00ff88" filter="url(#glow-green)"/>
+                    <circle class="ring-token" id="tok2" fill="#a78bfa" filter="url(#glow-purple)"/>
+                    <circle class="ring-token" id="tok3" fill="#f8b400" filter="url(#glow-gold)"/>
+
+                    <!-- SVG filters -->
+                    <defs>
+                        <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="4" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="4" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="4" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                </svg>
+
+                <!-- 6 ring devices — placed by JS -->
+                <div class="ring-device" id="rdev0">💻<div class="rdev-label" id="rlabel0">PC - 1</div></div>
+                <div class="ring-device" id="rdev1">💻<div class="rdev-label" id="rlabel1">PC - 2</div></div>
+                <div class="ring-device" id="rdev2">🖥️<div class="rdev-label" id="rlabel2">PC - 3</div></div>
+                <div class="ring-device" id="rdev3">🖥️<div class="rdev-label" id="rlabel3">Server</div></div>
+                <div class="ring-device" id="rdev4">💻<div class="rdev-label" id="rlabel4">PC - 4</div></div>
+                <div class="ring-device" id="rdev5" style="background:linear-gradient(135deg,#764ba2,#667eea);">🖨️<div class="rdev-label" id="rlabel5">Printer</div></div>
+
+                <!-- Token badge -->
+                <div class="token-badge" id="tokenBadge">🪙 TOKEN</div>
+
+            </div><!-- ring-canvas -->
+        </div><!-- animation-box -->
+
+        <div class="ring-controls">
+            <button class="ring-btn"        id="btnToken"  onclick="ringDemo('token')">🪙 Token Passing (Idle)</button>
+            <button class="ring-btn"        id="btnData"   onclick="ringDemo('data')">▶ PC-1 → Server (Data)</button>
+            <button class="ring-btn yellow" id="btnFail"   onclick="ringDemo('fail')">💥 Device Failure</button>
+            <button class="ring-btn green"  id="btnHeal"   onclick="ringDemo('heal')">🔁 Dual Ring Self-Heal</button>
+            <button class="ring-btn ghost"  onclick="ringReset()">↺ Reset</button>
+            <div class="ring-status" id="ringStatus">👆 Click a button above to start the simulation!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Token Passing:</strong> A special "Token" packet circulates the ring continuously — only the device holding the token can transmit data</li>
+                <li><strong>Hop-by-Hop Relay:</strong> Data doesn't skip devices — it passes THROUGH each device node-by-node until it reaches the destination</li>
+                <li><strong>No Collisions:</strong> Only ONE device can transmit at a time (token holder) — so collisions are physically impossible!</li>
+                <li><strong>Single Ring Failure:</strong> If one device or cable breaks → entire ring communication halts</li>
+                <li><strong>Dual Ring (FDDI):</strong> Two rings run in opposite directions — if primary ring breaks, secondary ring activates automatically (self-healing!)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============ WHAT IS RING TOPOLOGY ============ -->
+    <section class="section" id="what">
+        <h2>🔍 What is Ring Topology?</h2>
+        <p>
+            <strong>Ring Topology</strong> is a network configuration where every device is connected to exactly two
+            neighbouring devices — forming a closed circular loop. Data travels around this ring in one direction
+            (unidirectional) or both directions (bidirectional in Dual Ring), passing through each device along the way
+            until it reaches its destination.
+        </p>
+        <p>
+            The key defining feature is the <strong>Token Passing Protocol</strong> — a special control packet called
+            a "Token" continuously circulates around the ring. A device must capture this token before it is allowed
+            to transmit data. This eliminates collisions completely, making Ring Topology highly predictable and fair.
+        </p>
+
+        <div class="example-box">
+            <strong>📡 Simple Analogy — The Speaking Stick! 🪃</strong><br><br>
+            Imagine people sitting in a circle for a group discussion.<br>
+            There is ONE speaking stick (the Token) being passed around the circle.<br>
+            Only the person HOLDING the stick can speak (transmit data).<br>
+            After speaking, they pass the stick to the next person (release token).<br>
+            The stick always travels in one direction — clockwise around the circle.<br><br>
+            Everyone gets a fair turn. No two people talk at the same time. No chaos!<br>
+            That's EXACTLY how Ring Topology Token Passing works! 🎯
+        </div>
+
+        <h3>🔧 Core Components of Ring Topology</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🔄</span>
+                <h4>Ring Cable (Loop)</h4>
+                <p>A closed loop of cable connecting all devices in a circle. Each device has an IN port and an OUT port. Data enters from one side, the device reads/relays it, and it exits the other side. Typically uses coaxial, twisted-pair, or fiber optic cables.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🪙</span>
+                <h4>Token (Control Packet)</h4>
+                <p>A small, special 3-byte control frame that circulates continuously around the ring. It signals which device has permission to transmit. A "free token" means the ring is idle. A "busy token" means data is currently being transmitted by some device.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">💻</span>
+                <h4>Nodes / Ring Interfaces</h4>
+                <p>Each device (computer, server, printer) connects to the ring via a special <strong>Ring Interface Card (RIC)</strong> or <strong>Token Ring NIC</strong>. The NIC actively participates in the ring — it reads every frame and relays it forward if not the destination.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔁</span>
+                <h4>MAU / MSAU (Multistation Access Unit)</h4>
+                <p>In Token Ring (IEEE 802.5), a physical hub called MAU (or MSAU) is used. Devices connect to the MAU via cables, but internally the MAU creates a logical ring path. If a device fails, the MAU bypasses it automatically — keeping the ring intact.</p>
+            </div>
+        </div>
+
+        <h3>📶 Token Passing Protocol — Step by Step</h3>
+        <div class="example-box">
+            <strong>PC-1 wants to send data to Server — How Token Ring handles it:</strong><br><br>
+            <strong>Step 1 — Wait for Token:</strong> PC-1 monitors the ring. It waits until the free Token arrives at its port.<br>
+            <strong>Step 2 — Capture Token:</strong> PC-1 captures the free Token and marks it as "busy" (token busy = ring in use).<br>
+            <strong>Step 3 — Transmit Data:</strong> PC-1 appends its data frame to the busy token and releases it onto the ring.<br>
+            <strong>Step 4 — Relay by Nodes:</strong> PC-2 receives frame → reads Dst MAC → not for it → relays it forward. PC-3 same. PC-4 same.<br>
+            <strong>Step 5 — Destination Reads:</strong> Server receives frame → Dst MAC matches → copies data into its buffer → marks frame as "read" → relays it forward.<br>
+            <strong>Step 6 — Frame Returns:</strong> The frame travels full circle back to PC-1 (original sender).<br>
+            <strong>Step 7 — Release Token:</strong> PC-1 verifies the frame came back correctly → removes it from ring → releases a new FREE Token for next device.<br>
+            <strong>Step 8 — Next Device:</strong> PC-2 catches the free token → its turn to transmit. And so it goes round and round! ♻️
+        </div>
+
+        <h3>🔁 Single Ring vs Dual Ring (FDDI)</h3>
+        <div class="adv-grid">
+            <div class="info-card" style="border-color:rgba(102,126,234,0.5);">
+                <span class="info-card-icon">🔄</span>
+                <h4>Single Ring (Token Ring)</h4>
+                <p>
+                    One ring, one direction. Used in <strong>IBM Token Ring (IEEE 802.5)</strong>.<br><br>
+                    <strong>Speed:</strong> 4 Mbps or 16 Mbps<br>
+                    <strong>Cable:</strong> Shielded Twisted Pair (STP) or UTP<br>
+                    <strong>Failure:</strong> One break = entire ring down<br>
+                    <strong>MAU:</strong> Bypasses failed devices automatically<br>
+                    <strong>Status:</strong> 🔴 Obsolete (replaced by Ethernet)
+                </p>
+            </div>
+            <div class="info-card" style="border-color:rgba(118,75,162,0.5);">
+                <span class="info-card-icon">🔁</span>
+                <h4>Dual Ring — FDDI</h4>
+                <p>
+                    Two rings running in OPPOSITE directions simultaneously. Used in <strong>FDDI (Fiber Distributed Data Interface)</strong>.<br><br>
+                    <strong>Speed:</strong> 100 Mbps<br>
+                    <strong>Cable:</strong> Fiber optic (multi-mode or single-mode)<br>
+                    <strong>Failure:</strong> Primary ring breaks → Secondary ring wraps around break → Self-heals! ✅<br>
+                    <strong>Max Distance:</strong> 200 km total ring, 2 km between nodes<br>
+                    <strong>Status:</strong> 🟡 Legacy — used in MANs and backbone networks
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ADVANTAGES & DISADVANTAGES ============ -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Ring Topology has unique strengths — particularly the elimination of collisions — but its failure behaviour is a major concern.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>Zero collisions — token prevents simultaneous transmission</li>
+                    <li>Fair access — every device gets equal turn via token</li>
+                    <li>Performs well under heavy network load</li>
+                    <li>Predictable and deterministic latency</li>
+                    <li>No central device required (no hub/switch)</li>
+                    <li>Easy to detect which node is faulty</li>
+                    <li>Dual Ring (FDDI) offers self-healing capability</li>
+                    <li>Good for time-sensitive industrial applications</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Single break in cable = entire ring fails</li>
+                    <li>Adding/removing devices disrupts entire network</li>
+                    <li>Slower than Star Topology for small networks</li>
+                    <li>Data must hop through every device (latency)</li>
+                    <li>More complex to troubleshoot than Star</li>
+                    <li>Token Ring hardware is expensive and rare</li>
+                    <li>Performance drops as more devices join</li>
+                    <li>Largely obsolete for LAN use cases</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 Why Ring Topology Lost to Star Ethernet:</strong> Token Ring was actually more efficient than early Ethernet
+            under heavy load (no collisions). But when switched Ethernet arrived in the 1990s with dedicated collision domains per port,
+            Ethernet matched Token Ring's performance while being cheaper, faster (100Mbps vs 16Mbps), and easier to manage.
+            By 2000, Token Ring was effectively dead for LAN use — but the <em>concept</em> lives on in industrial and metropolitan networks.
+        </div>
+    </section>
+
+    <!-- ============ REAL WORLD EXAMPLES ============ -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Ring Topology was once a serious contender to Ethernet. Today it lives on in several critical 
+            modern technologies — some of which you use every day without knowing!
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏢</span>
+                <h4>IBM Token Ring (1980s–90s Office)</h4>
+                <p>IBM dominated corporate networking in the 1980s with Token Ring (IEEE 802.5). Banks, insurance companies, and hospitals used Token Ring LANs because the guaranteed, collision-free access was ideal for transaction processing. IBM mainframes connected this way.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌆</span>
+                <h4>FDDI — Metropolitan Area Networks</h4>
+                <p>FDDI (Fiber Distributed Data Interface) used Dual Ring at 100 Mbps over fiber optic. It connected entire city-wide networks — linking multiple buildings across a university campus or downtown business district. FDDI was the MAN backbone of the 1990s.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌍</span>
+                <h4>SONET / SDH — Internet Backbone</h4>
+                <p>The internet's fiber optic backbone runs on <strong>SONET</strong> (Synchronous Optical Network) — a Ring Topology! Major ISPs and telecommunications carriers use SONET rings at speeds up to 40 Gbps. If a fiber is cut, traffic automatically reroutes around the ring within 50ms.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏭</span>
+                <h4>PROFIBUS / Industrial Networks</h4>
+                <p>Factory automation systems use ring topology for deterministic timing. In car manufacturing plants (Toyota, Volkswagen), robotic arms, sensors, and PLCs on the production line are connected in industrial rings — guaranteed response times are critical for safety.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">⚡</span>
+                <h4>Power Grid Smart Networks</h4>
+                <p>Electrical utilities use ring topology for their <strong>SCADA</strong> (Supervisory Control and Data Acquisition) systems. Substations, transformers, and smart meters form a ring network so that if one link fails, the control system can still reach all devices via the other path.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🚉</span>
+                <h4>Railway & Metro Signalling</h4>
+                <p>London Underground, Delhi Metro, and many rail networks use ring topology for signalling systems. A Dual Ring ensures that even if one cable is cut (during maintenance or accident), trains can still receive speed and stop signals through the secondary ring — safety critical!</p>
+            </div>
+        </div>
+
+        <h3>📅 Historical Journey of Ring Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1969 — First Ring Network Concept</h4>
+                <p>The concept of a ring network with token passing was first proposed at Cambridge University. The "Cambridge Ring" was one of the earliest local area network designs, predating both Ethernet and Token Ring by nearly a decade.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1984 — IBM Token Ring Launched</h4>
+                <p>IBM introduced Token Ring at 4 Mbps (later 16 Mbps). It became the dominant corporate LAN technology in the mid-1980s. Major enterprises preferred it over Ethernet because the token-passing mechanism guaranteed fair, collision-free access — crucial for banking and finance.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1986 — IEEE 802.5 Standard Published</h4>
+                <p>Token Ring officially standardized under IEEE 802.5. This allowed other vendors to build compatible hardware, growing the ecosystem. IBM's MAU (Multistation Access Unit) became the standard way to connect Token Ring devices with automatic bypass for failed nodes.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990 — FDDI at 100 Mbps</h4>
+                <p>FDDI (Fiber Distributed Data Interface) introduced Dual Ring at 100 Mbps — revolutionary speed for the time. Campus networks, ISP backbones, and government networks adopted FDDI. The self-healing Dual Ring made it ideal for critical infrastructure.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1995–2000 — Ethernet Kills Token Ring</h4>
+                <p>Fast Ethernet (100 Mbps) and switched Ethernet eliminated Token Ring's performance advantage. Ethernet was cheaper, faster to install, and by now collision-free (with switches). IBM itself abandoned Token Ring development. By 2000, new Token Ring installations virtually ceased.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — Lives on in Critical Infrastructure</h4>
+                <p>SONET/SDH rings still carry international internet traffic. Industrial PROFINET and EtherNet/IP use ring topology for deterministic manufacturing networks. The concept of a resilient, self-healing ring remains fundamental in telecommunications and mission-critical systems worldwide.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ RING VS OTHER TOPOLOGIES ============ -->
+    <section class="section" id="comparison">
+        <h2>📊 Ring Topology vs Other Topologies</h2>
+        <p>Comparing Ring Topology across the key performance and design parameters that matter in real network decisions.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>🔄 Ring</th>
+                <th>⭐ Star</th>
+                <th>🚌 Bus</th>
+                <th>🕸️ Mesh</th>
+            </tr>
+            <tr>
+                <td><strong>Collision Prevention</strong></td>
+                <td>⭐ Token — zero collisions</td>
+                <td>⭐ Switch — per port domain</td>
+                <td>❌ CSMA/CD collisions</td>
+                <td>⭐ Per link — no collisions</td>
+            </tr>
+            <tr>
+                <td><strong>Cable Required</strong></td>
+                <td>🟡 Moderate</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Least</td>
+                <td>❌ Most</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance</strong></td>
+                <td>❌ Single ring: total failure / ⭐ Dual ring: self-heal</td>
+                <td>🟡 Per-device isolation</td>
+                <td>❌ Cable break = all fail</td>
+                <td>⭐ Excellent</td>
+            </tr>
+            <tr>
+                <td><strong>Fairness of Access</strong></td>
+                <td>⭐ Perfect — token rotates</td>
+                <td>🟡 Switch-managed</td>
+                <td>🟡 CSMA/CD — not guaranteed</td>
+                <td>⭐ Dedicated paths</td>
+            </tr>
+            <tr>
+                <td><strong>Performance under Load</strong></td>
+                <td>⭐ Consistent even at high load</td>
+                <td>⭐ Good (with switch)</td>
+                <td>❌ Degrades fast</td>
+                <td>⭐ Excellent</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>🟡 Hard — adding device disrupts ring</td>
+                <td>⭐ Very easy</td>
+                <td>❌ Very limited</td>
+                <td>⭐ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Troubleshooting</strong></td>
+                <td>🟡 Moderate (token helps locate fault)</td>
+                <td>⭐ Very easy</td>
+                <td>❌ Difficult</td>
+                <td>❌ Complex</td>
+            </tr>
+            <tr>
+                <td><strong>Latency (Predictability)</strong></td>
+                <td>⭐ Deterministic — known max wait</td>
+                <td>🟡 Variable</td>
+                <td>❌ Unpredictable</td>
+                <td>🟡 Variable</td>
+            </tr>
+            <tr>
+                <td><strong>Central Device Needed</strong></td>
+                <td>⭐ No (or optional MAU)</td>
+                <td>❌ Yes (hub/switch)</td>
+                <td>⭐ No</td>
+                <td>⭐ No</td>
+            </tr>
+            <tr>
+                <td><strong>Modern Usage</strong></td>
+                <td>🟡 Industrial / MAN / Backbone</td>
+                <td>🟢 Most common LAN</td>
+                <td>🔴 Mostly obsolete</td>
+                <td>🟢 Enterprise / WAN</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============ TECHNICAL SPECS ============ -->
+    <section class="section" id="specs">
+        <h2>🔬 Technical Specifications</h2>
+        <p>Detailed specs of the two primary Ring Topology standards — Token Ring and FDDI:</p>
+
+        <div class="adv-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🔄</span>
+                <h4>IEEE 802.5 — Token Ring</h4>
+                <p>
+                    <strong>Speed:</strong> 4 Mbps or 16 Mbps<br>
+                    <strong>Cable:</strong> STP (Type 1/2) or UTP (Type 3)<br>
+                    <strong>Connector:</strong> IBM Data Connector (IDC) or RJ-45<br>
+                    <strong>Max Devices per Ring:</strong> 72 (STP) / 32 (UTP)<br>
+                    <strong>Max Distance (node to MAU):</strong> 100m (UTP) / 300m (STP)<br>
+                    <strong>Token Hold Time:</strong> 10ms (default)<br>
+                    <strong>Frame Size:</strong> Up to 4,096 bytes<br>
+                    <strong>Access Method:</strong> Token Passing<br>
+                    <strong>Status:</strong> 🔴 Obsolete (IEEE standard withdrawn 2004)
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔁</span>
+                <h4>FDDI — Fiber Distributed Data Interface</h4>
+                <p>
+                    <strong>Speed:</strong> 100 Mbps<br>
+                    <strong>Cable:</strong> Multi-mode fiber (2km) / Single-mode (40km per segment)<br>
+                    <strong>Total Ring Length:</strong> Up to 200 km<br>
+                    <strong>Max Nodes:</strong> 500 devices per ring<br>
+                    <strong>Max Node-to-Node:</strong> 2 km (multi-mode fiber)<br>
+                    <strong>Healing Time:</strong> &lt; 2ms after cable break<br>
+                    <strong>Frame Size:</strong> Up to 4,500 bytes<br>
+                    <strong>Access Method:</strong> Timed Token Passing<br>
+                    <strong>Status:</strong> 🟡 Legacy — still in some MANs
+                </p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <strong>📏 FDDI Dual Ring Self-Healing — How it works:</strong><br><br>
+            Normal Operation:<br>
+            Primary Ring → Clockwise: A → B → C → D → E → F → A<br>
+            Secondary Ring → Counter-Clockwise: A → F → E → D → C → B → A (standby, not used)<br><br>
+            After Cable Break between C and D:<br>
+            ❌ Primary ring: A → B → C → [BREAK] ← D ← E ← F ← A<br>
+            ✅ Healing: C and D both detect break → they "wrap" their ports → secondary ring activates<br>
+            Result: A → B → C → [wraps onto secondary] → B → A → F → E → D → [wraps back]<br>
+            All devices remain connected! Self-healing completes in under 2 milliseconds! ⚡
+        </div>
+    </section>
+
+    <!-- ============ KEY TAKEAWAYS ============ -->
+    <section class="section">
+        <h2>🎯 Key Takeaways</h2>
+        <div class="highlight-box">
+            <ul>
+                <li>Ring Topology connects devices in a <strong>closed loop</strong> — each device connects to exactly two neighbours</li>
+                <li>A <strong>Token</strong> (special control packet) circulates the ring — only the token holder can transmit data</li>
+                <li>Data travels <strong>hop-by-hop</strong> through each device, relayed forward until it reaches the destination</li>
+                <li><strong>Zero collisions</strong> — token passing ensures only one device transmits at a time</li>
+                <li><strong>Deterministic latency</strong> — maximum wait time to access the ring is predictable (great for industrial systems)</li>
+                <li>Main weakness: <strong>single ring break = total network failure</strong> — entire ring goes down</li>
+                <li><strong>Dual Ring (FDDI)</strong> solves this — two rings in opposite directions; break on primary → secondary wraps and self-heals in &lt;2ms</li>
+                <li>IBM Token Ring (IEEE 802.5): 4/16 Mbps | FDDI: 100 Mbps over fiber | Both now largely obsolete for LANs</li>
+                <li>Ring topology principles <strong>live on</strong> in SONET backbone rings, industrial PROFIBUS/PROFINET, smart grid SCADA, and metro networks</li>
+                <li>Adding or removing a device <strong>disrupts the ring</strong> — requires brief downtime (major scalability disadvantage vs Star)</li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+    <p style="margin-top:10px; font-size:0.9rem;">Keep exploring, keep learning! 🚀</p>
+</footer>
+
+<script>
+// ── PROGRESS BAR ─────────────────────────────────────────
+window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ── FADE IN ───────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(20px)';
+    s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(s);
+});
+
+// ── RING LAYOUT CONFIG ────────────────────────────────────
+const NUM   = 6;
+const CX    = 400, CY = 220, R = 160;   // SVG coords
+const INNER = 135;                        // inner ring radius (dual)
+
+// Angles: start from top, go clockwise
+const ANGLES = [270, 330, 30, 90, 150, 210]; // degrees
+
+let ringMode      = 'single';  // 'single' | 'dual'
+let ringAnimating = false;
+
+// ── UTILITY ──────────────────────────────────────────────
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function setStatus(msg) { document.getElementById('ringStatus').innerHTML = msg; }
+
+function lockBtns(lock) {
+    ['btnToken','btnData','btnFail','btnHeal'].forEach(id => {
+        document.getElementById(id).disabled = lock;
+    });
+}
+
+function degToRad(d) { return (d - 90) * Math.PI / 180; }
+
+function pointOnRing(angleDeg, radius) {
+    const rad = degToRad(angleDeg);
+    return { x: CX + radius * Math.cos(rad), y: CY + radius * Math.sin(rad) };
+}
+
+// ── PLACE DEVICES ─────────────────────────────────────────
+function initLayout() {
+    const canvas = document.getElementById('ringCanvas');
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    const scaleX = W / 800, scaleY = H / 440;
+
+    for (let i = 0; i < NUM; i++) {
+        const pos = pointOnRing(ANGLES[i], R);
+        const dev = document.getElementById('rdev' + i);
+        dev.style.left = (pos.x * scaleX) + 'px';
+        dev.style.top  = (pos.y * scaleY) + 'px';
+
+        // Label placement
+        const lbl = document.getElementById('rlabel' + i);
+        const a = ANGLES[i];
+        const isTop    = a > 220 && a < 320;
+        const isBottom = a > 40  && a < 140;
+        const isLeft   = a >= 140 && a <= 220;
+        const isRight  = a >= 320 || a <= 40;
+        lbl.style.top = lbl.style.bottom = lbl.style.left = lbl.style.right = '';
+        lbl.style.transform = '';
+        if (isTop)    { lbl.style.top = '-22px'; lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+        if (isBottom) { lbl.style.bottom = '-22px'; lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+        if (isLeft)   { lbl.style.right = '-48px'; lbl.style.top='50%'; lbl.style.transform='translateY(-50%)'; }
+        if (isRight)  { lbl.style.left = '-48px'; lbl.style.top='50%'; lbl.style.transform='translateY(-50%)'; }
+    }
+}
+window.addEventListener('resize', initLayout);
+window.addEventListener('load',   initLayout);
+setTimeout(initLayout, 100);
+
+// ── DEVICE STATE ─────────────────────────────────────────
+function setDev(i, state) {
+    const d = document.getElementById('rdev' + i);
+    d.classList.remove('dev-hold','dev-send','dev-recv','dev-relay','dev-fail','dev-recover');
+    if (state) d.classList.add(state);
+}
+
+// ── INNER RING VISIBILITY ────────────────────────────────
+function setInnerRing(visible) {
+    const ir = document.getElementById('innerRing');
+    ir.style.opacity = visible ? '1' : '0';
+}
+
+// ── RING MODE TOGGLE ──────────────────────────────────────
+function setRingMode(mode) {
+    ringMode = mode;
+    document.getElementById('togSingle').classList.toggle('active', mode === 'single');
+    document.getElementById('togDual').classList.toggle('active', mode === 'dual');
+    document.getElementById('ringModeLabel').textContent = mode === 'single'
+        ? 'Single Ring: One direction, Token controls access'
+        : 'Dual Ring (FDDI): Two opposite-direction rings for self-healing!';
+    setInnerRing(mode === 'dual');
+    document.getElementById('dirBadge').textContent = mode === 'single' ? '🔄 Clockwise' : '🔄 Outer CW  ↺ Inner CCW';
+    ringReset();
+}
+
+// ── SVG ANIMATE TOKEN ON RING ────────────────────────────
+// Animates a token-dot (SVG circle) along the outer ring arc
+// from angle startDeg → endDeg (clockwise), duration ms
+function animTokenArc(tokenId, startDeg, endDeg, durationMs, color, innerRing) {
+    return new Promise(resolve => {
+        const tok = document.getElementById(tokenId);
+        tok.setAttribute('fill', color || '#00ff88');
+        tok.setAttribute('r', innerRing ? 8 : 11);
+        const radius = innerRing ? INNER : R;
+        const canvas = document.getElementById('ringCanvas');
+        const scaleX = canvas.offsetWidth / 800;
+        const scaleY = canvas.offsetHeight / 440;
+
+        const totalAngle = endDeg - startDeg;
+        const start = performance.now();
+        tok.style.opacity = '1';
+
+        function frame(now) {
+            const t  = Math.min((now - start) / durationMs, 1);
+            const ea = 1 - Math.pow(1 - t, 2); // ease-out
+            const angleDeg = startDeg + totalAngle * ea;
+            const pos = pointOnRing(angleDeg, radius);
+            tok.setAttribute('cx', pos.x * scaleX);
+            tok.setAttribute('cy', pos.y * scaleY);
+            if (t < 1) requestAnimationFrame(frame);
+            else { tok.style.opacity = '0'; resolve(); }
+        }
+        requestAnimationFrame(frame);
+    });
+}
+
+// Move token from device i → device j (clockwise = +ve, counter = -ve)
+function tokenMove(tokenId, fromIdx, toIdx, durationMs, color, ccw, innerRing) {
+    let startAngle = ANGLES[fromIdx];
+    let endAngle   = ANGLES[toIdx];
+    if (!ccw) {
+        // Clockwise — ensure endAngle > startAngle
+        if (endAngle <= startAngle) endAngle += 360;
+    } else {
+        // Counter-clockwise — ensure endAngle < startAngle
+        if (endAngle >= startAngle) endAngle -= 360;
+    }
+    return animTokenArc(tokenId, startAngle, endAngle, durationMs, color, innerRing);
+}
+
+// Show device-side flash + token travel for one hop
+async function hop(fromIdx, toIdx, tokenId, color, setDevState, ccw, innerRing) {
+    if (setDevState) setDev(fromIdx, setDevState);
+    await tokenMove(tokenId, fromIdx, toIdx, 520, color, ccw, innerRing);
+}
+
+// ── TOKEN BADGE ──────────────────────────────────────────
+function showTokenBadge(devIdx, text) {
+    const canvas = document.getElementById('ringCanvas');
+    const scaleX = canvas.offsetWidth / 800;
+    const scaleY = canvas.offsetHeight / 440;
+    const pos = pointOnRing(ANGLES[devIdx], R + 30);
+    const badge = document.getElementById('tokenBadge');
+    badge.textContent = text || '🪙 TOKEN';
+    badge.style.left = (pos.x * scaleX - 30) + 'px';
+    badge.style.top  = (pos.y * scaleY - 12) + 'px';
+    badge.style.opacity = '1';
+}
+function hideTokenBadge() { document.getElementById('tokenBadge').style.opacity = '0'; }
+
+// ── RING CABLE GLOW HELPERS ───────────────────────────────
+function setCableClass(cls) {
+    const outer = document.getElementById('outerRing');
+    const inner = document.getElementById('innerRing');
+    outer.className.baseVal = 'ring-cable ' + (cls || '');
+    inner.className.baseVal = 'ring-cable idle ' + (ringMode === 'dual' ? '' : 'idle');
+}
+
+// ── MAIN DEMOS ───────────────────────────────────────────
+async function ringDemo(mode) {
+    if (ringAnimating) return;
+    ringAnimating = true;
+    lockBtns(true);
+    ringReset(true);
+
+    if (mode === 'token') {
+        // ── TOKEN PASSING (idle ring, token rotating continuously for 2 full laps)
+        setStatus('🪙 <strong>Ring is IDLE.</strong> The Token circulates clockwise continuously. Any device can grab it to transmit!');
+        setCableClass('active-cw');
+        const order = [0,1,2,3,4,5,0,1,2,3,4,5]; // 2 laps
+        for (let step = 0; step < order.length - 1; step++) {
+            const from = order[step], to = order[step + 1];
+            showTokenBadge(from, '🪙 FREE');
+            setDev(from, 'dev-hold');
+            await sleep(120);
+            await hop(from, to, 'tok0', '#00ff88', null, false, false);
+            setDev(from, null);
+            if (step === 5) {
+                setStatus('🔄 <strong>Token completed one full lap!</strong> Every device had a chance to grab it. Nobody needed to transmit — token circulates again!');
+            }
+        }
+        showTokenBadge(0, '🪙 FREE');
+        setDev(0, 'dev-hold');
+        await sleep(600);
+        setStatus('✅ <strong>Token keeps circulating</strong> as long as the ring is idle — ready for any device to capture and send data!');
+
+    } else if (mode === 'data') {
+        // ── DATA TRANSFER: PC-1 (0) → Server (3)
+        setStatus('📦 <strong>PC-1 wants to send data to Server.</strong> Waiting for the free Token to arrive at PC-1...');
+        setCableClass('active-cw');
+
+        // Token arrives at PC-1
+        showTokenBadge(5, '🪙 FREE');
+        await hop(5, 0, 'tok0', '#00ff88', null, false, false);
+        hideTokenBadge();
+        setDev(0, 'dev-send');
+        await sleep(500);
+        setStatus('🪙 <strong>PC-1 captured the Token!</strong> Token is now BUSY. PC-1 appends data frame and releases it onto the ring...');
+        await sleep(700);
+
+        // Data frame hops: 0→1→2→3 (destination)
+        const hops = [
+            { from:0, to:1, label:'PC-1 sends frame → PC-2 receives it', devState:'dev-relay' },
+            { from:1, to:2, label:'PC-2 relays frame → PC-3 receives it (not for PC-3, relaying...)', devState:'dev-relay' },
+            { from:2, to:3, label:'PC-3 relays frame → Server receives it!' },
+        ];
+
+        for (let h = 0; h < hops.length; h++) {
+            const hp = hops[h];
+            setStatus(`📦 Hop ${h+1}/3: ` + hp.label);
+            if (h === 2) setDev(3, 'dev-recv');
+            else         setDev(hp.to, 'dev-relay');
+            await hop(hp.from, hp.to, 'tok1', '#00ccff', null, false, false);
+            if (h < 2) { await sleep(200); setDev(hp.to, null); }
+            await sleep(150);
+        }
+        await sleep(500);
+        setStatus('✅ <strong>Server copied the data frame!</strong> Frame now continues around the ring back to PC-1 for verification...');
+        await sleep(300);
+
+        // Frame returns: 3→4→5→0
+        setDev(3, 'dev-relay');
+        await hop(3, 4, 'tok2', '#a78bfa', null, false, false);
+        setDev(4, 'dev-relay');
+        await hop(4, 5, 'tok2', '#a78bfa', null, false, false);
+        setDev(5, 'dev-relay');
+        await hop(5, 0, 'tok2', '#a78bfa', null, false, false);
+
+        await sleep(400);
+        setStatus('🪙 <strong>PC-1 received frame back → verifies it arrived correctly → removes frame from ring → releases FREE Token!</strong> Next device can now transmit!');
+        setDev(0, 'dev-hold');
+        await sleep(500);
+        showTokenBadge(0, '🪙 FREE');
+        await sleep(600);
+
+        // Release token
+        setDev(0, null);
+        hideTokenBadge();
+        for (let i = 1; i <= 5; i++) setDev(i, null);
+        await sleep(400);
+        setStatus('✅ <strong>Data transfer complete!</strong> Server got the data. Free token released → next device can grab it now.');
+
+    } else if (mode === 'fail') {
+        // ── DEVICE FAILURE: PC-3 (idx 2) fails
+        setStatus('⚠️ <strong>PC-3 has suddenly failed!</strong> Watch what happens to ring communication...');
+        setCableClass('');
+
+        // Token traveling, then PC-3 goes dark
+        await hop(0, 1, 'tok0', '#00ff88', 'dev-hold', false, false);
+        await hop(1, 2, 'tok0', '#00ff88', 'dev-hold', false, false);
+        setDev(1, null);
+        await sleep(300);
+
+        // PC-3 fails
+        setDev(2, 'dev-fail');
+        setCableClass('broken');
+        setStatus('💥 <strong>PC-3 failed! Ring is BROKEN at PC-3.</strong> Token cannot pass through. The entire ring communication halts!');
+        await sleep(1200);
+
+        // All other devices also lose connectivity indication
+        for (let i = 0; i < NUM; i++) {
+            if (i !== 2) setDev(i, 'dev-fail');
+        }
+        await sleep(600);
+        setStatus(`❌ <strong>All 6 devices lost communication!</strong> This is Ring Topology's critical weakness — ONE failure brings the entire ring down. ${ringMode === 'dual' ? 'Switch to Dual Ring mode and use Self-Heal demo to see the solution!' : 'Enable Dual Ring mode to see how FDDI solves this!'}`);
+
+    } else if (mode === 'heal') {
+        // ── DUAL RING SELF-HEALING
+        if (ringMode !== 'dual') {
+            setRingMode('dual');
+            await sleep(400);
+        }
+        setStatus('🔁 <strong>FDDI Dual Ring mode active.</strong> Primary ring (outer, clockwise) is carrying traffic normally...');
+        setInnerRing(true);
+
+        // Normal outer ring traffic
+        setCableClass('active-cw');
+        document.getElementById('innerRing').className.baseVal = 'ring-cable idle';
+        document.getElementById('dirBadge').textContent = '🔄 Outer CW  ↺ Inner CCW';
+
+        for (let i = 0; i < NUM - 1; i++) {
+            setDev(i, 'dev-relay');
+            await hop(i, i + 1, 'tok0', '#00ff88', null, false, false);
+            setDev(i, null);
+            await sleep(80);
+        }
+        await sleep(300);
+
+        // Cable break between PC-3 (2) and Server (3)
+        setStatus('💥 <strong>Primary ring cable BREAKS between PC-3 and Server!</strong> Primary ring is severed...');
+        document.getElementById('outerRing').className.baseVal = 'ring-cable broken';
+        setDev(2, 'dev-recover');
+        setDev(3, 'dev-recover');
+        await sleep(900);
+
+        setStatus('⚡ <strong>PC-3 and Server detect the break instantly!</strong> They activate their secondary ring ports and begin WRAPPING...');
+        await sleep(800);
+
+        // Self-healing: secondary ring activates
+        document.getElementById('innerRing').className.baseVal = 'ring-cable healed';
+        setStatus('🔁 <strong>SELF-HEALING in progress!</strong> Secondary ring (counter-clockwise) wraps around the break point. New path forms automatically...');
+        await sleep(800);
+
+        // Animate wrap: traffic now flows on combined path
+        // Path: 0→1→2→[wrap CCW on inner]→3→4→5→0
+        setCableClass('healed');
+
+        // Forward side (outer, 0→1→2)
+        for (let i = 0; i < 3; i++) {
+            setDev(i, 'dev-recover');
+            await hop(i, (i+1) % 6, 'tok3', '#f8b400', null, false, false);
+            setDev(i, null);
+            await sleep(80);
+        }
+        // Wrap on inner CCW: 2→(inner reverse)→3
+        await hop(2, 3, 'tok3', '#f8b400', null, true, true);
+
+        // Continue outer CCW back: 3→4→5→0
+        for (let i = 3; i < 6; i++) {
+            setDev(i, 'dev-recover');
+            await hop(i, (i + 1) % 6, 'tok0', '#f8b400', null, false, false);
+            setDev(i, null);
+            await sleep(80);
+        }
+
+        await sleep(400);
+        setStatus('✅ <strong>SELF-HEALING COMPLETE!</strong> All 6 devices are back online! The ring automatically wrapped around the break using the secondary ring. Recovery time: &lt;2ms! This is why FDDI is used in mission-critical networks! 🎉');
+        for (let i = 0; i < NUM; i++) setDev(i, null);
+    }
+
+    ringAnimating = false;
+    lockBtns(false);
+}
+
+function ringReset(silent) {
+    ringAnimating = false;
+    lockBtns(false);
+
+    for (let i = 0; i < NUM; i++) setDev(i, null);
+    hideTokenBadge();
+
+    // Hide all token dots
+    ['tok0','tok1','tok2','tok3'].forEach(id => {
+        const t = document.getElementById(id);
+        if (t) t.style.opacity = '0';
+    });
+
+    document.getElementById('outerRing').className.baseVal = 'ring-cable';
+    document.getElementById('innerRing').className.baseVal = 'ring-cable idle';
+    setInnerRing(ringMode === 'dual');
+
+    if (!silent) setStatus('👆 Click a button above to start the simulation!');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSI Model - Complete 7 Layers Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 6px 14px;
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 70px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* SECTION */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #fff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            color: #d0d0d0;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* OSI STACK INTERACTIVE */
+        .osi-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 30px 0;
+        }
+
+        .layer-bar {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-bar::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--layer-color);
+        }
+
+        .layer-bar:hover {
+            transform: translateX(8px);
+            border-color: var(--layer-color);
+        }
+
+        .layer-bar.active {
+            transform: translateX(8px);
+            border-color: var(--layer-color);
+            box-shadow: 0 0 20px rgba(var(--layer-rgb), 0.3);
+        }
+
+        .layer-num {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--layer-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(var(--layer-rgb), 0.5);
+        }
+
+        .layer-info {
+            flex: 1;
+        }
+
+        .layer-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--layer-color);
+        }
+
+        .layer-tagline {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .layer-icon {
+            font-size: 2rem;
+            margin-left: 15px;
+        }
+
+        .layer-arrow {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+
+        .layer-bar.active .layer-arrow {
+            transform: rotate(90deg);
+        }
+
+        /* LAYER DETAIL PANEL */
+        .layer-detail {
+            display: none;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.3s ease;
+        }
+
+        .layer-detail.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media(max-width:700px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-card {
+            background: rgba(102, 126, 234, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .detail-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .detail-card p,
+        .detail-card li {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .detail-card ul {
+            padding-left: 18px;
+        }
+
+        .real-example {
+            background: rgba(118, 75, 162, 0.15);
+            border-left: 4px solid #764ba2;
+            border-radius: 0 10px 10px 0;
+            padding: 15px 20px;
+            margin-top: 15px;
+        }
+
+        .real-example h4 {
+            color: #a78bfa;
+            margin-bottom: 8px;
+        }
+
+        .protocol-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .protocol-tag {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #a5b4fc;
+        }
+
+        /* VISUAL FLOW ANIMATION */
+        .flow-box {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .flow-title {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .flow-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .flow-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .flow-side-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .flow-layer {
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: default;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .flow-layer.highlight {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(var(--layer-rgb), 0.5);
+            border-color: var(--layer-color);
+        }
+
+        .flow-middle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding-top: 50px;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        .flow-packet {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            margin: 5px 0;
+            animation: packetPulse 2s infinite;
+        }
+
+        @keyframes packetPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* QUIZ SECTION */
+        .quiz-box {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 12px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #d0d0d0;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+        }
+
+        .quiz-option.wrong {
+            border-color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid #4ade80;
+            color: #4ade80;
+        }
+
+        .quiz-feedback.wrong {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid #f87171;
+            color: #f87171;
+        }
+
+        .quiz-nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .quiz-btn {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .quiz-score {
+            color: #a5b4fc;
+            font-size: 0.9rem;
+        }
+
+        .quiz-progress {
+            color: #888;
+            font-size: 0.9rem;
+            margin-left: auto;
+        }
+
+        /* DATA ENCAPSULATION */
+        .encap-demo {
+            margin: 30px 0;
+        }
+
+        .encap-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .encap-step:hover {
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        .encap-label {
+            width: 130px;
+            font-size: 0.85rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .encap-data {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .encap-header {
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .encap-payload {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 5px;
+            font-size: 0.78rem;
+            color: #aaa;
+        }
+
+        .encap-info {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* COMPARISON TABLE */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.3);
+            padding: 14px;
+            text-align: left;
+            color: #fff;
+        }
+
+        .comparison-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            color: #ccc;
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(102, 126, 234, 0.08);
+        }
+
+        /* HIGHLIGHT BOX */
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: #a5b4fc;
+            margin-bottom: 10px;
+        }
+
+        /* INFO CARDS */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .info-card h4 {
+            color: #a5b4fc;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .info-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* MEMORY TRICK */
+        .memory-trick {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .memory-trick h3 {
+            color: #a5b4fc;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .memory-letters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .mem-letter {
+            padding: 15px 18px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .mem-letter:hover {
+            transform: scale(1.15) rotate(3deg);
+        }
+
+        .mem-letter span {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: normal;
+            margin-top: 4px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* SEARCH BAR */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* SCROLL TO TOP */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px);
+        }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+
+        /* LAYER COLORS */
+        .l7 {
+            --layer-color: #f97316;
+            --layer-rgb: 249, 115, 22;
+            background: rgba(249, 115, 22, 0.08);
+        }
+
+        .l6 {
+            --layer-color: #eab308;
+            --layer-rgb: 234, 179, 8;
+            background: rgba(234, 179, 8, 0.08);
+        }
+
+        .l5 {
+            --layer-color: #22c55e;
+            --layer-rgb: 34, 197, 94;
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .l4 {
+            --layer-color: #06b6d4;
+            --layer-rgb: 6, 182, 212;
+            background: rgba(6, 182, 212, 0.08);
+        }
+
+        .l3 {
+            --layer-color: #667eea;
+            --layer-rgb: 102, 126, 234;
+            background: rgba(102, 126, 234, 0.08);
+        }
+
+        .l2 {
+            --layer-color: #a855f7;
+            --layer-rgb: 168, 85, 247;
+            background: rgba(168, 85, 247, 0.08);
+        }
+
+        .l1 {
+            --layer-color: #ec4899;
+            --layer-rgb: 236, 72, 153;
+            background: rgba(236, 72, 153, 0.08);
+        }
+
+        .flow-l7 {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            --layer-color: #f97316;
+            --layer-rgb: 249, 115, 22;
+        }
+
+        .flow-l6 {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fbbf24;
+            --layer-color: #eab308;
+            --layer-rgb: 234, 179, 8;
+        }
+
+        .flow-l5 {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            --layer-color: #22c55e;
+            --layer-rgb: 34, 197, 94;
+        }
+
+        .flow-l4 {
+            background: rgba(6, 182, 212, 0.2);
+            color: #22d3ee;
+            --layer-color: #06b6d4;
+            --layer-rgb: 6, 182, 212;
+        }
+
+        .flow-l3 {
+            background: rgba(102, 126, 234, 0.2);
+            color: #818cf8;
+            --layer-color: #667eea;
+            --layer-rgb: 102, 126, 234;
+        }
+
+        .flow-l2 {
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            --layer-color: #a855f7;
+            --layer-rgb: 168, 85, 247;
+        }
+
+        .flow-l1 {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+            --layer-color: #ec4899;
+            --layer-rgb: 236, 72, 153;
+        }
+
+        .encap-l7 {
+            background: rgba(249, 115, 22, 0.3);
+            color: #fb923c;
+        }
+
+        .encap-l6 {
+            background: rgba(234, 179, 8, 0.3);
+            color: #fbbf24;
+        }
+
+        .encap-l5 {
+            background: rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+
+        .encap-l4 {
+            background: rgba(6, 182, 212, 0.3);
+            color: #22d3ee;
+        }
+
+        .encap-l3 {
+            background: rgba(102, 126, 234, 0.3);
+            color: #818cf8;
+        }
+
+        .encap-l2 {
+            background: rgba(168, 85, 247, 0.3);
+            color: #c084fc;
+        }
+
+        .encap-l1 {
+            background: rgba(236, 72, 153, 0.3);
+            color: #f472b6;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 18px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            background: transparent;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #a5b4fc;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media(max-width:600px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .section {
+                padding: 25px 18px;
+            }
+
+            .flow-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="nav-logo">🌐 OSI Model</span>
+            <div class="nav-links">
+                <a class="nav-link" onclick="scrollTo('#overview')">Overview</a>
+                <a class="nav-link" onclick="scrollTo('#layers')">7 Layers</a>
+                <a class="nav-link" onclick="scrollTo('#encap')">Encapsulation</a>
+                <a class="nav-link" onclick="scrollTo('#flow')">Data Flow</a>
+                <a class="nav-link" onclick="scrollTo('#quiz')">Quiz</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="container">
+        <div class="hero" id="top">
+            <h1>🌐 OSI Model</h1>
+            <p class="hero-subtitle">Open Systems Interconnection — Network Communication ஐ புரிந்துகொள்ள உதவும் 7-Layer
+                Framework</p>
+            <div class="hero-badge">Interactive Learning Guide • All 7 Layers Covered</div>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section class="section" id="overview">
+            <h2>📖 OSI Model என்றால் என்ன?</h2>
+            <p>
+                <strong>OSI (Open Systems Interconnection) Model</strong> என்பது 1984-ல் ISO (International Organization
+                for Standardization) உருவாக்கிய ஒரு <strong>conceptual framework</strong>. இந்த model, different
+                computers மற்றும் network devices எப்படி ஒருவருக்கொருவர் communicate செய்கின்றன என்பதை <strong>7
+                    Layers</strong> ஆக பிரித்து விளக்குகிறது.
+            </p>
+            <p>
+                உதாரணமாக, நீங்கள் WhatsApp-ல் ஒரு message அனுப்பும்போது, அந்த message உங்கள் phone-ல் இருந்து உங்கள்
+                நண்பரின் phone வரை பல stages-ல் travel செய்கிறது — ஒவ்வொரு stage-ம் ஒரு OSI Layer.
+            </p>
+
+            <div class="highlight-box">
+                <h3>🤔 எதற்காக OSI Model கற்றுக்கொள்ள வேண்டும்?</h3>
+                <p style="margin:0;">Network problems diagnose செய்ய, protocols புரிந்துகொள்ள, interviews crack செய்ய,
+                    மற்றும் networking fundamentals வலுப்படுத்திக்கொள்ள OSI Model மிகவும் அவசியம். Networking field-ல்
+                    இருக்கும் எல்லாருக்கும் இது foundation knowledge.</p>
+            </div>
+
+            <div class="info-cards">
+                <div class="info-card">
+                    <span class="info-card-icon">🏗️</span>
+                    <h4>Structured Communication</h4>
+                    <p>Complex network communication-ஐ manageable layers-ஆக பிரிக்கிறது. ஒவ்வொரு layer-ம் specific job
+                        செய்கிறது.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🔧</span>
+                    <h4>Troubleshooting Made Easy</h4>
+                    <p>Network issue எந்த layer-ல் உள்ளது என்று quickly identify செய்யலாம். "Ping works but web doesn't
+                        load" = Layer 7 issue!</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">🌍</span>
+                    <h4>Vendor Neutral</h4>
+                    <p>Cisco, Juniper, HP — எல்லா vendors-ம் same OSI model follow செய்கிறார்கள். Universal language of
+                        networking.</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-icon">📚</span>
+                    <h4>Industry Standard</h4>
+                    <p>CCNA, CompTIA Network+, CISSP — எல்லா networking certifications-லும் OSI model முக்கியமான topic.
+                    </p>
+                </div>
+            </div>
+
+            <!-- MEMORY TRICK -->
+            <div class="memory-trick">
+                <h3>🧠 7 Layers எளிதாக நினைவில் வைத்துக்கொள்ள Mnemonic!</h3>
+                <p style="color:#aaa; margin-bottom:15px;">Each letter-ஐ click செய்து layer name பாருங்கள்!</p>
+                <div class="memory-letters">
+                    <div class="mem-letter l7" style="background:rgba(249,115,22,0.3);" onclick="showMemory(7)">
+                        P<span>Please (L7: Application)</span>
+                    </div>
+                    <div class="mem-letter l6" style="background:rgba(234,179,8,0.3);" onclick="showMemory(6)">
+                        D<span>Do (L6: Presentation)</span>
+                    </div>
+                    <div class="mem-letter l5" style="background:rgba(34,197,94,0.3);" onclick="showMemory(5)">
+                        N<span>Not (L5: Session)</span>
+                    </div>
+                    <div class="mem-letter l4" style="background:rgba(6,182,212,0.3);" onclick="showMemory(4)">
+                        T<span>Throw (L4: Transport)</span>
+                    </div>
+                    <div class="mem-letter l3" style="background:rgba(102,126,234,0.3);" onclick="showMemory(3)">
+                        S<span>Sausage (L3: Network)</span>
+                    </div>
+                    <div class="mem-letter l2" style="background:rgba(168,85,247,0.3);" onclick="showMemory(2)">
+                        P<span>Pizza (L2: Data Link)</span>
+                    </div>
+                    <div class="mem-letter l1" style="background:rgba(236,72,153,0.3);" onclick="showMemory(1)">
+                        A<span>Away (L1: Physical)</span>
+                    </div>
+                </div>
+                <div id="memoryMsg" style="color:#a5b4fc; font-size:1rem; min-height:30px; transition:all 0.3s;"></div>
+            </div>
+        </section>
+
+        <!-- 7 LAYERS INTERACTIVE -->
+        <section class="section" id="layers">
+            <h2>🔢 7 Layers — Click செய்து விரிவாக அறியுங்கள்!</h2>
+            <p>ஒவ்வொரு layer-ஐயும் click செய்யுங்கள் — definition, real-world example, protocols எல்லாம் பாருங்கள்.</p>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="layerSearch"
+                    placeholder="🔍 Layer name or protocol search... (e.g. TCP, HTTP, MAC)"
+                    oninput="filterLayers(this.value)">
+                <button class="search-btn"
+                    onclick="filterLayers(document.getElementById('layerSearch').value)">Search</button>
+            </div>
+
+            <div class="osi-stack" id="osiStack">
+
+                <!-- LAYER 7 -->
+                <div class="layer-bar l7" onclick="toggleLayer(7)" id="bar7">
+                    <div class="layer-num" style="background:#f97316;">7</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Application Layer</div>
+                        <div class="layer-tagline">User interact பண்ற interface — Apps, Browser, Email</div>
+                    </div>
+                    <div class="layer-icon">💻</div>
+                    <div class="layer-arrow" id="arrow7">▶</div>
+                </div>
+                <div class="layer-detail" id="detail7">
+                    <div style="border-left:4px solid #f97316; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#fb923c;">Layer 7: Application Layer</h3>
+                        <p><strong>Definition:</strong> Application layer என்பது end-user-க்கு நேரடியாக service வழங்கும்
+                            layer. நீங்கள் use செய்யும் applications இந்த layer-ல்தான் operate செய்கின்றன. Network-ஐ use
+                            செய்ய user-க்கு ஒரு interface கொடுக்கிறது.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>நீங்கள் Chrome browser-ல் "www.google.com" type செய்கிறீர்கள் — இது Application Layer.
+                            Gmail-ல் mail அனுப்புவது, WhatsApp-ல் message பண்ணுவது, YouTube-ல் video பார்ப்பது — எல்லாமே
+                            Layer 7. Restaurant-ல் Waiter உங்களிடம் order வாங்குவது மாதிரி — user மற்றும் network-க்கு
+                            இடையேயான interface.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Network services to applications provide செய்கிறது</li>
+                                <li>User authentication & authorization</li>
+                                <li>Email services, file transfer</li>
+                                <li>Web browsing support</li>
+                                <li>Remote login services</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit</h4>
+                            <p><strong>Data / Message</strong></p>
+                            <p style="margin-top:10px;">Hardware: No specific hardware — Software layer. End-user
+                                software-ல் implement ஆகிறது.</p>
+                            <p style="margin-top:10px; color:#4ade80;">✅ Sender: Data உருவாக்குகிறது<br>✅ Receiver: Data
+                                display செய்கிறது</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#f97316;">Protocols & Examples:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">HTTP/HTTPS</span>
+                            <span class="protocol-tag">FTP</span>
+                            <span class="protocol-tag">SMTP</span>
+                            <span class="protocol-tag">DNS</span>
+                            <span class="protocol-tag">DHCP</span>
+                            <span class="protocol-tag">Telnet</span>
+                            <span class="protocol-tag">SSH</span>
+                            <span class="protocol-tag">POP3</span>
+                            <span class="protocol-tag">IMAP</span>
+                            <span class="protocol-tag">SNMP</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(249,115,22,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#fb923c;">🏠 Analogy:</strong> Restaurant-ல் Menu Card. User என்ன service
+                        வேண்டும் என்று choose செய்யும் interface.
+                    </div>
+                </div>
+
+                <!-- LAYER 6 -->
+                <div class="layer-bar l6" onclick="toggleLayer(6)" id="bar6">
+                    <div class="layer-num" style="background:#eab308;">6</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Presentation Layer</div>
+                        <div class="layer-tagline">Data Format மாற்றம் — Encryption, Compression, Translation</div>
+                    </div>
+                    <div class="layer-icon">🎨</div>
+                    <div class="layer-arrow" id="arrow6">▶</div>
+                </div>
+                <div class="layer-detail" id="detail6">
+                    <div style="border-left:4px solid #eab308; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#fbbf24;">Layer 6: Presentation Layer</h3>
+                        <p><strong>Definition:</strong> Presentation layer என்பது data-ஐ translate, encrypt, மற்றும்
+                            compress செய்யும் layer. இது "translator" மாதிரி செயல்படுகிறது — application data-ஐ
+                            network-க்கு ஏற்ற format-ல் மாற்றி, receive ஆகும்போது மீண்டும் application-க்கு ஏற்ற
+                            format-ல் திரும்ப மாற்றுகிறது.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>நீங்கள் Tamil-ல் letter எழுதுகிறீர்கள், translator அதை English-ல் மாற்றுகிறார் — இதுதான்
+                            Presentation Layer! HTTPS-ல் உங்கள் password SSL/TLS-ல் encrypt ஆகுது — Presentation Layer.
+                            JPG, MP4, PDF போன்ற file formats handle செய்வதும் இந்த layer-தான். WhatsApp messages
+                            end-to-end encrypt ஆவது இந்த layer-ல்தான் நடக்கிறது.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Data Translation (ASCII ↔ EBCDIC)</li>
+                                <li>Encryption & Decryption (SSL/TLS)</li>
+                                <li>Data Compression (ZIP, GZIP)</li>
+                                <li>Character encoding (UTF-8, Unicode)</li>
+                                <li>Data formatting (JSON, XML)</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit</h4>
+                            <p><strong>Data</strong></p>
+                            <p style="margin-top:10px;">No specific hardware. Software-based layer. OS மற்றும்
+                                application-ல் implement ஆகிறது.</p>
+                            <p style="margin-top:10px; color:#fbbf24;">✅ Sender: Encrypt + Compress<br>✅ Receiver:
+                                Decrypt + Decompress</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#eab308;">Protocols & Standards:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">SSL/TLS</span>
+                            <span class="protocol-tag">JPEG/PNG</span>
+                            <span class="protocol-tag">MPEG/MP4</span>
+                            <span class="protocol-tag">ASCII/Unicode</span>
+                            <span class="protocol-tag">JSON/XML</span>
+                            <span class="protocol-tag">MIME</span>
+                            <span class="protocol-tag">GZip</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(234,179,8,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#fbbf24;">🏠 Analogy:</strong> Translator/Interpreter. Tamil text-ஐ
+                        English-க்கு மாற்றுவது மாதிரி, data-ஐ readable format-ல் convert செய்கிறது.
+                    </div>
+                </div>
+
+                <!-- LAYER 5 -->
+                <div class="layer-bar l5" onclick="toggleLayer(5)" id="bar5">
+                    <div class="layer-num" style="background:#22c55e;">5</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Session Layer</div>
+                        <div class="layer-tagline">Connection establish, maintain & terminate செய்கிறது</div>
+                    </div>
+                    <div class="layer-icon">🤝</div>
+                    <div class="layer-arrow" id="arrow5">▶</div>
+                </div>
+                <div class="layer-detail" id="detail5">
+                    <div style="border-left:4px solid #22c55e; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#4ade80;">Layer 5: Session Layer</h3>
+                        <p><strong>Definition:</strong> Session layer, two devices-க்கு இடையேயான communication
+                            "session"-ஐ establish, manage மற்றும் terminate செய்கிறது. Login-ல் இருந்து logout வரை உள்ள
+                            ஒட்டுமொத்த communication session-ஐ handle செய்கிறது. Data synchronization மற்றும் dialog
+                            control இந்த layer-ல் நடக்கும்.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>Google Meet-ல் video call — call start ஆகும்போது session open, call end ஆகும்போது session
+                            close. NetBank-ல் login செய்து transactions செய்து logout வரை ஒரு session. Long download
+                            intermittently fail ஆகும்போது resume ஆவது — Session Layer-ன் checkpointing feature! Phone
+                            call போன்று — dial, talk, hang up.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Session establishment & termination</li>
+                                <li>Session synchronization (checkpoints)</li>
+                                <li>Dialog control (Half/Full duplex)</li>
+                                <li>Authentication during session</li>
+                                <li>Session recovery after failure</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit</h4>
+                            <p><strong>Data</strong></p>
+                            <p style="margin-top:10px;">No specific hardware. Application layer software-ல் implement
+                                ஆகிறது.</p>
+                            <p style="margin-top:10px; color:#4ade80;">✅ Manages: Who speaks when<br>✅ Controls: Start,
+                                Pause, Resume, End</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#22c55e;">Protocols:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">NetBIOS</span>
+                            <span class="protocol-tag">RPC</span>
+                            <span class="protocol-tag">PPTP</span>
+                            <span class="protocol-tag">SIP</span>
+                            <span class="protocol-tag">H.245</span>
+                            <span class="protocol-tag">PAP</span>
+                            <span class="protocol-tag">SQL Session</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(34,197,94,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#4ade80;">🏠 Analogy:</strong> Phone Operator. Call connect செய்து, call-ல்
+                        யார் பேசுவார் என்று manage செய்து, call end செய்கிறார்.
+                    </div>
+                </div>
+
+                <!-- LAYER 4 -->
+                <div class="layer-bar l4" onclick="toggleLayer(4)" id="bar4">
+                    <div class="layer-num" style="background:#06b6d4;">4</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Transport Layer</div>
+                        <div class="layer-tagline">End-to-end delivery, error control, flow control</div>
+                    </div>
+                    <div class="layer-icon">🚌</div>
+                    <div class="layer-arrow" id="arrow4">▶</div>
+                </div>
+                <div class="layer-detail" id="detail4">
+                    <div style="border-left:4px solid #06b6d4; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#22d3ee;">Layer 4: Transport Layer</h3>
+                        <p><strong>Definition:</strong> Transport layer, source computer-ல் இருந்து destination
+                            computer-க்கு <strong>end-to-end reliable data delivery</strong> உறுதிப்படுத்துகிறது. Data-ஐ
+                            segments-ஆக பிரித்து, ports மூலம் correct application-க்கு deliver செய்கிறது. TCP (reliable)
+                            மற்றும் UDP (fast) இந்த layer-ல்தான் செயல்படுகின்றன.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>
+                            <strong>TCP (Reliable):</strong> Speed post — delivery confirmation கிடைக்கும். Lost ஆனால்
+                            resend செய்யும். Online banking, file download-ல் TCP use ஆகுது.<br><br>
+                            <strong>UDP (Fast):</strong> Normal post — drop பண்ணி போகலாம், ஆனால் speed அதிகம். YouTube
+                            live stream, online gaming, video call-ல் UDP use ஆகுது.
+                        </p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Segmentation & Reassembly</li>
+                                <li>End-to-end error detection</li>
+                                <li>Flow control (prevent overflow)</li>
+                                <li>Port addressing (80, 443, 22...)</li>
+                                <li>Connection management (3-way handshake)</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit</h4>
+                            <p><strong>Segment (TCP) / Datagram (UDP)</strong></p>
+                            <p style="margin-top:10px;">Ports: HTTP=80, HTTPS=443, SSH=22, FTP=21, DNS=53</p>
+                            <p style="margin-top:10px; color:#22d3ee;">✅ TCP: Reliable, ordered, slow<br>✅ UDP:
+                                Unreliable, fast, no guarantee</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#06b6d4;">Protocols:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">TCP</span>
+                            <span class="protocol-tag">UDP</span>
+                            <span class="protocol-tag">SCTP</span>
+                            <span class="protocol-tag">Port 80 (HTTP)</span>
+                            <span class="protocol-tag">Port 443 (HTTPS)</span>
+                            <span class="protocol-tag">Port 22 (SSH)</span>
+                            <span class="protocol-tag">Port 53 (DNS)</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(6,182,212,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#22d3ee;">🏠 Analogy:</strong> Courier Service. Big parcel-ஐ boxes-ஆக
+                        பிரித்து, correct address-க்கு, correct person-க்கு deliver செய்து, confirmation வாங்குகிறது
+                        (TCP) அல்லது just drop செய்கிறது (UDP).
+                    </div>
+                </div>
+
+                <!-- LAYER 3 -->
+                <div class="layer-bar l3" onclick="toggleLayer(3)" id="bar3">
+                    <div class="layer-num" style="background:#667eea;">3</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Network Layer</div>
+                        <div class="layer-tagline">Logical addressing (IP) & Routing — Router operate செய்யும் layer
+                        </div>
+                    </div>
+                    <div class="layer-icon">🗺️</div>
+                    <div class="layer-arrow" id="arrow3">▶</div>
+                </div>
+                <div class="layer-detail" id="detail3">
+                    <div style="border-left:4px solid #667eea; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#818cf8;">Layer 3: Network Layer</h3>
+                        <p><strong>Definition:</strong> Network layer, different networks-க்கு இடையே data-ஐ route
+                            செய்கிறது. <strong>IP addresses</strong> மூலம் logical addressing செய்கிறது. உங்கள்
+                            device-ல் இருந்து internet வழியாக destination device வரை <strong>best path</strong>
+                            கண்டுபிடிக்கிறது. Router இந்த layer-ல் operate செய்கிறது.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>Google.com-க்கு request அனுப்பும்போது, உங்கள் packet Tiruppur → Chennai → Mumbai → Google's
+                            server என்று பல routers வழியாக travel செய்கிறது. GPS navigation மாதிரி — ஒவ்வொரு router-ம்
+                            "அடுத்து எந்த direction?" என்று decide செய்கிறது. IP address = House address. Router = Post
+                            Office sorting.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Logical Addressing (IP addressing)</li>
+                                <li>Routing (path determination)</li>
+                                <li>Packet forwarding</li>
+                                <li>Fragmentation & Reassembly</li>
+                                <li>Inter-network communication</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit & Hardware</h4>
+                            <p><strong>Packet</strong></p>
+                            <p style="margin-top:10px;"><strong>Hardware:</strong> Router, Layer 3 Switch, Firewall</p>
+                            <p style="margin-top:10px; color:#818cf8;">IPv4: 192.168.1.1<br>IPv6: 2001:0db8::1<br>Public
+                                vs Private IP</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#667eea;">Protocols:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">IPv4 / IPv6</span>
+                            <span class="protocol-tag">ICMP (Ping)</span>
+                            <span class="protocol-tag">OSPF</span>
+                            <span class="protocol-tag">BGP</span>
+                            <span class="protocol-tag">RIP</span>
+                            <span class="protocol-tag">NAT</span>
+                            <span class="protocol-tag">ARP</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(102,126,234,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#818cf8;">🏠 Analogy:</strong> GPS Navigation System. Source-ல் இருந்து
+                        destination வரை best route கண்டுபிடித்து, ஒவ்வொரு junction-லும் correct direction indicate
+                        செய்கிறது.
+                    </div>
+                </div>
+
+                <!-- LAYER 2 -->
+                <div class="layer-bar l2" onclick="toggleLayer(2)" id="bar2">
+                    <div class="layer-num" style="background:#a855f7;">2</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Data Link Layer</div>
+                        <div class="layer-tagline">MAC Address, Frames, Error Detection — Switch operate செய்யும் layer
+                        </div>
+                    </div>
+                    <div class="layer-icon">🔗</div>
+                    <div class="layer-arrow" id="arrow2">▶</div>
+                </div>
+                <div class="layer-detail" id="detail2">
+                    <div style="border-left:4px solid #a855f7; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#c084fc;">Layer 2: Data Link Layer</h3>
+                        <p><strong>Definition:</strong> Data Link layer, directly connected nodes-க்கு இடையே (same
+                            network-ல்) reliable data transfer உறுதிப்படுத்துகிறது. <strong>MAC addresses</strong> மூலம்
+                            physical addressing செய்கிறது. Data-ஐ <strong>frames</strong>-ஆக பிரிக்கிறது மற்றும் error
+                            detection செய்கிறது. Switch இந்த layer-ல் operate செய்கிறது.</p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>உங்கள் home network-ல் Laptop, Phone, TV எல்லாம் same WiFi-ல் connect. Switch/Router உங்கள்
+                            Laptop-ன் MAC address (unique hardware ID) பார்த்து correct device-க்கு data அனுப்புகிறது.
+                            Apartment building-ல் floor number மட்டும் தெரிஞ்சு flat-க்கு delivery பண்றது மாதிரி. ஒரே
+                            building (network) உள்ளே correct flat (device) கண்டுபிடிக்கிறது.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Sub-layers</h4>
+                            <p><strong>LLC (Logical Link Control):</strong></p>
+                            <ul>
+                                <li>Error detection & flow control</li>
+                                <li>Upper layer protocol identify</li>
+                            </ul>
+                            <p style="margin-top:10px;"><strong>MAC (Media Access Control):</strong></p>
+                            <ul>
+                                <li>Physical addressing (MAC address)</li>
+                                <li>Frame creation & destruction</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit & Hardware</h4>
+                            <p><strong>Frame</strong></p>
+                            <p style="margin-top:10px;"><strong>Hardware:</strong> Switch, Bridge, NIC (Network
+                                Interface Card)</p>
+                            <p style="margin-top:10px; color:#c084fc;">MAC: AA:BB:CC:DD:EE:FF (48-bit)<br>Ethernet, WiFi
+                                (802.11), PPP</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#a855f7;">Protocols:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">Ethernet (IEEE 802.3)</span>
+                            <span class="protocol-tag">WiFi (802.11)</span>
+                            <span class="protocol-tag">PPP</span>
+                            <span class="protocol-tag">HDLC</span>
+                            <span class="protocol-tag">Frame Relay</span>
+                            <span class="protocol-tag">ARP</span>
+                            <span class="protocol-tag">STP</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(168,85,247,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#c084fc;">🏠 Analogy:</strong> Apartment Building Floor Directory. IP
+                        address (city/area) கண்டுபிடித்த பிறகு, MAC address (flat number) மூலம் exact device-க்கு
+                        deliver செய்கிறது.
+                    </div>
+                </div>
+
+                <!-- LAYER 1 -->
+                <div class="layer-bar l1" onclick="toggleLayer(1)" id="bar1">
+                    <div class="layer-num" style="background:#ec4899;">1</div>
+                    <div class="layer-info">
+                        <div class="layer-name">Physical Layer</div>
+                        <div class="layer-tagline">Bits transmission — Cables, Signals, Hardware — எல்லாவற்றிற்கும்
+                            அடிப்படை</div>
+                    </div>
+                    <div class="layer-icon">⚡</div>
+                    <div class="layer-arrow" id="arrow1">▶</div>
+                </div>
+                <div class="layer-detail" id="detail1">
+                    <div style="border-left:4px solid #ec4899; padding-left:15px; margin-bottom:20px;">
+                        <h3 style="color:#f472b6;">Layer 1: Physical Layer</h3>
+                        <p><strong>Definition:</strong> Physical layer என்பது OSI model-ன் ஆதாரம். Raw <strong>bits (0s
+                                and 1s)</strong>-ஐ physical medium மூலம் (cables, wireless signals, fiber optics) ஒரு
+                            device-ல் இருந்து இன்னொரு device-க்கு transmit செய்கிறது. Electrical signals, light pulses,
+                            அல்லது radio waves — எந்த form-ல் data travel செய்கிறது என்பதை இந்த layer define செய்கிறது.
+                        </p>
+                    </div>
+                    <div class="real-example">
+                        <h4>🌍 Real World Example — உங்கள் Daily Life-ல்!</h4>
+                        <p>உங்கள் Ethernet cable (LAN wire), WiFi signal, Fiber optic cable — எல்லாமே Physical Layer.
+                            Mobile tower-ல் இருந்து உங்கள் phone-க்கு வரும் radio waves — Physical Layer! Undersea
+                            cables மூலம் India-US internet connection — Physical Layer. Data-ஐ electrical pulses, light,
+                            அல்லது radio waves-ஆக convert செய்து transmit செய்கிறது.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>📋 Functions</h4>
+                            <ul>
+                                <li>Bit transmission (0s and 1s)</li>
+                                <li>Encoding/Modulation</li>
+                                <li>Physical topology define</li>
+                                <li>Transmission mode (Simplex/Duplex)</li>
+                                <li>Data rate specification</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>🔧 Data Unit & Hardware</h4>
+                            <p><strong>Bits (0s and 1s)</strong></p>
+                            <p style="margin-top:10px;"><strong>Hardware:</strong> Cables (Cat5/Cat6/Fiber), Hub,
+                                Repeater, NIC, Modem, WiFi Antenna</p>
+                            <p style="margin-top:10px; color:#f472b6;">Medium: Copper wire, Fiber, Air (wireless)</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <strong style="color:#ec4899;">Standards & Media:</strong>
+                        <div class="protocol-tags">
+                            <span class="protocol-tag">Ethernet (Cat5/Cat6)</span>
+                            <span class="protocol-tag">Fiber Optics</span>
+                            <span class="protocol-tag">WiFi (802.11)</span>
+                            <span class="protocol-tag">Bluetooth</span>
+                            <span class="protocol-tag">USB</span>
+                            <span class="protocol-tag">DSL</span>
+                            <span class="protocol-tag">RS-232</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:15px; background:rgba(236,72,153,0.1); padding:15px; border-radius:8px;">
+                        <strong style="color:#f472b6;">🏠 Analogy:</strong> Road/Highway. Data packets travel செய்யும்
+                        physical pathway. Road quality (bandwidth), road width (capacity), road type (medium) எல்லாமே
+                        Physical Layer-ல் decide ஆகுது.
+                    </div>
+                </div>
+
+            </div><!-- end osi-stack -->
+        </section>
+
+        <!-- DATA ENCAPSULATION -->
+        <section class="section" id="encap">
+            <h2>📦 Data Encapsulation — Layer-by-Layer என்ன நடக்கிறது?</h2>
+            <p>நீங்கள் "Hello" என்று send செய்யும்போது, ஒவ்வொரு layer-ம் header/trailer add செய்கிறது. இதை
+                <strong>Encapsulation</strong> என்று சொல்கிறோம். Receive ஆகும்போது reverse process ஆகுது —
+                <strong>De-encapsulation</strong>.
+            </p>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('encap-send', this)">📤 Sending
+                    (Encapsulation)</button>
+                <button class="tab-btn" onclick="switchTab('encap-recv', this)">📥 Receiving (De-encapsulation)</button>
+            </div>
+
+            <div id="encap-send" class="tab-content active">
+                <div class="encap-demo">
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 7 (App)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l7">DATA: "Hello World!"</span>
+                        </div>
+                        <span class="encap-info">Message create ஆகுது</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 6 (Present)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l6">[Encrypted]</span>
+                            <span class="encap-payload">DATA</span>
+                        </div>
+                        <span class="encap-info">Encrypt + Compress</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 5 (Session)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l5">[Session ID]</span>
+                            <span class="encap-payload">Encrypted DATA</span>
+                        </div>
+                        <span class="encap-info">Session info add</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 4 (Transport)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l4">[TCP/Port Header]</span>
+                            <span class="encap-payload">Session DATA</span>
+                        </div>
+                        <span class="encap-info">Segment → Port numbers</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 3 (Network)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l3">[IP Header: Src/Dst IP]</span>
+                            <span class="encap-payload">TCP Segment</span>
+                        </div>
+                        <span class="encap-info">Packet → IP addresses</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 2 (Data Link)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l2">[MAC Header]</span>
+                            <span class="encap-payload">IP Packet</span>
+                            <span class="encap-header encap-l2">[FCS Trailer]</span>
+                        </div>
+                        <span class="encap-info">Frame → MAC address</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 1 (Physical)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l1">01001000 01100101 01101100 01101100 01101111...</span>
+                        </div>
+                        <span class="encap-info">Bits → Signals</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="encap-recv" class="tab-content">
+                <div class="encap-demo">
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 1 (Physical)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l1">01001000 01100101 01101100 01101100 01101111...</span>
+                        </div>
+                        <span class="encap-info">Bits receive ஆகுது</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 2 (Data Link)</span>
+                        <div class="encap-data">
+                            <span class="encap-payload" style="text-decoration:line-through; opacity:0.5;">[MAC Header
+                                removed]</span>
+                            <span class="encap-header encap-l2">IP Packet</span>
+                        </div>
+                        <span class="encap-info">MAC header strip</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 3 (Network)</span>
+                        <div class="encap-data">
+                            <span class="encap-payload" style="text-decoration:line-through; opacity:0.5;">[IP Header
+                                removed]</span>
+                            <span class="encap-header encap-l3">TCP Segment</span>
+                        </div>
+                        <span class="encap-info">IP header strip</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 4 (Transport)</span>
+                        <div class="encap-data">
+                            <span class="encap-payload" style="text-decoration:line-through; opacity:0.5;">[TCP Header
+                                removed]</span>
+                            <span class="encap-header encap-l4">Session DATA</span>
+                        </div>
+                        <span class="encap-info">Reassemble segments</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 5 (Session)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l5">Encrypted DATA</span>
+                        </div>
+                        <span class="encap-info">Session verify</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 6 (Present)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l6">DATA (Decrypted)</span>
+                        </div>
+                        <span class="encap-info">Decrypt + Decompress</span>
+                    </div>
+                    <div class="encap-step" onclick="highlightEncap(this)">
+                        <span class="encap-label">Layer 7 (App)</span>
+                        <div class="encap-data">
+                            <span class="encap-header encap-l7">✅ "Hello World!" displayed!</span>
+                        </div>
+                        <span class="encap-info">User sees message</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA FLOW VISUALIZATION -->
+        <section class="section" id="flow">
+            <h2>🌊 Live OSI Data Flow — Real Animation Simulation</h2>
+            <p>Type → Encrypt → Session → Segment → IP → MAC → Bits → Reverse Process</p>
+
+            <div class="flow-box" style="min-height:550px;">
+                <div style="text-align:center; margin-bottom:20px;">
+                    <input id="userInput" placeholder="Type site name... (ex: google.com)"
+                        style="padding:10px 20px; width:300px; border-radius:8px; border:none;">
+                    <button class="quiz-btn" onclick="startOSI()">Start Simulation</button>
+                </div>
+
+                <div id="liveFlow" style="text-align:center; font-size:0.9rem; line-height:2;"></div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section class="section" id="quiz">
+            <h2>🎯 Interactive Quiz — உங்கள் Knowledge Test செய்யுங்கள்!</h2>
+            <p>OSI Model-பற்றி எவ்வளவு புரிந்துகொண்டீர்கள் என்று check செய்யுங்கள். 10 questions — Let's go! 🚀</p>
+
+            <div class="quiz-box">
+                <div id="quizContainer">
+                    <div class="quiz-question" id="quizQuestion"></div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                    <div class="quiz-nav">
+                        <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">Next
+                            Question ➡️</button>
+                        <span class="quiz-score" id="quizScore">Score: 0/0</span>
+                        <span class="quiz-progress" id="quizProgress">Question 1 / 10</span>
+                    </div>
+                </div>
+                <div id="quizResult" style="display:none; text-align:center; padding:20px;">
+                    <div style="font-size:3rem; margin-bottom:15px;" id="resultEmoji">🎉</div>
+                    <div style="font-size:1.5rem; color:#a5b4fc; margin-bottom:10px;" id="resultTitle"></div>
+                    <div style="font-size:1.1rem; color:#ccc;" id="resultMsg"></div>
+                    <button class="quiz-btn" onclick="restartQuiz()" style="margin-top:20px;">🔄 Restart Quiz</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- KEY TAKEAWAYS -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>📌 Remember These Points!</h3>
+                <ul style="padding-left:20px; color:#ccc;">
+                    <li>OSI Model-ல் <strong>7 layers</strong> உள்ளன — Physical → Application (bottom to top)</li>
+                    <li><strong>Layer 1-4</strong> = Lower layers (hardware-oriented), <strong>Layer 5-7</strong> =
+                        Upper layers (software-oriented)</li>
+                    <li>Data travel: Sender → L7 down to L1 → Network → Receiver L1 up to L7</li>
+                    <li><strong>Encapsulation</strong>: Sending-ல் header add ஆகுது. <strong>De-encapsulation</strong>:
+                        Receiving-ல் header remove ஆகுது</li>
+                    <li>Router = Layer 3, Switch = Layer 2, Hub/Cable = Layer 1</li>
+                    <li>TCP/UDP = Layer 4, IP = Layer 3, MAC = Layer 2</li>
+                    <li>HTTP/HTTPS/DNS = Layer 7, SSL/TLS = Layer 6</li>
+                    <li>Real world: OSI Model troubleshoot-ல் "which layer failed?" என்று diagnose செய்ய use ஆகுது</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top:10px; font-size:0.9rem;">OSI Model Master ஆனீர்களா? 🚀 Keep Learning!</p>
+    </footer>
+
+    <script>
+        async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function typeEffect(text, element) {
+            element.innerHTML = "";
+            for (let i = 0; i < text.length; i++) {
+                element.innerHTML += text[i];
+                await sleep(50);
+            }
+        }
+
+        async function startOSI() {
+            const input = document.getElementById("userInput").value || "google.com";
+            const box = document.getElementById("liveFlow");
+            box.innerHTML = "";
+
+            // L7 Application
+            box.innerHTML += "<div id='l7'></div>";
+            await typeEffect("L7 Application: User typing → " + input, document.getElementById("l7"));
+            await sleep(800);
+
+            // L6 Presentation
+            box.innerHTML += "<div id='l6'></div>";
+            await typeEffect("L6 Presentation: Encrypting data...", document.getElementById("l6"));
+            await sleep(1000);
+            document.getElementById("l6").innerHTML += " 🔒 Encrypted: " + btoa(input);
+
+            // L5 Session
+            await sleep(800);
+            box.innerHTML += "<div id='l5'></div>";
+            let sessionID = "SID" + Math.floor(Math.random() * 9999);
+            document.getElementById("l5").innerHTML = "L5 Session: Creating Session → " + sessionID;
+
+            // L4 Transport
+            await sleep(1000);
+            box.innerHTML += "<div id='l4'></div>";
+            let segments = [];
+            for (let i = 0; i < input.length; i += 3) {
+                segments.push(input.slice(i, i + 3));
+            }
+            document.getElementById("l4").innerHTML = "L4 Transport: TCP Segments Created";
+            await sleep(500);
+            segments.forEach((seg, i) => {
+                box.innerHTML += "<div>Segment " + (i + 1) + " [ID:" + i + "] → " + seg + "</div>";
+            });
+
+            // L3 Network
+            await sleep(1200);
+            box.innerHTML += "<div id='l3'></div>";
+            document.getElementById("l3").innerHTML = "L3 Network: Adding IP Header → 192.168.1.10 → 142.250.x.x";
+
+            // L2 Data Link
+            await sleep(1000);
+            box.innerHTML += "<div id='l2'></div>";
+            document.getElementById("l2").innerHTML = "L2 Data Link: Adding MAC Header → AA:BB:CC:DD:EE:FF";
+
+            // L1 Physical
+            await sleep(1000);
+            box.innerHTML += "<div id='l1'></div>";
+            let bits = "";
+            for (let i = 0; i < 8; i++) {
+                bits += Math.random() > 0.5 ? "1" : "0";
+            }
+            document.getElementById("l1").innerHTML = "L1 Physical: Transmitting Bits → " + bits + "...";
+
+            // Reverse Process
+            await sleep(1500);
+            box.innerHTML += "<hr style='margin:15px 0; border:1px solid #333'>";
+            box.innerHTML += "<div>⬅ Reverse Process Starting...</div>";
+            await sleep(800);
+
+            box.innerHTML += "<div>Physical → Bits received</div>";
+            await sleep(600);
+            box.innerHTML += "<div>Data Link → MAC Removed</div>";
+            await sleep(600);
+            box.innerHTML += "<div>Network → IP Header Removed</div>";
+            await sleep(600);
+            box.innerHTML += "<div>Transport → Segments Reassembled</div>";
+            await sleep(600);
+            box.innerHTML += "<div>Session → " + sessionID + " Verified</div>";
+            await sleep(600);
+            box.innerHTML += "<div>Presentation → Decrypting...</div>";
+            await sleep(800);
+            box.innerHTML += "<div>Application → Final Data Displayed: " + input + "</div>";
+        }
+        // PROGRESS BAR
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+        });
+
+        // SMOOTH SCROLL
+        function scrollTo(id) {
+            document.querySelector(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // SCROLL ANIMATION
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+        // LAYER TOGGLE
+        let activeLayer = null;
+        function toggleLayer(n) {
+            const detail = document.getElementById('detail' + n);
+            const arrow = document.getElementById('arrow' + n);
+            const bar = document.getElementById('bar' + n);
+
+            if (activeLayer && activeLayer !== n) {
+                document.getElementById('detail' + activeLayer).classList.remove('show');
+                document.getElementById('arrow' + activeLayer).style.transform = '';
+                document.getElementById('bar' + activeLayer).classList.remove('active');
+            }
+
+            const isOpen = detail.classList.contains('show');
+            detail.classList.toggle('show', !isOpen);
+            arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
+            bar.classList.toggle('active', !isOpen);
+            activeLayer = isOpen ? null : n;
+
+            if (!isOpen) {
+                setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            }
+        }
+
+        // MEMORY TRICK
+        const layerNames = {
+            7: 'Layer 7: Application — HTTP, Browser, Email apps!',
+            6: 'Layer 6: Presentation — Encryption (SSL), Compression (ZIP)!',
+            5: 'Layer 5: Session — Login to Logout session management!',
+            4: 'Layer 4: Transport — TCP/UDP, Port numbers!',
+            3: 'Layer 3: Network — IP Addresses, Routing (Router)!',
+            2: 'Layer 2: Data Link — MAC Addresses, Frames (Switch)!',
+            1: 'Layer 1: Physical — Cables, Bits, WiFi signals!'
+        };
+        function showMemory(n) {
+            const msg = document.getElementById('memoryMsg');
+            msg.style.opacity = '0';
+            setTimeout(() => {
+                msg.textContent = layerNames[n];
+                msg.style.opacity = '1';
+            }, 200);
+        }
+
+        // FILTER LAYERS
+        const layerKeywords = {
+            7: 'http https ftp smtp dns dhcp telnet ssh pop3 imap application browser email web',
+            6: 'ssl tls jpeg png mpeg mp4 ascii unicode json xml mime gzip encrypt presentation',
+            5: 'netbios rpc pptp sip session login logout',
+            4: 'tcp udp port transport segment 80 443 22 21 53',
+            3: 'ip ipv4 ipv6 icmp ospf bgp rip nat arp router network packet routing',
+            2: 'ethernet mac wifi 802 ppp hdlc switch bridge frame datalink data link',
+            1: 'cable fiber cat5 cat6 hub repeater nic modem bluetooth usb physical bit'
+        };
+        function filterLayers(val) {
+            val = val.toLowerCase().trim();
+            for (let i = 1; i <= 7; i++) {
+                const bar = document.getElementById('bar' + i);
+                const detail = document.getElementById('detail' + i);
+                if (!val || layerKeywords[i].includes(val)) {
+                    bar.style.display = 'flex';
+                } else {
+                    bar.style.display = 'none';
+                    detail.classList.remove('show');
+                }
+            }
+        }
+
+        // HIGHLIGHT ENCAP STEP
+        function highlightEncap(el) {
+            document.querySelectorAll('.encap-step').forEach(s => s.style.background = '');
+            el.style.background = 'rgba(102,126,234,0.15)';
+            el.style.borderColor = 'rgba(102,126,234,0.4)';
+        }
+
+        // TABS
+        function switchTab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ANIMATE FLOW
+        let isAnimating = false;
+        const flowMessages = [
+            '📱 Browser sends HTTP GET request (Layer 7)',
+            '🔒 TLS Encryption applied (Layer 6)',
+            '🤝 TCP Session established (Layer 5)',
+            '📦 TCP Segment created, Port 443 (Layer 4)',
+            '🗺️ IP Packet routed to 142.250.x.x (Layer 3)',
+            '🔗 Ethernet Frame with MAC address (Layer 2)',
+            '⚡ Bits sent via WiFi signal (Layer 1)',
+            '🌐 Traveling through Internet...',
+            '⚡ Google receives bits (Layer 1)',
+            '🔗 Frame decoded, MAC verified (Layer 2)',
+            '🗺️ IP Packet arrives at Google (Layer 3)',
+            '📦 TCP Segment reassembled (Layer 4)',
+            '🤝 Session verified (Layer 5)',
+            '🔒 TLS Decrypted (Layer 6)',
+            '✅ Google serves HTML page! (Layer 7)'
+        ];
+
+        async function animateFlow() {
+            if (isAnimating) return;
+            isAnimating = true;
+            const btn = document.getElementById('animBtn');
+            btn.disabled = true;
+
+            // Reset
+            for (let i = 1; i <= 7; i++) {
+                document.getElementById('fl' + i + 's').classList.remove('highlight');
+                document.getElementById('fl' + i + 'r').classList.remove('highlight');
+            }
+            document.getElementById('travelPacket').style.display = 'none';
+
+            const layers = [7, 6, 5, 4, 3, 2, 1];
+            const msg = document.getElementById('flowMsg');
+
+            // Sender side (down)
+            for (let i = 0; i < layers.length; i++) {
+                const n = layers[i];
+                document.getElementById('fl' + n + 's').classList.add('highlight');
+                msg.textContent = flowMessages[i];
+                await sleep(600);
+            }
+
+            // Travel
+            document.getElementById('travelPacket').style.display = 'block';
+            msg.textContent = flowMessages[7];
+            await sleep(800);
+
+            // Receiver side (up)
+            const rlayers = [1, 2, 3, 4, 5, 6, 7];
+            for (let i = 0; i < rlayers.length; i++) {
+                const n = rlayers[i];
+                document.getElementById('fl' + n + 'r').classList.add('highlight');
+                msg.textContent = flowMessages[8 + i];
+                await sleep(600);
+            }
+
+            await sleep(500);
+            isAnimating = false;
+            btn.disabled = false;
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // QUIZ
+        const questions = [
+            { q: "OSI Model-ல் எத்தனை layers உள்ளன?", opts: ["5", "6", "7", "8"], ans: 2, exp: "OSI Model-ல் 7 layers உள்ளன: Physical, Data Link, Network, Transport, Session, Presentation, Application." },
+            { q: "Router எந்த OSI Layer-ல் operate செய்கிறது?", opts: ["Layer 1", "Layer 2", "Layer 3", "Layer 4"], ans: 2, exp: "Router Layer 3 (Network Layer)-ல் operate செய்கிறது. IP addresses பயன்படுத்தி routing செய்கிறது." },
+            { q: "TCP மற்றும் UDP எந்த layer-ல் செயல்படுகின்றன?", opts: ["Network Layer", "Transport Layer", "Session Layer", "Data Link Layer"], ans: 1, exp: "TCP மற்றும் UDP Layer 4 (Transport Layer)-ல் operate செய்கின்றன. End-to-end delivery handle செய்கின்றன." },
+            { q: "MAC Address எந்த layer-ல் use ஆகுது?", opts: ["Layer 1", "Layer 2", "Layer 3", "Layer 4"], ans: 1, exp: "MAC Address Layer 2 (Data Link Layer)-ல் use ஆகுது. Switch இந்த layer-ல் MAC addresses பயன்படுத்தி frame forward செய்கிறது." },
+            { q: "Data Encapsulation-ல் Layer 4 data unit-ஐ என்ன என்று சொல்கிறோம்?", opts: ["Frame", "Packet", "Segment", "Bits"], ans: 2, exp: "Layer 4 (Transport Layer)-ல் data unit-ஐ Segment (TCP) அல்லது Datagram (UDP) என்று சொல்கிறோம்." },
+            { q: "SSL/TLS encryption எந்த OSI layer-ல் நடக்கிறது?", opts: ["Layer 4", "Layer 5", "Layer 6", "Layer 7"], ans: 2, exp: "SSL/TLS Layer 6 (Presentation Layer)-ல் operate செய்கிறது. Data encryption, decryption, compression இந்த layer-ல் நடக்கும்." },
+            { q: "Switch எந்த layer-ல் operate செய்கிறது?", opts: ["Layer 1", "Layer 2", "Layer 3", "Layer 4"], ans: 1, exp: "Switch Layer 2 (Data Link Layer)-ல் operate செய்கிறது. MAC address table பயன்படுத்தி frames forward செய்கிறது." },
+            { q: "HTTP protocol எந்த layer-ல் உள்ளது?", opts: ["Layer 4", "Layer 5", "Layer 6", "Layer 7"], ans: 3, exp: "HTTP Layer 7 (Application Layer)-ல் உள்ளது. Web browsing-க்கு use ஆகும் protocol." },
+            { q: "Physical layer-ல் data என்ன format-ல் transmit ஆகுது?", opts: ["Frames", "Packets", "Segments", "Bits (0s and 1s)"], ans: 3, exp: "Physical Layer-ல் data raw bits (0s and 1s) format-ல் transmit ஆகுது. Electrical signals, light, அல்லது radio waves மூலம்." },
+            { q: "OSI Model-ல் Session Layer என்ன செய்கிறது?", opts: ["IP routing செய்கிறது", "Data encrypt செய்கிறது", "Communication sessions manage செய்கிறது", "Physical cables manage செய்கிறது"], ans: 2, exp: "Session Layer communication sessions-ஐ establish, maintain மற்றும் terminate செய்கிறது. Login to logout வரை session manage செய்கிறது." }
+        ];
+
+        let currentQ = 0, score = 0, answered = false;
+
+        function loadQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('quizQuestion').textContent = (currentQ + 1) + '. ' + q.q;
+            const opts = document.getElementById('quizOptions');
+            opts.innerHTML = '';
+            q.opts.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.textContent = opt;
+                div.onclick = () => selectAnswer(i);
+                opts.appendChild(div);
+            });
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            document.getElementById('quizFeedback').textContent = '';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('quizProgress').textContent = 'Question ' + (currentQ + 1) + ' / ' + questions.length;
+            document.getElementById('quizScore').textContent = 'Score: ' + score + '/' + currentQ;
+            answered = false;
+        }
+
+        function selectAnswer(i) {
+            if (answered) return;
+            answered = true;
+            const q = questions[currentQ];
+            const opts = document.querySelectorAll('.quiz-option');
+            opts.forEach((o, idx) => {
+                o.style.pointerEvents = 'none';
+                if (idx === q.ans) o.classList.add('correct');
+                if (idx === i && i !== q.ans) o.classList.add('wrong');
+            });
+            const fb = document.getElementById('quizFeedback');
+            if (i === q.ans) {
+                score++;
+                fb.className = 'quiz-feedback correct show';
+                fb.textContent = '✅ சரியான பதில்! ' + q.exp;
+            } else {
+                fb.className = 'quiz-feedback wrong show';
+                fb.textContent = '❌ தவறான பதில். ' + q.exp;
+            }
+            document.getElementById('quizScore').textContent = 'Score: ' + score + '/' + (currentQ + 1);
+            document.getElementById('nextBtn').style.display = currentQ < questions.length - 1 ? 'block' : 'none';
+            if (currentQ === questions.length - 1) {
+                setTimeout(showResult, 800);
+            }
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            const pct = (score / questions.length) * 100;
+            let emoji, title, msg;
+            if (pct === 100) { emoji = '🏆'; title = 'Perfect Score! OSI Master!'; msg = 'நீங்கள் OSI Model-ஐ முழுமையாக புரிந்துகொண்டீர்கள்! Excellent job!'; }
+            else if (pct >= 80) { emoji = '🎉'; title = 'Great Job! Almost Perfect!'; msg = 'மிகவும் நல்லா பண்ணீர்கள்! சில points review பண்ணி perfect ஆக்குங்கள்!'; }
+            else if (pct >= 60) { emoji = '👍'; title = 'Good Effort!'; msg = 'நல்ல progress! Layers-ஐ மீண்டும் படித்து quiz try பண்ணுங்கள்!'; }
+            else { emoji = '📚'; title = 'Keep Learning!'; msg = 'OSI Model-ஐ மீண்டும் ஒரு முறை படியுங்கள். நீங்கள் நிச்சயம் சரியாக செய்வீர்கள்!'; }
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultTitle').textContent = title + ' (' + score + '/' + questions.length + ')';
+            document.getElementById('resultMsg').textContent = msg;
+        }
+
+        function restartQuiz() {
+            currentQ = 0; score = 0;
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('quizResult').style.display = 'none';
+            loadQuestion();
+        }
+
+        // INIT
+        loadQuestion();
+    </script>
+</body>
+
+</html>

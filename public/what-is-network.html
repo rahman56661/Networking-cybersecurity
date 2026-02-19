@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Network? - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Animation Container */
+        .animation-box {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Network Animation 1 - Simple Connection */
+        .network-demo-1 {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            min-height: 250px;
+        }
+
+        .device {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .device-label {
+            position: absolute;
+            bottom: -30px;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            white-space: nowrap;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            top: 50%;
+            left: 15%;
+            right: 15%;
+            animation: dataFlow 2s infinite;
+        }
+
+        .data-packet {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: movePacket 3s infinite;
+        }
+
+        /* Network Animation 2 - Multiple Devices */
+        .network-demo-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .router {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            z-index: 10;
+            animation: routerPulse 3s infinite;
+            box-shadow: 0 0 50px rgba(240, 147, 251, 0.6);
+        }
+
+        .devices-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .circle-device {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: float 4s ease-in-out infinite;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .circle-device:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+
+        .circle-device:nth-child(2) {
+            top: 30%;
+            right: 5%;
+            animation-delay: 0.5s;
+        }
+
+        .circle-device:nth-child(3) {
+            bottom: 10%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .circle-device:nth-child(4) {
+            bottom: 10%;
+            left: 15%;
+            animation-delay: 1.5s;
+        }
+
+        .circle-device:nth-child(5) {
+            top: 30%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+
+        .signal-wave {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: waveExpand 2s infinite;
+        }
+
+        .signal-wave:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .signal-wave:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: left;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #d0d0d0;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: #667eea;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes dataFlow {
+            0% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes movePacket {
+            0% {
+                left: 15%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 85%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes routerPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 50px rgba(240, 147, 251, 0.6);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 80px rgba(240, 147, 251, 0.9);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .network-demo-1 {
+                flex-direction: column;
+                gap: 60px;
+            }
+
+            .connection-line {
+                width: 3px;
+                height: 100px;
+                left: 50%;
+                top: 20%;
+                background: linear-gradient(180deg, #667eea, #764ba2);
+            }
+
+            .data-packet {
+                animation: movePacketVertical 3s infinite;
+            }
+
+            .device {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+
+            .circle-device {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .router {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+        }
+
+        @keyframes movePacketVertical {
+            0% {
+                top: 20%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 70%;
+                opacity: 0;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            margin-top: 60px;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Networking Hub</a>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🌐 What is a Network?</h1>
+            <p class="hero-subtitle">Understanding the Foundation of Digital Communication</p>
+        </section>
+
+        <!-- Definition Section -->
+        <section class="section">
+            <h2>📖 Definition</h2>
+            <p>
+                A <strong>computer network</strong> is a group of two or more computing devices (like computers, smartphones, 
+                tablets, servers, or printers) that are connected together to share resources, exchange data, and communicate 
+                with each other. Think of it like a digital highway system that allows information to travel between different 
+                devices.
+            </p>
+
+            <div class="example-box">
+                <strong>🏠 Real-Life Example:</strong>
+                Imagine your home Wi-Fi network. Your laptop, smartphone, smart TV, and printer are all connected to the same 
+                router. When you print a document from your laptop, the data travels through the network to reach the printer. 
+                That's a network in action!
+            </div>
+
+            <p>
+                In simple terms, a network is like a community where devices can talk to each other, share files, access 
+                the internet together, and work as a team. Just like how people in a neighborhood communicate and help each 
+                other, devices in a network communicate and share resources.
+            </p>
+        </section>
+
+        <!-- Visual Demo 1 - Simple Connection -->
+        <section class="section">
+            <h2>🔗 How Do Devices Connect?</h2>
+            <p>
+                At its most basic level, a network involves at least two devices connected together. Let's visualize this:
+            </p>
+
+            <div class="animation-box">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #667eea;">
+                    Simple Device Connection
+                </h3>
+                <div class="network-demo-1">
+                    <div class="device">
+                        💻
+                        <div class="device-label">Computer</div>
+                    </div>
+                    <div class="connection-line">
+                        <div class="data-packet"></div>
+                    </div>
+                    <div class="device">
+                        🖨️
+                        <div class="device-label">Printer</div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 30px; color: #b0b0b0;">
+                    ✨ Watch the data packet travel between devices!
+                </p>
+            </div>
+
+            <p>
+                The glowing line between the devices represents the <strong>network connection</strong>. This could be:
+            </p>
+            <ul>
+                <li><strong>Wired Connection:</strong> Using Ethernet cables (physical cables)</li>
+                <li><strong>Wireless Connection:</strong> Using Wi-Fi, Bluetooth, or other radio signals</li>
+            </ul>
+        </section>
+
+        <!-- Visual Demo 2 - Network with Router -->
+        <section class="section">
+            <h2>🌟 Modern Network Structure</h2>
+            <p>
+                In real-world scenarios, networks usually have a central device called a <strong>router</strong> or 
+                <strong>switch</strong> that connects all devices together. This creates a star-shaped network where 
+                all devices communicate through this central hub.
+            </p>
+
+            <div class="animation-box">
+                <h3 style="text-align: center; margin-bottom: 30px; color: #667eea;">
+                    Network with Router (Hub)
+                </h3>
+                <div class="network-demo-2">
+                    <div class="signal-wave"></div>
+                    <div class="signal-wave"></div>
+                    <div class="signal-wave"></div>
+                    
+                    <div class="router">
+                        📡
+                    </div>
+
+                    <div class="devices-circle">
+                        <div class="circle-device">💻</div>
+                        <div class="circle-device">📱</div>
+                        <div class="circle-device">🖨️</div>
+                        <div class="circle-device">📺</div>
+                        <div class="circle-device">⌚</div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 30px; color: #b0b0b0;">
+                    🎯 The router (center) connects all devices and manages data flow
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Why Use a Router?</h3>
+                <ul>
+                    <li>Makes it easy to connect multiple devices</li>
+                    <li>Manages traffic so devices don't interfere with each other</li>
+                    <li>Provides security and internet access to all connected devices</li>
+                    <li>Acts like a traffic controller for data</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Key Components -->
+        <section class="section">
+            <h2>🧩 Key Components of a Network</h2>
+            <p>Every network consists of several important components that work together:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">💻</span>
+                    <h4>End Devices</h4>
+                    <p>
+                        Computers, smartphones, tablets, printers - any device that sends or receives data. 
+                        These are also called "hosts" or "nodes."
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Network Devices</h4>
+                    <p>
+                        Routers, switches, access points - devices that help direct and manage data flow 
+                        between end devices.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Network Media</h4>
+                    <p>
+                        The physical or wireless channels that carry data. This includes cables (Ethernet, fiber) 
+                        or wireless signals (Wi-Fi, Bluetooth).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Protocols</h4>
+                    <p>
+                        Rules and standards that govern how data is transmitted. Like a common language that 
+                        all devices understand (TCP/IP, HTTP, etc.).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📦</span>
+                    <h4>Data Packets</h4>
+                    <p>
+                        Information is broken into small chunks called packets. Each packet travels independently 
+                        and is reassembled at the destination.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔐</span>
+                    <h4>Security Elements</h4>
+                    <p>
+                        Firewalls, encryption, passwords - components that protect the network and data from 
+                        unauthorized access.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How Networks Work -->
+        <section class="section">
+            <h2>⚙️ How Does a Network Actually Work?</h2>
+            <p>
+                Let's break down what happens when you send a message or file over a network:
+            </p>
+
+            <ol>
+                <li>
+                    <strong>Source Device Creates Data:</strong> You click "send" on a message or file. Your device 
+                    (computer, phone) prepares this data for transmission.
+                </li>
+                <li>
+                    <strong>Data is Broken into Packets:</strong> The data is divided into small pieces called "packets." 
+                    Each packet contains a portion of your data plus addressing information (like an envelope with 
+                    sender and receiver addresses).
+                </li>
+                <li>
+                    <strong>Packets Travel Through the Network:</strong> These packets travel through network devices 
+                    (routers, switches) which read the address and forward them toward the destination. Packets might 
+                    take different routes to get there!
+                </li>
+                <li>
+                    <strong>Destination Device Receives Packets:</strong> The receiving device collects all the packets. 
+                    They might arrive out of order!
+                </li>
+                <li>
+                    <strong>Data is Reassembled:</strong> The receiving device puts all the packets back together in 
+                    the correct order, like completing a jigsaw puzzle.
+                </li>
+                <li>
+                    <strong>Confirmation Sent:</strong> The receiving device sends a confirmation back to the sender 
+                    saying "I got it!" If any packets were lost, the sender will resend them.
+                </li>
+            </ol>
+
+            <div class="example-box">
+                <strong>📬 Real-World Analogy:</strong>
+                Imagine sending a large book through the mail. You can't send it all at once, so you:
+                <br>1. Tear out pages and put each in a separate envelope
+                <br>2. Write the receiver's address and page number on each envelope
+                <br>3. Mail them all (they might take different routes)
+                <br>4. The receiver collects all envelopes and assembles the pages in order
+                <br>5. If any envelope is missing, they ask you to resend that specific page
+                <br><br>
+                That's exactly how computer networks work with data packets!
+            </div>
+        </section>
+
+        <!-- Types of Networks -->
+        <section class="section">
+            <h2>📡 Types of Networks</h2>
+            <p>Networks come in different sizes and serve different purposes:</p>
+
+            <h3>1. PAN (Personal Area Network)</h3>
+            <ul>
+                <li><strong>Coverage:</strong> Very small area (within 10 meters)</li>
+                <li><strong>Example:</strong> Bluetooth connection between your phone and wireless earbuds, smartwatch connected to phone</li>
+                <li><strong>Purpose:</strong> Connect personal devices around one person</li>
+            </ul>
+
+            <h3>2. LAN (Local Area Network)</h3>
+            <ul>
+                <li><strong>Coverage:</strong> Small area like a home, office, or building</li>
+                <li><strong>Example:</strong> Your home Wi-Fi network, office network connecting computers on one floor</li>
+                <li><strong>Purpose:</strong> Share resources (printers, files) and internet within a building</li>
+            </ul>
+
+            <h3>3. MAN (Metropolitan Area Network)</h3>
+            <ul>
+                <li><strong>Coverage:</strong> A city or large campus</li>
+                <li><strong>Example:</strong> Cable TV networks in a city, university campus network connecting multiple buildings</li>
+                <li><strong>Purpose:</strong> Connect multiple LANs across a city</li>
+            </ul>
+
+            <h3>4. WAN (Wide Area Network)</h3>
+            <ul>
+                <li><strong>Coverage:</strong> Large geographical area (countries, continents)</li>
+                <li><strong>Example:</strong> The Internet! Also, corporate networks connecting offices across different countries</li>
+                <li><strong>Purpose:</strong> Connect networks over long distances</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>🌍 Fun Fact About the Internet</h3>
+                <p>
+                    The Internet is actually the world's largest WAN - it's a massive network of networks connecting 
+                    billions of devices globally! When you visit a website, your data might travel through dozens of 
+                    different networks before reaching the server and coming back to you.
+                </p>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of Networks</h2>
+            <p>Networks provide numerous benefits in our daily lives and work:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🤝</span>
+                    <h4>Resource Sharing</h4>
+                    <p>
+                        Share expensive devices like printers, scanners, and storage drives among multiple users. 
+                        No need to buy a printer for every computer!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📁</span>
+                    <h4>File Sharing</h4>
+                    <p>
+                        Easily share documents, photos, videos, and other files between devices. No need for USB drives!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💬</span>
+                    <h4>Communication</h4>
+                    <p>
+                        Instant messaging, video calls, emails - networks enable real-time communication across the globe.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Internet Access</h4>
+                    <p>
+                        One internet connection can be shared among all devices in the network, saving money and resources.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💾</span>
+                    <h4>Centralized Data</h4>
+                    <p>
+                        Store all important data in one central location (server), making backups and management easier.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Improved Efficiency</h4>
+                    <p>
+                        Work collaboratively on projects, access information quickly, and automate tasks across the network.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Cost Savings</h4>
+                    <p>
+                        Share resources instead of buying separate ones for each user. Reduces hardware and software costs.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Remote Access</h4>
+                    <p>
+                        Access your files and applications from anywhere in the world. Work from home or on the go!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages -->
+        <section class="section">
+            <h2>⚠️ Disadvantages of Networks</h2>
+            <p>While networks are incredibly useful, they also come with some challenges:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Security Risks</h4>
+                    <p>
+                        Networks can be vulnerable to hackers, viruses, and unauthorized access. Requires constant 
+                        security monitoring and updates.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💵</span>
+                    <h4>Initial Setup Cost</h4>
+                    <p>
+                        Setting up a network requires investment in hardware (routers, cables, servers) and possibly 
+                        professional installation.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔧</span>
+                    <h4>Maintenance Required</h4>
+                    <p>
+                        Networks need regular maintenance, updates, and monitoring. May require hiring IT professionals 
+                        for larger networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚠️</span>
+                    <h4>Server Dependency</h4>
+                    <p>
+                        If the central server fails, the entire network might be affected. Requires backup systems and 
+                        redundancy planning.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🐌</span>
+                    <h4>Performance Issues</h4>
+                    <p>
+                        Too many users or heavy traffic can slow down the network. Bandwidth limitations can cause 
+                        bottlenecks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Dependency on Infrastructure</h4>
+                    <p>
+                        Networks rely on stable power supply and functioning hardware. Power outages or equipment 
+                        failures can disrupt operations.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">😰</span>
+                    <h4>Complexity</h4>
+                    <p>
+                        Large networks can be complex to set up and manage. Requires technical knowledge and training.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🦠</span>
+                    <h4>Virus Spread</h4>
+                    <p>
+                        If one device gets infected, viruses can quickly spread to other connected devices through 
+                        the network.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li>A <strong>network</strong> is simply a group of connected devices that can communicate and share resources</li>
+                    <li>Networks use <strong>routers</strong> or switches to connect multiple devices together</li>
+                    <li>Data travels as <strong>packets</strong> - small chunks that take the best route to reach their destination</li>
+                    <li>Networks range from tiny (PAN - your Bluetooth devices) to massive (WAN - the entire Internet!)</li>
+                    <li>The biggest advantage is <strong>resource sharing</strong> and <strong>communication</strong></li>
+                    <li>The main concerns are <strong>security</strong> and <strong>maintenance costs</strong></li>
+                    <li>Modern life heavily depends on networks - from your home Wi-Fi to global business operations</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Next Steps -->
+        <section class="section">
+            <h2>🚀 Ready to Learn More?</h2>
+            <p>
+                Now that you understand what a network is, you're ready to dive deeper into specific topics! 
+                Head back to the dashboard to explore:
+            </p>
+            <ul>
+                <li>Network Topologies - How networks are structured</li>
+                <li>OSI Model - The 7 layers of network communication</li>
+                <li>IP Addressing - How devices find each other</li>
+                <li>Protocols - The rules that make networks work</li>
+                <li>And much more!</li>
+            </ul>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="dashboard.html" class="back-btn" style="display: inline-block; padding: 15px 40px; font-size: 1.1rem;">
+                    🎓 Continue Learning →
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Progress bar on scroll
+        window.addEventListener('scroll', function() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAN - Personal Area Network | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            /*-webkit-text-fill-color: transparent;*/
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* PAN Illustration - Person with Devices */
+        .pan-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 50px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .person-center {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            z-index: 10;
+            animation: personPulse 3s infinite;
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.6);
+        }
+
+        .person-label {
+            position: absolute;
+            bottom: -35px;
+            font-size: 1rem;
+            color: #fff;
+            background: rgba(102, 126, 234, 0.3);
+            padding: 5px 15px;
+            border-radius: 15px;
+            white-space: nowrap;
+        }
+
+        .pan-device {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            animation: deviceFloat 4s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(118, 75, 162, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pan-device:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(118, 75, 162, 0.8);
+        }
+
+        .device-name {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            color: #fff;
+            text-align: center;
+        }
+
+        /*.pan-device:nth-of-type(1) {
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+
+        .pan-device:nth-of-type(2) {
+            top: 25%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+
+        .pan-device:nth-of-type(3) {
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .pan-device:nth-of-type(4) {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 1.5s;
+        }
+
+        .pan-device:nth-of-type(5) {
+            top: 25%;
+            left: 10%;
+            animation-delay: 2s;
+        }*/
+
+        /* Bluetooth Signal Waves */
+        .bluetooth-wave {
+            position: absolute;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            animation: waveExpand 3s infinite;
+        }
+
+        /*.bluetooth-wave:nth-child(6) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 0s;
+        }
+
+        .bluetooth-wave:nth-child(7) {
+            width: 300px;
+            height: 300px;
+            animation-delay: 0.7s;
+        }
+
+        .bluetooth-wave:nth-child(8) {
+            width: 400px;
+            height: 400px;
+            animation-delay: 1.4s;
+        }*/
+
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            transform-origin: center;
+            opacity: 0;
+            animation: lineAppear 3s infinite;
+        }
+
+        /* Real-World Examples Grid */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .example-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .example-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .example-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .example-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .example-details strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Workflow Timeline */
+        .workflow-timeline {
+            position: relative;
+            padding: 40px 0;
+            margin: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            width: 45%;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            animation: slideIn 0.6s ease;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+            z-index: 10;
+        }
+
+        .timeline-content h4 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: #d0d0d0;
+            margin: 0;
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .info-card:hover::after {
+            opacity: 1;
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: left;
+            margin: 0;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+
+        /* List Styles */
+        ul,
+        ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #d0d0d0;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: #667eea;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroGlow {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes personPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 60px rgba(102, 126, 234, 0.6);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 80px rgba(102, 126, 234, 0.9);
+            }
+        }
+
+        @keyframes deviceFloat {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes lineAppear {
+
+            0%,
+            100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: row !important;
+                padding-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .timeline-dot {
+                left: 30px !important;
+            }
+
+            .pan-device {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+
+            .person-center {
+                width: 100px;
+                height: 100px;
+                font-size: 3rem;
+            }
+
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            margin-top: 60px;
+        }
+
+        /* ===== PAN VISUAL – FINAL FIX ===== */
+
+        .pan-illustration {
+            position: relative;
+            min-height: 500px;
+            background: rgba(30, 30, 30, .85);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Center person */
+        .person-center {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Devices */
+        .pan-device {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #fff;
+            animation: deviceFloat 4s ease-in-out infinite;
+        }
+
+        .pan-device span {
+            font-size: .75rem;
+            margin-top: 5px;
+        }
+
+        /* Fixed positions */
+        .d1 {
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .d2 {
+            top: 25%;
+            right: 10%;
+        }
+
+        .d3 {
+            bottom: 15%;
+            right: 15%;
+        }
+
+        .d4 {
+            bottom: 15%;
+            left: 15%;
+        }
+
+        .d5 {
+            top: 25%;
+            left: 10%;
+        }
+
+        /* Bluetooth waves */
+        .bluetooth-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(102, 126, 234, .3);
+            border-radius: 50%;
+            animation: waveExpand 3s infinite;
+        }
+
+        .w1 {
+            width: 200px;
+            height: 200px;
+        }
+
+        .w2 {
+            width: 300px;
+            height: 300px;
+            animation-delay: .7s;
+        }
+
+        .w3 {
+            width: 400px;
+            height: 400px;
+            animation-delay: 1.4s;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Networking Hub</a>
+            <div class="nav-buttons">
+                <!--<a href="what-is-network.html" class="nav-btn">← Network Basics</a>-->
+                <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>📱 PAN - Personal Area Network</h1>
+                <p class="hero-subtitle">The Smallest Network That Powers Your Daily Life</p>
+                <span class="hero-badge">Coverage: Within 10 Meters</span>
+            </div>
+        </section>
+
+        <!-- Introduction & Definition -->
+        <section class="section">
+            <h2>📖 What is PAN?</h2>
+            <p>
+                A <strong>Personal Area Network (PAN)</strong> is the smallest type of network designed for personal
+                use.
+                It connects devices within a very short range - typically within 10 meters (about 30 feet) of a single
+                person.
+                Think of it as your personal bubble of connected devices that follow you wherever you go!
+            </p>
+
+            <div class="example-box">
+                <strong>🎯 Simple Definition:</strong>
+                PAN is like your personal digital ecosystem where all your gadgets can talk to each other wirelessly.
+                Your smartphone connects to your wireless earbuds, your smartwatch syncs with your phone, and your
+                laptop shares files with your tablet - all happening within arm's reach!
+            </div>
+
+            <p>
+                The term "Personal" is key here - this network is specifically for one individual's devices. Unlike
+                larger networks that serve offices or cities, PAN is all about connecting YOUR personal gadgets together
+                to make YOUR life easier and more convenient.
+            </p>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">~10m</div>
+                    <div class="stat-label">Maximum Range</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5-7</div>
+                    <div class="stat-label">Typical Devices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.4 GHz</div>
+                    <div class="stat-label">Common Frequency</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1-3 Mbps</div>
+                    <div class="stat-label">Typical Speed</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual PAN Network Illustration -->
+        <section class="section">
+            <h2>👤 Visual Representation: Your Personal Network</h2>
+
+            <p style="text-align:center;margin-bottom:30px;">
+                Here's how a typical PAN looks – one person surrounded by connected devices
+            </p>
+
+            <div class="pan-illustration">
+
+                <!-- Center Person -->
+                <div class="person-center">
+                    🧑
+                    <div class="person-label">You</div>
+                </div>
+
+                <!-- Waves -->
+                <div class="bluetooth-wave w1"></div>
+                <div class="bluetooth-wave w2"></div>
+                <div class="bluetooth-wave w3"></div>
+
+                <!-- Devices -->
+                <div class="pan-device d1">📱<span>Smartphone</span></div>
+                <div class="pan-device d2">🎧<span>Earbuds</span></div>
+                <div class="pan-device d3">⌚<span>Smartwatch</span></div>
+                <div class="pan-device d4">💻<span>Laptop</span></div>
+                <div class="pan-device d5">🎮<span>Controller</span></div>
+
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Notice</h3>
+                <ul>
+                    <li>All devices are within 10 meters</li>
+                    <li>Everything is wireless (Bluetooth / PAN)</li>
+                    <li>You are the center of the network</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Real-World Examples -->
+        <section class="section">
+            <h2>🌍 Real-World Examples of PAN</h2>
+            <p>
+                You probably use PAN technology every single day without even realizing it! Let's explore common
+                scenarios where PAN makes your life easier:
+            </p>
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <span class="example-icon">🎵</span>
+                    <h4>Wireless Audio</h4>
+                    <p>
+                        Listening to music on your smartphone through Bluetooth earbuds or headphones while
+                        working out at the gym or commuting to work.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth
+                        <br><strong>Range:</strong> Up to 10 meters
+                        <br><strong>Use Case:</strong> Music, Calls, Podcasts
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">⌚</span>
+                    <h4>Smartwatch Sync</h4>
+                    <p>
+                        Your smartwatch receives notifications, tracks fitness data, and syncs with your
+                        smartphone to display messages, calls, and health metrics.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth LE
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> Fitness, Notifications, Health
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🖨️</span>
+                    <h4>Wireless Printing</h4>
+                    <p>
+                        Printing documents directly from your smartphone or tablet to a Bluetooth printer
+                        without any cables - perfect for home or small office.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth/Wi-Fi Direct
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> Document Printing, Photos
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🎮</span>
+                    <h4>Gaming Controllers</h4>
+                    <p>
+                        Playing video games with wireless controllers connected to your console or PC.
+                        No tangled cables, complete freedom of movement!
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth/Proprietary Wireless
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> Gaming, Entertainment
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🖱️</span>
+                    <h4>Wireless Peripherals</h4>
+                    <p>
+                        Using wireless keyboard and mouse with your computer for a clean, cable-free desk
+                        setup. Great for productivity and aesthetics!
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth/RF Wireless
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> Work, Study, Gaming
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">📸</span>
+                    <h4>Photo Transfer</h4>
+                    <p>
+                        Instantly sharing photos from your smartphone to your laptop or tablet for editing,
+                        backup, or sharing on social media.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth/Wi-Fi Direct
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> File Sharing, Backup
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏥</span>
+                    <h4>Health Monitoring</h4>
+                    <p>
+                        Fitness trackers and health monitors that sync data to your phone - tracking steps,
+                        heart rate, sleep patterns, and more.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth LE
+                        <br><strong>Range:</strong> 5-10 meters
+                        <br><strong>Use Case:</strong> Health, Fitness Tracking
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🚗</span>
+                    <h4>Car Connectivity</h4>
+                    <p>
+                        Connecting your smartphone to your car's audio system for hands-free calling,
+                        navigation, and music streaming while driving.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> Bluetooth
+                        <br><strong>Range:</strong> Within car
+                        <br><strong>Use Case:</strong> Calls, Navigation, Music
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How PAN Works - Workflow -->
+        <section class="section">
+            <h2>⚙️ How Does PAN Work? - Step-by-Step Workflow</h2>
+            <p>
+                Understanding how devices in a PAN communicate is easier than you think. Let's walk through
+                the complete process using a common example: connecting wireless earbuds to your smartphone.
+            </p>
+
+            <div class="workflow-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <h4>🔌 Device Activation</h4>
+                        <p>
+                            You turn on your wireless earbuds by pressing the power button. The earbuds activate
+                            their Bluetooth radio chip and enter "discoverable mode" - they're now ready to be found
+                            by other devices. A small LED usually blinks to indicate this state.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <h4>📡 Discovery Phase</h4>
+                        <p>
+                            Your smartphone's Bluetooth is turned on and starts scanning for nearby devices.
+                            It sends out radio signals asking "Is anyone there?" Your earbuds respond with
+                            "Yes! I'm here!" along with their device name and unique identifier (MAC address).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <h4>🤝 Pairing Request</h4>
+                        <p>
+                            You see your earbuds listed on your phone's Bluetooth settings and tap to connect.
+                            Your phone sends a pairing request to the earbuds. Both devices exchange security
+                            keys to ensure a secure connection - like a secret handshake!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <h4>🔐 Authentication</h4>
+                        <p>
+                            Both devices verify each other's identity using encryption. They create a unique
+                            "bond" and save each other's information. This is why you only need to pair once -
+                            next time, they'll recognize each other automatically!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">5</div>
+                    <div class="timeline-content">
+                        <h4>🔗 Connection Established</h4>
+                        <p>
+                            Success! A stable connection is now established. The devices agree on communication
+                            parameters: which frequency channels to use, data transmission speed, and power
+                            settings. Your phone usually shows "Connected" status.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">6</div>
+                    <div class="timeline-content">
+                        <h4>🎵 Data Transmission</h4>
+                        <p>
+                            Now the real magic happens! When you play music, your phone converts the audio file
+                            into digital packets. These packets are compressed, encrypted, and sent via radio waves
+                            at 2.4 GHz frequency to your earbuds dozens of times per second.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">7</div>
+                    <div class="timeline-content">
+                        <h4>📥 Reception & Decoding</h4>
+                        <p>
+                            Your earbuds receive these packets, decrypt them, decompress the audio, and convert
+                            the digital signals back into analog sound waves. The tiny speakers vibrate to produce
+                            the music you hear - all happening in milliseconds!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">8</div>
+                    <div class="timeline-content">
+                        <h4>🔄 Continuous Communication</h4>
+                        <p>
+                            The connection remains active with constant two-way communication. Your phone sends
+                            audio data, while earbuds send back status updates (battery level, button presses).
+                            If the signal weakens, both devices automatically adjust power to maintain quality.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">9</div>
+                    <div class="timeline-content">
+                        <h4>⏸️ Smart Power Management</h4>
+                        <p>
+                            When you pause the music, the devices enter a low-power mode but stay connected.
+                            They occasionally send "keep-alive" signals to each other to maintain the connection
+                            without draining the battery unnecessarily.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">10</div>
+                    <div class="timeline-content">
+                        <h4>👋 Disconnection</h4>
+                        <p>
+                            When you turn off your earbuds or move too far away (beyond 10 meters), the connection
+                            is lost. Both devices recognize this and clean up the session. Don't worry - they
+                            remember each other and will reconnect automatically next time!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="highlight-box">
+                <h3>🔬 Behind the Scenes - Technical Details</h3>
+                <ul>
+                    <li><strong>Frequency Hopping:</strong> Bluetooth rapidly switches between 79 different frequencies
+                        1,600 times per second to avoid interference from other devices!</li>
+                    <li><strong>Adaptive Power:</strong> Devices automatically adjust transmission power based on
+                        distance - closer = less power = longer battery life.</li>
+                    <li><strong>Error Correction:</strong> If some data packets are lost, the system can recreate
+                        them or request resend, ensuring smooth audio quality.</li>
+                    <li><strong>Multiple Connections:</strong> Modern Bluetooth can connect to multiple devices
+                        simultaneously - like earbuds AND smartwatch at the same time!</li>
+                </ul>
+            </div>-->
+        </section>
+
+        <!-- Technologies Used in PAN 
+        <section class="section">
+            <h2>🔧 Technologies That Power PAN</h2>
+            <p>
+                Several wireless technologies enable PAN connections. Let's explore the most common ones:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Range</th>
+                        <th>Speed</th>
+                        <th>Common Use</th>
+                        <th>Power Consumption</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Bluetooth Classic</strong></td>
+                        <td>~10 meters</td>
+                        <td>1-3 Mbps</td>
+                        <td>Audio devices, file transfer</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bluetooth LE (Low Energy)</strong></td>
+                        <td>~10 meters</td>
+                        <td>125-2000 Kbps</td>
+                        <td>Smartwatches, fitness trackers</td>
+                        <td>Very Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zigbee</strong></td>
+                        <td>10-100 meters</td>
+                        <td>250 Kbps</td>
+                        <td>Smart home devices, sensors</td>
+                        <td>Very Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NFC (Near Field Communication)</strong></td>
+                        <td>~4 cm</td>
+                        <td>424 Kbps</td>
+                        <td>Contactless payments, quick pairing</td>
+                        <td>Very Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>USB Wireless</strong></td>
+                        <td>~10 meters</td>
+                        <td>Up to 480 Mbps</td>
+                        <td>Keyboards, mice, dongles</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IrDA (Infrared)</strong></td>
+                        <td>~1 meter</td>
+                        <td>Up to 4 Mbps</td>
+                        <td>Old phones, TV remotes (legacy)</td>
+                        <td>Low</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <strong>🏆 Bluetooth is the King of PAN!</strong>
+                Bluetooth is by far the most popular PAN technology because it offers the perfect balance of
+                range, speed, power consumption, and ease of use. It's built into almost every smartphone,
+                laptop, and modern gadget you can think of!
+            </div>
+        </section>-->
+
+        <!-- Advantages of PAN -->
+        <section class="section">
+            <h2>✅ Advantages of PAN</h2>
+            <p>
+                Personal Area Networks offer numerous benefits that make our daily digital lives more convenient:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Cable-Free Convenience</h4>
+                    <p>
+                        No messy cables needed! Wireless connections mean you can move freely without being
+                        tethered to devices. Perfect for active lifestyles - workout, walk, or work without
+                        tangled wires.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Easy Setup</h4>
+                    <p>
+                        Setting up a PAN is incredibly simple - usually just a few button presses or taps on
+                        your screen. No technical knowledge required. Most devices pair automatically after
+                        the first connection!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Cost-Effective</h4>
+                    <p>
+                        Most devices today come with built-in Bluetooth or other PAN technologies at no extra
+                        cost. No need to buy expensive cables, adapters, or networking equipment.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔋</span>
+                    <h4>Low Power Consumption</h4>
+                    <p>
+                        Modern PAN technologies like Bluetooth LE are designed for minimal battery drain.
+                        Your wireless earbuds and smartwatch can run for days or even weeks on a single charge!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🚶</span>
+                    <h4>Portability</h4>
+                    <p>
+                        Your PAN moves with you! All connected devices stay synchronized wherever you go.
+                        From home to gym to office - your personal network follows you seamlessly.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔐</span>
+                    <h4>Secure Connections</h4>
+                    <p>
+                        PAN connections use encryption and authentication to protect your data. Only paired
+                        devices can communicate, preventing unauthorized access from nearby strangers.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Automatic Syncing</h4>
+                    <p>
+                        Once paired, devices automatically connect when in range. Your smartwatch syncs data,
+                        your earbuds connect instantly - all without manual intervention!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌍</span>
+                    <h4>Universal Compatibility</h4>
+                    <p>
+                        Bluetooth and other PAN standards work across different brands and operating systems.
+                        Your Android phone can connect to Apple AirPods, Windows laptop to Samsung earbuds -
+                        true interoperability!
+                    </p>
+                </div>
+
+               <!-- <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Multiple Device Support</h4>
+                    <p>
+                        Connect multiple devices simultaneously! Your phone can be connected to your smartwatch,
+                        earbuds, and fitness tracker all at once without interference.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">🏃</span>
+                    <h4>Freedom of Movement</h4>
+                    <p>
+                        Move around freely within the 10-meter range without losing connection. Perfect for
+                        activities like exercise, cooking, or working around your home/office.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔇</span>
+                    <h4>Reduced Clutter</h4>
+                    <p>
+                        Eliminates cable mess on your desk, in your bag, or around your home. Creates a cleaner,
+                        more organized environment - great for minimalists and productivity enthusiasts!
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚙️</span>
+                    <h4>Low Maintenance</h4>
+                    <p>
+                        Once set up, PAN requires virtually no maintenance. No cables to replace, no wear and
+                        tear from plugging/unplugging. Just charge your devices and enjoy!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages of PAN -->
+        <section class="section">
+            <h2>⚠️ Disadvantages of PAN</h2>
+            <p>
+                While PAN technology is incredibly convenient, it's not perfect. Here are some limitations to be aware
+                of:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">📏</span>
+                    <h4>Limited Range</h4>
+                    <p>
+                        The maximum range is only about 10 meters (33 feet). Walk too far from your device and
+                        the connection drops. This makes PAN unsuitable for large areas or when you need to move
+                        between rooms.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🐌</span>
+                    <h4>Lower Speed</h4>
+                    <p>
+                        Compared to wired connections or Wi-Fi, PAN technologies like Bluetooth are relatively
+                        slow (1-3 Mbps). Transferring large files can take a long time. Not ideal for backing
+                        up photos or videos.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔋</span>
+                    <h4>Battery Dependency</h4>
+                    <p>
+                        All wireless devices need batteries, which need regular charging. Running out of battery
+                        on your earbuds during a workout or on a call can be frustrating. Always need to remember
+                        to charge!
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Interference Issues</h4>
+                    <p>
+                        PAN uses the crowded 2.4 GHz frequency band, which is also used by Wi-Fi, microwaves,
+                        and other devices. In busy areas (like offices or apartments), you might experience
+                        connection drops or audio stuttering.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">🧱</span>
+                    <h4>Obstacle Sensitivity</h4>
+                    <p>
+                        Walls, furniture, and even your body can block or weaken the signal. Putting your phone
+                        in your pocket might cause audio dropouts. Line-of-sight connections work best but aren't
+                        always practical.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Security Vulnerabilities</h4>
+                    <p>
+                        While encrypted, Bluetooth can still be vulnerable to attacks like "bluejacking" or
+                        "bluesnarfing." Keeping devices in discoverable mode for too long or in public places
+                        can pose security risks.
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔢</span>
+                    <h4>Device Limit</h4>
+                    <p>
+                        There's a limit to how many devices can connect simultaneously. While Bluetooth 5.0
+                        improved this, connecting too many devices can cause performance degradation and
+                        connection instability.
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Compatibility Issues</h4>
+                    <p>
+                        Different Bluetooth versions (4.0, 4.2, 5.0, 5.1) may not always work together perfectly.
+                        Older devices might not support newer features or might have slower speeds when connected
+                        to modern devices.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">🎵</span>
+                    <h4>Audio Quality Loss</h4>
+                    <p>
+                        Bluetooth audio is compressed before transmission, which can reduce sound quality
+                        compared to wired connections. Audiophiles often prefer wired headphones for the
+                        highest fidelity music experience.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <h4>Latency (Delay)</h4>
+                    <p>
+                        There's a slight delay (lag) between when audio is sent and when you hear it. This
+                        can be noticeable when gaming or watching videos - your actions and sounds might not
+                        sync perfectly.
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">💵</span>
+                    <h4>Higher Device Cost</h4>
+                    <p>
+                        Wireless devices are often more expensive than their wired equivalents. You're paying
+                        for the convenience and technology - Bluetooth earbuds cost more than regular wired ones.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Not for Data-Intensive Tasks</h4>
+                    <p>
+                        PAN is not suitable for transferring large amounts of data or streaming high-definition
+                        video. For such tasks, Wi-Fi or wired connections are far superior in speed and reliability.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAN vs Other Networks -->
+        <section class="section">
+            <h2>🔄 How PAN Compares to Other Networks</h2>
+            <p>
+                Let's see how PAN stacks up against larger network types:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>PAN</th>
+                        <th>LAN</th>
+                        <th>MAN</th>
+                        <th>WAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Coverage Area</strong></td>
+                        <td>~10 meters</td>
+                        <td>Building/Campus</td>
+                        <td>City</td>
+                        <td>Country/Global</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>1-3 Mbps</td>
+                        <td>100-1000 Mbps</td>
+                        <td>10-100 Mbps</td>
+                        <td>1-100 Mbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Setup Cost</strong></td>
+                        <td>Very Low</td>
+                        <td>Low-Medium</td>
+                        <td>High</td>
+                        <td>Very High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Users</strong></td>
+                        <td>1 person</td>
+                        <td>10-100</td>
+                        <td>1000s</td>
+                        <td>Millions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Connection Type</strong></td>
+                        <td>Wireless (mostly)</td>
+                        <td>Wired/Wireless</td>
+                        <td>Wired (mostly)</td>
+                        <td>Wired</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td>Minimal</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example</strong></td>
+                        <td>Bluetooth earbuds</td>
+                        <td>Office Wi-Fi</td>
+                        <td>City cable TV</td>
+                        <td>Internet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Key Takeaways -->
+        <!--<section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>PAN is Personal:</strong> It's designed for one individual's devices within arm's reach
+                        (10 meters)</li>
+                    <li><strong>Bluetooth is King:</strong> The most popular PAN technology, found in billions of
+                        devices worldwide</li>
+                    <li><strong>Perfect for Small Tasks:</strong> Great for audio, fitness tracking, and connecting
+                        peripherals</li>
+                    <li><strong>Trade-offs Exist:</strong> You sacrifice some speed and range for convenience and
+                        portability</li>
+                    <li><strong>Battery Matters:</strong> All wireless devices need power - keep them charged!</li>
+                    <li><strong>Security is Built-in:</strong> Encryption and pairing protect your connections</li>
+                    <li><strong>Everywhere Around You:</strong> You probably use PAN technology multiple times every
+                        day!</li>
+                    <li><strong>Future is Bright:</strong> New versions (like Bluetooth 5.3) keep improving range,
+                        speed, and battery life</li>
+                </ul>
+            </div>
+        </section>-->
+
+        <!-- Navigation to Other Topics -->
+        <!--<section class="section">
+            <h2>🚀 Continue Your Learning Journey</h2>
+            <p>
+                Now that you're a PAN expert, explore other network types to build your networking knowledge!
+            </p>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="dashboard.html" class="nav-btn"
+                    style="display: inline-block; padding: 15px 40px; font-size: 1.1rem; margin: 10px;">
+                    📚 Back to All Topics
+                </a>
+                <a href="what-is-network.html" class="nav-btn"
+                    style="display: inline-block; padding: 15px 40px; font-size: 1.1rem; margin: 10px;">
+                    🌐 Network Basics
+                </a>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>💡 Next Recommended Topics:</strong>
+                <br>• <strong>LAN (Local Area Network)</strong> - Learn about home and office networks
+                <br>• <strong>Network Topologies</strong> - Understand how networks are structured
+                <br>• <strong>Wireless Technologies</strong> - Deep dive into Wi-Fi, Bluetooth, and more
+                <br>• <strong>Network Security</strong> - Protect your devices and data
+            </div>
+        </section>
+    </div>-->
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Progress bar on scroll
+        window.addEventListener('scroll', function () {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Interactive device hover effect
+        document.querySelectorAll('.pan-device').forEach(device => {
+            device.addEventListener('mouseenter', function () {
+                this.style.scale = '1.15';
+            });
+
+            device.addEventListener('mouseleave', function () {
+                this.style.scale = '1';
+            });
+        });
+    </script>
+</body>
+
+</html>

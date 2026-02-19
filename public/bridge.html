@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge - Network Device | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+            /*-webkit-background-clip: text;*/
+            /*-webkit-text-fill-color: transparent;*/
+            animation: fadeInDown 0.8s ease;
+            color: white;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Animation Container */
+        .animation-box {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        /* Bridge Visualization */
+        .bridge-demo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Network Segments */
+        .segment {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+        }
+
+        .segment-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: bold;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: 1px solid #667eea;
+        }
+
+        /* Devices */
+        .device {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            position: relative;
+            animation: devicePulse 2s infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .device-label {
+            position: absolute;
+            bottom: -30px;
+            font-size: 0.7rem;
+            color: #b0b0b0;
+            white-space: nowrap;
+        }
+
+        .mac-address {
+            position: absolute;
+            top: -25px;
+            font-size: 0.65rem;
+            color: #667eea;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Bridge Device */
+        .bridge {
+            width: 120px;
+            height: 140px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            position: relative;
+            z-index: 10;
+            animation: bridgePulse 3s infinite;
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.8);
+        }
+
+        .bridge-label {
+            position: absolute;
+            bottom: -35px;
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .bridge::before {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            animation: rippleSquare 2s infinite;
+        }
+
+        /* MAC Table Display */
+        .mac-table {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.75rem;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            z-index: 15;
+        }
+
+        .mac-table h4 {
+            margin-bottom: 10px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .mac-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 0.5) 0%, 
+                rgba(102, 126, 234, 1) 50%, 
+                rgba(102, 126, 234, 0.5) 100%);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            animation: dataFlow 2s infinite;
+        }
+
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(6px);
+            transform: translateY(-50%);
+        }
+
+        .line-left {
+            left: calc(80px + 20px);
+            width: calc(50% - 140px - 40px);
+        }
+
+        .line-right {
+            right: calc(80px + 20px);
+            width: calc(50% - 140px - 40px);
+        }
+
+        /* Data Packets */
+        .data-packet {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px;
+            z-index: 5;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .packet-pass {
+            background: #51cf66;
+            box-shadow: 0 0 20px #51cf66;
+            animation: packetPass 4s infinite;
+        }
+
+        .packet-filter {
+            background: #ff6b6b;
+            box-shadow: 0 0 20px #ff6b6b;
+            animation: packetFilter 4s infinite;
+        }
+
+        /* Collision Domain Indicators */
+        .collision-domain {
+            position: absolute;
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            z-index: 0;
+        }
+
+        .domain-left {
+            left: 0;
+            top: 10%;
+            width: calc(50% - 80px);
+            height: 80%;
+        }
+
+        .domain-right {
+            right: 0;
+            top: 10%;
+            width: calc(50% - 80px);
+            height: 80%;
+        }
+
+        .domain-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #667eea;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 12px;
+            border-radius: 10px;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .info-card h4 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #c0c0c0;
+            text-align: left;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .highlight-box ul {
+            list-style-position: inside;
+            color: #d0d0d0;
+            margin-left: 20px;
+        }
+
+        .highlight-box li {
+            margin: 10px 0;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(30, 30, 30, 0.6);
+            border: 2px dashed rgba(102, 126, 234, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.95);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes devicePulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+            }
+        }
+
+        @keyframes bridgePulse {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(102, 126, 234, 1);
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes rippleSquare {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes dataFlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes packetPass {
+            0% {
+                left: 20%;
+                top: 50%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            45% {
+                left: 50%;
+                top: 50%;
+            }
+            50% {
+                left: 50%;
+                top: 50%;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 80%;
+                top: 50%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes packetFilter {
+            0% {
+                left: 20%;
+                top: 35%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            45% {
+                left: 48%;
+                top: 35%;
+            }
+            50% {
+                left: 48%;
+                top: 35%;
+                opacity: 0.8;
+            }
+            55% {
+                left: 48%;
+                top: 35%;
+                opacity: 0;
+            }
+            100% {
+                left: 48%;
+                top: 35%;
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .animation-box {
+                padding: 40px 20px;
+            }
+
+            .bridge-demo {
+                flex-direction: column;
+                gap: 80px;
+            }
+
+            .connection-line {
+                display: none;
+            }
+
+            .mac-table {
+                font-size: 0.65rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+            <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🌉 Network Bridge</h1>
+            <p class="hero-subtitle">Intelligent Layer 2 Device - Connecting & Filtering LAN Segments</p>
+        </section>
+
+        <!-- Interactive Bridge Visualization -->
+        <section class="section">
+            <h2>🔄 How Bridge Works - Live Visualization</h2>
+            <p>
+                Watch how a network bridge intelligently connects two LAN segments, learns MAC addresses, and filters 
+                traffic to reduce collisions. Green packets pass through, red packets are filtered (blocked).
+            </p>
+
+            <div class="animation-box">
+                <!-- MAC Address Table -->
+                <div class="mac-table">
+                    <h4>📋 Bridge MAC Table</h4>
+                    <div class="mac-entry">
+                        <div>Segment A:</div>
+                        <div>AA:01, AA:02</div>
+                    </div>
+                    <div class="mac-entry">
+                        <div>Segment B:</div>
+                        <div>BB:01, BB:02</div>
+                    </div>
+                </div>
+
+                <div class="bridge-demo">
+                    <!-- Collision Domain Indicators -->
+                    <div class="collision-domain domain-left">
+                        <div class="domain-label">🔴 Collision Domain 1</div>
+                    </div>
+                    <div class="collision-domain domain-right">
+                        <div class="domain-label">🔴 Collision Domain 2</div>
+                    </div>
+
+                    <!-- Left Segment -->
+                    <div class="segment">
+                        <div class="segment-label">Segment A</div>
+                        <div class="device">
+                            <div class="mac-address">AA:01</div>
+                            <div>💻</div>
+                            <div class="device-label">PC A1</div>
+                        </div>
+                        <div class="device">
+                            <div class="mac-address">AA:02</div>
+                            <div>🖥️</div>
+                            <div class="device-label">PC A2</div>
+                        </div>
+                    </div>
+
+                    <!-- Bridge -->
+                    <div class="bridge">
+                        <div>🌉</div>
+                        <div class="bridge-label">BRIDGE</div>
+                    </div>
+
+                    <!-- Right Segment -->
+                    <div class="segment">
+                        <div class="segment-label">Segment B</div>
+                        <div class="device">
+                            <div class="mac-address">BB:01</div>
+                            <div>💻</div>
+                            <div class="device-label">PC B1</div>
+                        </div>
+                        <div class="device">
+                            <div class="mac-address">BB:02</div>
+                            <div>🖥️</div>
+                            <div class="device-label">PC B2</div>
+                        </div>
+                    </div>
+
+                    <!-- Connection Lines -->
+                    <div class="connection-line line-left"></div>
+                    <div class="connection-line line-right"></div>
+
+                    <!-- Data Packets -->
+                    <div class="data-packet packet-pass"></div>
+                    <div class="data-packet packet-filter"></div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🎯 Key Observations:</h3>
+                <ul>
+                    <li><strong>Separate Collision Domains:</strong> Each segment has its own collision domain - reduces conflicts</li>
+                    <li><strong>MAC Learning:</strong> Bridge maintains table showing which MAC addresses are on which segment</li>
+                    <li><strong>Intelligent Filtering:</strong> Green packet crosses bridge (destination on other segment)</li>
+                    <li><strong>Smart Blocking:</strong> Red packet blocked (source and destination on same segment - no crossing needed)</li>
+                    <li><strong>Performance Improvement:</strong> Less traffic on each segment = faster network</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- What is a Bridge -->
+        <section class="section">
+            <h2>🔍 What is a Network Bridge?</h2>
+            <p>
+                A <strong>network bridge</strong> is an intelligent Layer 2 (Data Link layer) device that connects two or more LAN segments 
+                and filters traffic based on MAC addresses. Unlike a repeater which just amplifies signals, or a hub which broadcasts to all ports, 
+                a bridge learns which devices are on which segment and only forwards traffic when necessary.
+            </p>
+
+            <h3>🔧 Why Bridges Are Needed</h3>
+            <p>
+                Bridges solve several important networking problems:
+            </p>
+            <ul style="margin-left: 40px; color: #d0d0d0;">
+                <li><strong>Collision Reduction:</strong> Splits large collision domain into smaller ones - fewer collisions per segment</li>
+                <li><strong>Performance Improvement:</strong> Each segment only sees its own traffic plus cross-segment traffic</li>
+                <li><strong>Network Segmentation:</strong> Logically separates network while maintaining connectivity</li>
+                <li><strong>Distance Extension:</strong> Can extend network beyond single segment limits</li>
+                <li><strong>Bandwidth Multiplication:</strong> Each segment gets full bandwidth, not shared</li>
+            </ul>
+
+            <div class="example-box">
+                <strong>🏢 Real-World Example - Office Network:</strong><br><br>
+                <strong>Problem:</strong> 50 computers in office on single Ethernet hub = constant collisions, very slow.<br><br>
+                
+                <strong>Solution with Bridge:</strong><br>
+                1. Split into 2 segments: Engineering (25 PCs) and Marketing (25 PCs)<br>
+                2. Install bridge between segments<br>
+                3. Bridge learns: Engineering PCs on Segment A, Marketing PCs on Segment B<br>
+                4. When Engineering PC1 talks to Engineering PC2 → stays on Segment A (bridge blocks)<br>
+                5. When Engineering PC1 sends file to Marketing PC1 → bridge forwards to Segment B<br>
+                6. Each segment now has only 25 devices → 50% less collisions on each side<br>
+                7. Network performance doubles! 🚀<br><br>
+                
+                <strong>Result:</strong> Same 50 PCs, but 2 separate collision domains = much faster network.
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Core Functions:</h3>
+                <ul>
+                    <li><strong>MAC Address Learning:</strong> Observes source MAC addresses and learns which segment each device is on</li>
+                    <li><strong>Frame Filtering:</strong> Only forwards frames when destination is on different segment</li>
+                    <li><strong>Frame Forwarding:</strong> Passes frames between segments when needed</li>
+                    <li><strong>Loop Prevention:</strong> Uses Spanning Tree Protocol to prevent network loops</li>
+                    <li><strong>Collision Domain Separation:</strong> Each port/segment is separate collision domain</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- How Bridge Works -->
+        <section class="section">
+            <h2>⚙️ How Bridge Works - Detailed Operation</h2>
+            <p>
+                Bridges operate at Layer 2 and make intelligent forwarding decisions based on MAC addresses:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">1️⃣</span>
+                    <h4>Learning Phase</h4>
+                    <p>
+                        Bridge starts with empty MAC address table. Observes all frames passing through. Examines source MAC 
+                        address of each frame. Records "MAC address X is on Port/Segment Y" in its table. Builds complete 
+                        map of network over time. Entries age out if not seen for period (default 300 seconds).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">2️⃣</span>
+                    <h4>Filtering Decision</h4>
+                    <p>
+                        When frame arrives, bridge checks destination MAC. Looks up destination in MAC table. If source and 
+                        destination on SAME segment → FILTER (don't forward). If on DIFFERENT segments → FORWARD (send across). 
+                        If destination unknown → FLOOD (send to all segments except source).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">3️⃣</span>
+                    <h4>Forwarding Frame</h4>
+                    <p>
+                        Frame needs to cross segments. Bridge buffers entire frame in memory. Waits for destination segment 
+                        to be clear (no collision). Retransmits frame on destination segment. Source segment and destination 
+                        segment operate independently - separate collision domains.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">4️⃣</span>
+                    <h4>Error Checking</h4>
+                    <p>
+                        Bridge examines Frame Check Sequence (FCS). Drops corrupted frames - doesn't forward bad data. 
+                        Filters out collision fragments. May discard malformed frames. Only forwards valid, clean frames. 
+                        Improves overall network quality.
+                    </p>
+                </div>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>📦 Example Frame Processing:</strong><br><br>
+                <strong>Scenario 1 - Frame Filtered (Same Segment):</strong><br>
+                1. PC A1 (AA:01 on Segment A) sends to PC A2 (AA:02 on Segment A)<br>
+                2. Bridge receives frame on Segment A port<br>
+                3. Checks source: AA:01 → updates "AA:01 on Segment A" (already known)<br>
+                4. Checks destination: AA:02 → looks in table → "AA:02 on Segment A"<br>
+                5. Decision: Source and destination both on Segment A → FILTER ❌<br>
+                6. Frame NOT forwarded to Segment B → reduces traffic on Segment B ✅<br><br>
+                
+                <strong>Scenario 2 - Frame Forwarded (Different Segments):</strong><br>
+                1. PC A1 (AA:01 on Segment A) sends file to PC B1 (BB:01 on Segment B)<br>
+                2. Bridge receives frame on Segment A port<br>
+                3. Checks destination: BB:01 → looks in table → "BB:01 on Segment B"<br>
+                4. Decision: Destination on different segment → FORWARD ✅<br>
+                5. Bridge buffers frame, waits for Segment B clear, retransmits<br>
+                6. PC B1 receives file successfully! 🎉
+            </div>
+        </section>
+
+        <!-- Types of Bridges -->
+        <section class="section">
+            <h2>📦 Types of Bridges</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔗</span>
+                    <h4>Transparent Bridge</h4>
+                    <p>
+                        Most common type. Completely invisible to connected devices - they don't know bridge exists. 
+                        Automatically learns topology. No configuration of end devices needed. Plug and play operation. 
+                        Uses Spanning Tree Protocol. Standard in Ethernet networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛣️</span>
+                    <h4>Source Routing Bridge</h4>
+                    <p>
+                        Used in Token Ring networks (obsolete). Source device determines entire path. Frame contains routing 
+                        information. Bridge just follows instructions in frame. More complex, rarely used today. Replaced 
+                        by transparent bridging in modern networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Wireless Bridge</h4>
+                    <p>
+                        Connects wired LAN to wireless LAN or two wireless LANs. Operates as Layer 2 bridge using Wi-Fi. 
+                        Useful for connecting buildings without running cables. Can bridge Ethernet to Wi-Fi transparently. 
+                        Common in campus environments and industrial settings.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Remote Bridge</h4>
+                    <p>
+                        Connects LANs across WAN link (e.g., two offices in different cities). Uses point-to-point connection 
+                        like leased line or VPN. Makes remote LANs appear as single network. Each location has local bridge. 
+                        Useful for extending corporate networks geographically.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Translation Bridge</h4>
+                    <p>
+                        Connects different network types (e.g., Ethernet to Token Ring). Translates between different frame 
+                        formats. Complex due to differences in protocols. Mostly obsolete - modern networks standardized on 
+                        Ethernet. Historical importance but rare today.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🖥️</span>
+                    <h4>Software Bridge</h4>
+                    <p>
+                        Implemented in software on computer with multiple network interfaces. Turn PC/server into bridge. 
+                        Linux, Windows, BSD support bridging. Useful for virtualization and testing. Flexible but slower 
+                        than hardware bridges. Good for lab environments.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of Bridges</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Collision Domain Segmentation</h4>
+                    <p>
+                        Each port/segment is separate collision domain. Drastically reduces collisions. Better performance 
+                        for all devices. If 50 devices, splitting into 2 segments = ~75% fewer collisions per segment. 
+                        Network becomes much faster and more reliable.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🚀</span>
+                    <h4>Performance Improvement</h4>
+                    <p>
+                        Filters unnecessary traffic between segments. Each segment only sees local + cross-segment traffic. 
+                        Reduces bandwidth waste. Better utilization of available capacity. Can double or triple effective 
+                        network speed. Users experience faster file transfers and less lag.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🧠</span>
+                    <h4>Intelligent Forwarding</h4>
+                    <p>
+                        Makes smart decisions based on MAC addresses. Only forwards when necessary. Learns network topology 
+                        automatically. No manual configuration of MAC tables. Adapts to network changes. Much smarter than 
+                        hub or repeater - actual intelligence in operation.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">👻</span>
+                    <h4>Transparent Operation</h4>
+                    <p>
+                        Devices don't know bridge exists. No configuration changes needed on end devices. Works with any 
+                        protocol. Plug and play from device perspective. Easy deployment in existing networks. Backward 
+                        compatible with all Ethernet devices.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Improved Security</h4>
+                    <p>
+                        Traffic isolation between segments. Devices on Segment A can't see Segment B's local traffic. 
+                        Reduces packet sniffing opportunities. Can help contain security incidents to one segment. 
+                        Better than hub where everyone sees everything.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📏</span>
+                    <h4>Distance Extension</h4>
+                    <p>
+                        Can extend network beyond single segment limits. Each segment can be full length (100m for Ethernet). 
+                        Bridge regenerates signal like repeater. Total distance: segment 1 + segment 2 + ... 
+                        Useful for large facilities.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Error Filtering</h4>
+                    <p>
+                        Drops corrupted frames - doesn't forward bad data. Filters collision fragments. Improves overall 
+                        network quality. Bad frames stay on local segment. Prevents error propagation. Healthier network 
+                        overall.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Backward Compatibility</h4>
+                    <p>
+                        Works with old and new devices. No upgrades needed on end stations. Can connect legacy equipment 
+                        to modern network. Protects existing investment. Gradual network evolution possible. Very flexible.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages -->
+        <section class="section">
+            <h2>❌ Disadvantages & Limitations</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Higher Cost Than Hub/Repeater</h4>
+                    <p>
+                        More expensive than simple repeaters or hubs. Intelligence requires more complex hardware. CPU, 
+                        memory for MAC table needed. Still cheaper than router but pricier than Layer 1 devices. However, 
+                        performance improvement usually justifies cost.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌊</span>
+                    <h4>Broadcast Domain Still Shared</h4>
+                    <p>
+                        All segments share single broadcast domain. Broadcast traffic forwarded to all segments. ARP requests 
+                        flood entire bridged network. Large bridged networks still suffer broadcast storms. Need router to 
+                        segment broadcast domains. Can't scale infinitely.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <h4>Adds Latency</h4>
+                    <p>
+                        Store-and-forward operation adds delay. Must receive entire frame before forwarding. Processing 
+                        MAC table takes time. Latency higher than hub (no processing). Modern switches faster but bridge 
+                        still adds microseconds to milliseconds delay.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Cannot Route Between Networks</h4>
+                    <p>
+                        Layer 2 only - works with MAC addresses. Cannot route between different IP networks. Cannot perform 
+                        NAT. Cannot connect to Internet directly. Need router for inter-network communication. Limited to 
+                        extending single network, not connecting multiple networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔁</span>
+                    <h4>Spanning Tree Overhead</h4>
+                    <p>
+                        STP prevents loops but blocks redundant links. Convergence time after topology change. BPDU packets 
+                        consume bandwidth. Complex in large networks. Misconfiguration can cause network outages. Need to 
+                        understand STP to manage properly.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Limited Scalability</h4>
+                    <p>
+                        MAC tables have size limits. Large networks exhaust table capacity. Performance degrades with too 
+                        many segments. Spanning Tree becomes complex. Better to use routers and Layer 3 switches for large 
+                        networks. Bridges work best in small to medium LANs.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🚫</span>
+                    <h4>No Protocol Filtering</h4>
+                    <p>
+                        Forwards all Layer 2 protocols. Cannot filter by IP address or port. No firewall capability. 
+                        Cannot prioritize traffic (no QoS). All filtering is MAC-based only. Need Layer 3+ devices for 
+                        advanced filtering.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h4>Learning Delay</h4>
+                    <p>
+                        MAC table starts empty. Initial traffic may be flooded. Takes time to learn all MAC addresses. 
+                        Topology changes require relearning. During learning phase, more traffic than necessary. Eventually 
+                        stabilizes but initial period less efficient.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bridge vs Switch -->
+        <section class="section">
+            <h2>⚖️ Bridge vs Switch - What's the Difference?</h2>
+            <p>
+                Modern switches are essentially multi-port bridges with hardware optimization. Understanding the relationship:
+            </p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Bridge</th>
+                    <th>Switch</th>
+                </tr>
+                <tr>
+                    <td><strong>OSI Layer</strong></td>
+                    <td>Layer 2 (Data Link)</td>
+                    <td>Layer 2 (Data Link)</td>
+                </tr>
+                <tr>
+                    <td><strong>Core Function</strong></td>
+                    <td>MAC-based filtering/forwarding</td>
+                    <td>MAC-based filtering/forwarding</td>
+                </tr>
+                <tr>
+                    <td><strong>Number of Ports</strong></td>
+                    <td>Usually 2-4</td>
+                    <td>Many (8, 16, 24, 48+)</td>
+                </tr>
+                <tr>
+                    <td><strong>Processing</strong></td>
+                    <td>Software-based (slower)</td>
+                    <td>Hardware ASIC (very fast)</td>
+                </tr>
+                <tr>
+                    <td><strong>Speed</strong></td>
+                    <td>Moderate forwarding rate</td>
+                    <td>Wire-speed on all ports</td>
+                </tr>
+                <tr>
+                    <td><strong>Collision Domains</strong></td>
+                    <td>Per segment (typically 2)</td>
+                    <td>Per port (many)</td>
+                </tr>
+                <tr>
+                    <td><strong>Features</strong></td>
+                    <td>Basic filtering</td>
+                    <td>VLANs, QoS, SNMP, more</td>
+                </tr>
+                <tr>
+                    <td><strong>Typical Use</strong></td>
+                    <td>Segment two LANs</td>
+                    <td>Connect many devices</td>
+                </tr>
+                <tr>
+                    <td><strong>Modern Status</strong></td>
+                    <td>Mostly replaced by switches</td>
+                    <td>Standard for LANs</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>💰💰 Moderate</td>
+                    <td>💰💰 Moderate (better value)</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 25px;">
+                <h3>💡 Key Insight:</h3>
+                <p style="margin: 0;">
+                    <strong>A switch is essentially a multi-port bridge with hardware acceleration.</strong> 
+                    They work on the same principles (MAC learning, filtering, forwarding) but switches are optimized for 
+                    connecting many devices with high performance. The term "bridge" is mostly historical - today we just use 
+                    switches for the same purpose.
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li>A <strong>bridge</strong> is a Layer 2 device that connects LAN segments and filters traffic based on MAC addresses</li>
+                    <li>Bridges <strong>learn</strong> which devices are on which segment by observing source MAC addresses</li>
+                    <li>Smart <strong>filtering</strong>: only forwards frames when source and destination on different segments</li>
+                    <li>Creates <strong>separate collision domains</strong> - dramatically reduces collisions and improves performance</li>
+                    <li>Operates <strong>transparently</strong> - devices don't know bridge exists, no configuration needed</li>
+                    <li><strong>Store-and-forward</strong>: receives entire frame, checks for errors, then forwards if needed</li>
+                    <li>Much more intelligent than hub or repeater, but simpler than router</li>
+                    <li>Modern <strong>switches are multi-port bridges</strong> with hardware acceleration</li>
+                    <li>All segments share <strong>same broadcast domain</strong> - broadcasts forwarded to all segments</li>
+                    <li>Used Spanning Tree Protocol (STP) to prevent network loops</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Generate additional packets
+        function createPacket(type) {
+            const demo = document.querySelector('.bridge-demo');
+            const packet = document.createElement('div');
+            packet.className = `data-packet packet-${type}`;
+            demo.appendChild(packet);
+            
+            const duration = type === 'pass' ? 4000 : 2500;
+            setTimeout(() => packet.remove(), duration);
+        }
+
+        // Create packets periodically
+        setInterval(() => createPacket('pass'), 4000);
+        setInterval(() => createPacket('filter'), 5000);
+
+        // Initial packets
+        setTimeout(() => createPacket('pass'), 1000);
+        setTimeout(() => createPacket('filter'), 2500);
+    </script>
+</body>
+</html>

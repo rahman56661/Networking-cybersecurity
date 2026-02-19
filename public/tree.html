@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .navbar {
+            background: rgba(30,30,30,0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(34,197,94,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #22c55e;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #22c55e; }
+        .section p  { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        .animation-box {
+            background: rgba(12,12,22,0.97);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(34,197,94,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== TREE CANVAS ===== */
+        .tree-canvas {
+            position: relative;
+            width: 100%;
+            height: 480px;
+        }
+        .tree-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* Layer labels */
+        .layer-label {
+            position: absolute;
+            font-size: 0.72rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 5;
+            letter-spacing: 0.05em;
+        }
+        .layer-root   { background: rgba(102,126,234,0.15); border:1px solid rgba(102,126,234,0.4); color:#818cf8; }
+        .layer-dist   { background: rgba(34,197,94,0.12);  border:1px solid rgba(34,197,94,0.4);  color:#4ade80; }
+        .layer-access { background: rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.4); color:#fb923c; }
+
+        /* Links */
+        .t-link {
+            fill: none;
+            stroke: rgba(102,126,234,0.2);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .t-link.active { stroke: #00ff88; stroke-width: 4.5; filter: drop-shadow(0 0 6px #00ff88); }
+        .t-link.fail   { stroke: #ef4444; stroke-width: 3; stroke-dasharray: 7 4; opacity: 0.6; }
+        .t-link.back   { stroke: #f8b400; stroke-width: 4; filter: drop-shadow(0 0 6px #f8b400); }
+
+        /* Devices */
+        .t-device {
+            position: absolute;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            z-index: 20;
+            border: 2px solid rgba(102,126,234,0.35);
+            box-shadow: 0 0 15px rgba(102,126,234,0.4);
+            transform: translate(-50%,-50%);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .t-device:hover { transform: translate(-50%,-50%) scale(1.1); box-shadow: 0 0 30px rgba(102,126,234,0.8); }
+        .t-device.sz-lg { width:62px; height:62px; }
+        .t-device.sz-md { width:54px; height:54px; font-size:1.2rem; }
+        .t-device.sz-sm { width:46px; height:46px; font-size:1.1rem; }
+
+        .t-device.root-dev  { background: linear-gradient(135deg,#667eea,#764ba2); border-color:rgba(102,126,234,0.7); box-shadow:0 0 22px rgba(102,126,234,0.6); }
+        .t-device.dist-dev  { background: linear-gradient(135deg,#22c55e,#15803d); border-color:rgba(34,197,94,0.5);  box-shadow:0 0 14px rgba(34,197,94,0.35);  }
+        .t-device.access-dev{ background: linear-gradient(135deg,#f97316,#c2410c); border-color:rgba(249,115,22,0.5); box-shadow:0 0 14px rgba(249,115,22,0.35); }
+        .t-device.end-dev   { background: linear-gradient(135deg,#64748b,#334155); border-color:rgba(100,116,139,0.5);box-shadow:0 0 10px rgba(100,116,139,0.3); }
+
+        .t-device.dev-src  { border-color:#00ff88!important; box-shadow:0 0 45px rgba(0,255,136,0.9)!important; animation:devSrc 0.55s infinite; }
+        .t-device.dev-dst  { border-color:#a78bfa!important; box-shadow:0 0 45px rgba(167,139,250,0.9)!important; animation:devDst 0.55s infinite; }
+        .t-device.dev-fwd  { border-color:#f8b400!important; box-shadow:0 0 38px rgba(248,180,0,0.8)!important; animation:devFwd 0.55s infinite; }
+        .t-device.dev-fail { opacity:0.35!important; filter:grayscale(80%)!important; border-color:#ef4444!important; animation:none!important; }
+
+        .t-label {
+            position: absolute;
+            font-size: 0.67rem;
+            color: #94a3b8;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 25;
+        }
+
+        .tpkt { opacity: 0; }
+
+        .route-pill {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.4);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.78rem;
+            color: #86efac;
+            z-index: 30;
+            white-space: nowrap;
+        }
+
+        .tree-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .t-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(34,197,94,0.3);
+        }
+        .t-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.5); }
+        .t-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .t-btn.purple { background: linear-gradient(135deg, #8b5cf6, #4c1d95); }
+        .t-btn.orange { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .t-btn.red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .t-btn.blue   { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .t-btn.ghost  { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+
+        .t-status {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(34,197,94,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #86efac;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82rem;
+            color: #c0c0c0;
+        }
+        .legend-dot {
+            width: 14px; height: 14px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #22c55e; box-shadow: 0 10px 30px rgba(34,197,94,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4   { color: #22c55e; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p    { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card { border-radius: 12px; padding: 25px; border: 1px solid; }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        .highlight-box {
+            background: rgba(34,197,94,0.08);
+            border-left: 4px solid #22c55e;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(34,197,94,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(34,197,94,0.2); color: #22c55e; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(34,197,94,0.06); }
+
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#22c55e,#15803d); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#22c55e; border:2px solid #15803d; box-shadow:0 0 10px rgba(34,197,94,0.6); }
+        .timeline-item h4 { color: #86efac; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p  { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        footer { background: rgba(30,30,30,0.95); text-align: center; padding: 30px 20px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#22c55e,#15803d); z-index:9999; width:0%; transition:width 0.2s; }
+
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes fadeInUp   { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes devSrc { 0%,100%{box-shadow:0 0 28px rgba(0,255,136,0.6);}  50%{box-shadow:0 0 60px rgba(0,255,136,1);} }
+        @keyframes devDst { 0%,100%{box-shadow:0 0 28px rgba(167,139,250,0.7);} 50%{box-shadow:0 0 60px rgba(167,139,250,1);} }
+        @keyframes devFwd { 0%,100%{box-shadow:0 0 22px rgba(248,180,0,0.6);}  50%{box-shadow:0 0 50px rgba(248,180,0,1);} }
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .section{padding:25px;}
+            .tree-canvas{height:380px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>🌳 Tree Topology</h1>
+        <p class="hero-subtitle">Hierarchical & Scalable — The Backbone of Enterprise & Campus Networks!</p>
+        <span class="hero-badge">🏢 Enterprise LAN | Campus Networks | ISP Access Layer | Real-World Standard</span>
+    </section>
+
+    <!-- ============ LIVE ANIMATION ============ -->
+    <section class="section" id="animation">
+        <h2>⚡ Tree Topology — Live Interactive Visualization</h2>
+        <p>
+            This canvas shows a <strong>3-layer Tree Topology</strong> —
+            <span style="color:#818cf8;font-weight:bold;">Root Switch (Core)</span>,
+            <span style="color:#4ade80;font-weight:bold;">Distribution Switches (Layer 2)</span>, and
+            <span style="color:#fb923c;font-weight:bold;">Access Switches (Layer 3)</span>
+            with end devices — arranged in a hierarchical parent-child tree. Watch how data flows up and down the tree!
+        </p>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#667eea;"></div> Root Switch (Core)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Distribution Switches</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Access Switches</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#64748b;"></div> End Devices (PCs / Printers)</div>
+        </div>
+
+        <div class="animation-box">
+            <div class="route-pill" id="routePill">🌳 Tree Network — Hierarchical & Ready</div>
+
+            <div class="tree-canvas" id="treeCanvas">
+                <svg class="tree-svg" id="treeSvg" viewBox="0 0 860 480" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <filter id="glow-g"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="glow-y"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="glow-p"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+
+                    <!-- Horizontal level guide lines -->
+                    <line x1="30" y1="60" x2="830" y2="60" stroke="rgba(102,126,234,0.08)" stroke-width="1" stroke-dasharray="4 6"/>
+                    <line x1="30" y1="195" x2="830" y2="195" stroke="rgba(34,197,94,0.08)" stroke-width="1" stroke-dasharray="4 6"/>
+                    <line x1="30" y1="330" x2="830" y2="330" stroke="rgba(249,115,22,0.08)" stroke-width="1" stroke-dasharray="4 6"/>
+
+                    <!-- All links drawn by JS -->
+
+                    <!-- Packet dots -->
+                    <circle class="tpkt" id="tpkt0" r="9" fill="#00ff88" filter="url(#glow-g)"/>
+                    <circle class="tpkt" id="tpkt1" r="9" fill="#a78bfa" filter="url(#glow-p)"/>
+                    <circle class="tpkt" id="tpkt2" r="9" fill="#f8b400" filter="url(#glow-y)"/>
+                </svg>
+
+                <!-- Layer labels -->
+                <div class="layer-label layer-root"   style="top:8px; left:10px;">🔷 LAYER 1 — ROOT SWITCH (Core)</div>
+                <div class="layer-label layer-dist"   style="top:143px; left:10px;">🟢 LAYER 2 — DISTRIBUTION</div>
+                <div class="layer-label layer-access" style="top:278px; left:10px;">🟠 LAYER 3 — ACCESS SWITCHES</div>
+
+                <!-- ROOT SWITCH -->
+                <div class="t-device sz-lg root-dev" id="devRoot" style="left:0;top:0;">🏛️<div class="t-label" id="lbl-Root" style="bottom:-22px;left:50%;transform:translateX(-50%);">ROOT-SW</div></div>
+
+                <!-- DISTRIBUTION SWITCHES: D1, D2 -->
+                <div class="t-device sz-md dist-dev" id="devD1" style="">🔀<div class="t-label" id="lbl-D1" style="bottom:-22px;left:50%;transform:translateX(-50%);">DIST-SW1</div></div>
+                <div class="t-device sz-md dist-dev" id="devD2" style="">🔀<div class="t-label" id="lbl-D2" style="bottom:-22px;left:50%;transform:translateX(-50%);">DIST-SW2</div></div>
+
+                <!-- ACCESS SWITCHES: A1 under D1, A2 under D1; A3 under D2, A4 under D2 -->
+                <div class="t-device sz-sm access-dev" id="devA1" style="">🔌<div class="t-label" id="lbl-A1" style="bottom:-22px;left:50%;transform:translateX(-50%);">ACC-SW1</div></div>
+                <div class="t-device sz-sm access-dev" id="devA2" style="">🔌<div class="t-label" id="lbl-A2" style="bottom:-22px;left:50%;transform:translateX(-50%);">ACC-SW2</div></div>
+                <div class="t-device sz-sm access-dev" id="devA3" style="">🔌<div class="t-label" id="lbl-A3" style="bottom:-22px;left:50%;transform:translateX(-50%);">ACC-SW3</div></div>
+                <div class="t-device sz-sm access-dev" id="devA4" style="">🔌<div class="t-label" id="lbl-A4" style="bottom:-22px;left:50%;transform:translateX(-50%);">ACC-SW4</div></div>
+
+                <!-- END DEVICES: 2 per access switch -->
+                <div class="t-device sz-sm end-dev" id="devE1" style="">💻<div class="t-label" id="lbl-E1" style="bottom:-22px;left:50%;transform:translateX(-50%);">PC-1</div></div>
+                <div class="t-device sz-sm end-dev" id="devE2" style="">🖨️<div class="t-label" id="lbl-E2" style="bottom:-22px;left:50%;transform:translateX(-50%);">PRN-1</div></div>
+                <div class="t-device sz-sm end-dev" id="devE3" style="">💻<div class="t-label" id="lbl-E3" style="bottom:-22px;left:50%;transform:translateX(-50%);">PC-2</div></div>
+                <div class="t-device sz-sm end-dev" id="devE4" style="">💻<div class="t-label" id="lbl-E4" style="bottom:-22px;left:50%;transform:translateX(-50%);">PC-3</div></div>
+                <div class="t-device sz-sm end-dev" id="devE5" style="">💻<div class="t-label" id="lbl-E5" style="bottom:-22px;left:50%;transform:translateX(-50%);">PC-4</div></div>
+                <div class="t-device sz-sm end-dev" id="devE6" style="">🖥️<div class="t-label" id="lbl-E6" style="bottom:-22px;left:50%;transform:translateX(-50%);">SRV-1</div></div>
+                <div class="t-device sz-sm end-dev" id="devE7" style="">💻<div class="t-label" id="lbl-E7" style="bottom:-22px;left:50%;transform:translateX(-50%);">PC-5</div></div>
+                <div class="t-device sz-sm end-dev" id="devE8" style="">🖨️<div class="t-label" id="lbl-E8" style="bottom:-22px;left:50%;transform:translateX(-50%);">PRN-2</div></div>
+
+            </div><!-- tree-canvas -->
+        </div><!-- animation-box -->
+
+        <div class="tree-controls">
+            <button class="t-btn blue"   id="btnUpward"  onclick="treeDemo('upward')">⬆️ Upward TX</button>
+            <button class="t-btn"        id="btnDownward" onclick="treeDemo('downward')">⬇️ Downward TX</button>
+            <button class="t-btn orange" id="btnCross"   onclick="treeDemo('cross')">🔀 Cross-Branch TX</button>
+            <button class="t-btn purple" id="btnBroadcast" onclick="treeDemo('broadcast')">📡 Root Broadcast</button>
+            <button class="t-btn red"    id="btnFail"    onclick="treeDemo('fail')">💥 Dist Switch Fail</button>
+            <button class="t-btn ghost"  onclick="treeReset()">↺ Reset</button>
+            <div class="t-status" id="treeStatus">👆 Click a button to simulate traffic in the Tree Network!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Hierarchical Path:</strong> Every packet travels UP to the common ancestor switch, then DOWN to the destination — this is the defining characteristic of Tree Topology</li>
+                <li><strong>Root Switch:</strong> Acts as the backbone — all cross-branch traffic must pass through it; this is both its power and its single point of failure</li>
+                <li><strong>Scalability:</strong> Adding more branches only requires connecting a new switch to the distribution layer — no disruption to existing branches</li>
+                <li><strong>Fault Isolation:</strong> A failure in one access switch only affects that branch's end devices; other branches continue normally</li>
+                <li><strong>3-Layer Model:</strong> Root (Core) → Distribution → Access mirrors exactly the Cisco hierarchical design model used in enterprise networks worldwide</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============ WHAT IS TREE ============ -->
+    <section class="section" id="what">
+        <h2>🔍 What is Tree Topology?</h2>
+        <p>
+            <strong>Tree Topology</strong> (also called Hierarchical Topology) is a network design where devices are
+            arranged in a parent-child hierarchy — like the branches of a tree. At the top sits the <em>root node</em>
+            (usually a core switch or router), which branches out to intermediate nodes (distribution switches),
+            which further branch out to leaf nodes (access switches and end devices).
+        </p>
+        <p>
+            Tree topology is essentially a <strong>combination of Bus and Star topologies</strong> organized in layers.
+            Each parent node acts as a "mini-hub" for its children, while the entire structure is connected back to
+            a single root. This creates a clear hierarchy that makes the network easy to manage, troubleshoot,
+            and expand — one branch at a time.
+        </p>
+        <p>
+            In practice, <strong>Tree Topology is the foundation of virtually every structured campus and enterprise LAN</strong>.
+            When you see a network diagram for a university, hospital, or corporate office, the hierarchical structure
+            you see — access switches on each floor, distribution switches per building, core switches at the data centre —
+            is Tree Topology in action.
+        </p>
+
+        <div class="example-box">
+            <strong>🏫 Real Analogy — A School/University Campus Network! 🎓</strong><br><br>
+            🏛️ <strong>Root (Core) Switch</strong> → In the main data centre. Connects all buildings. Handles internet uplink.<br>
+            🏢 <strong>Distribution Switches</strong> → One per building (Science Block, Arts Block, Admin Block).<br>
+            🚪 <strong>Access Switches</strong> → One per floor or department within each building.<br>
+            💻 <strong>End Devices</strong> → Student PCs, teacher laptops, printers connected to access switches.<br><br>
+            Adding a new Computer Lab? → Just add one more access switch under the building's distribution switch.<br>
+            Adding a new building? → Just connect a new distribution switch to the root switch. Done! ✅<br><br>
+            This is Tree Topology — <strong>structured, scalable, and simple to expand</strong>!
+        </div>
+
+        <h3>🔧 Core Components of Tree Topology</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏛️</span>
+                <h4>Root Node (Core Switch / Router)</h4>
+                <p>The topmost node in the tree. It is the central point that all distribution switches connect to. The root node handles inter-branch routing and connects the entire network to external resources (WAN, internet). It must be the most powerful and reliable device — a failure here affects the entire network. Cisco Nexus 9000 or Catalyst 9500 are typical root switches.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔀</span>
+                <h4>Distribution Switches (Intermediate Nodes)</h4>
+                <p>Sit between the root and access layers. Each distribution switch aggregates traffic from multiple access switches in its branch. They run Layer-3 routing between VLANs, apply QoS policies, and enforce ACLs. In a large building, one distribution switch per floor cluster or zone is typical. Cisco Catalyst 4500 or 6500 series are common here.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔌</span>
+                <h4>Access Switches (Leaf Nodes)</h4>
+                <p>The lowest-level switches that end devices connect to directly. Each access switch serves a specific department, lab, or room. They are usually Layer-2 only, assigning VLANs and providing PoE for IP phones and wireless access points. They must have enough ports for all local devices. Cisco Catalyst 2960 or 9200 series are typical access switches.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">💻</span>
+                <h4>End Devices (Leaf Endpoints)</h4>
+                <p>PCs, laptops, printers, IP phones, servers, and IoT devices that sit at the bottom of the tree. Each end device connects to exactly ONE access switch — there is no direct connection between end devices across branches. Traffic between devices in different branches always travels up to the common parent switch before coming back down.</p>
+            </div>
+        </div>
+
+        <h3>🏗️ Types of Tree Topology Variants</h3>
+        <div class="info-grid">
+            <div class="info-card" style="border-color:rgba(102,126,234,0.4);">
+                <span class="info-card-icon">🌲</span>
+                <h4>Binary Tree (2 children per node)</h4>
+                <p>Each node has exactly two child nodes. Simple and balanced — each level doubles the number of nodes. Used in small structured networks and theoretical networking models. Easy to predict depth and path length. With n levels, you get 2ⁿ-1 nodes total. Used as a teaching model and in some redundancy schemes.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(34,197,94,0.4);">
+                <span class="info-card-icon">🌳</span>
+                <h4>General Tree (n children per node)</h4>
+                <p>Each node can have any number of children. This is the most common real-world form — a core switch might have 4–8 distribution switches, each with 4–24 access switches. The number of children per node depends on switch port count. This flexible model maps perfectly to real enterprise network design.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(249,115,22,0.4);">
+                <span class="info-card-icon">🌴</span>
+                <h4>Extended Star (2-Level Tree)</h4>
+                <p>A simplified tree with only root and access layers — no distribution layer in between. One central switch connects to several access switches, each serving end devices. Also called "Extended Star" topology. Suitable for medium-sized offices (200–500 users). Saves cost by eliminating the distribution layer; used in 2-tier or "collapsed core" designs.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(234,179,8,0.4);">
+                <span class="info-card-icon">🔄</span>
+                <h4>Redundant Tree (Dual Root)</h4>
+                <p>A Tree topology with two root switches connected to each other for redundancy. Distribution switches connect to BOTH root switches. If one root fails, the other takes over. Uses Spanning Tree Protocol (STP) to prevent loops. This is the standard design for enterprise networks where root switch failure would be catastrophic. Often called "dual-home" or "stacked core" design.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ADVANTAGES & DISADVANTAGES ============ -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Tree Topology's hierarchical structure gives it powerful management and scalability advantages, but the root node dependency creates an inherent vulnerability.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>Highly scalable — add branches without redesigning existing ones</li>
+                    <li>Easy to manage and troubleshoot — clear parent-child hierarchy</li>
+                    <li>Fault isolation — one branch failure does not affect others</li>
+                    <li>Supports large networks — hierarchical structure manages complexity</li>
+                    <li>Easy to segment with VLANs at each layer</li>
+                    <li>Mirrors real-world org structure (floor → building → campus)</li>
+                    <li>Efficient use of cabling — no direct links between all devices</li>
+                    <li>Supports point-to-point connections at every level</li>
+                    <li>Industry-standard design (Cisco 3-tier model)</li>
+                    <li>Used in every enterprise, university, and hospital network</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Root node is a single point of failure for entire network</li>
+                    <li>Performance bottleneck at root for cross-branch traffic</li>
+                    <li>Deeper trees = longer paths = higher latency</li>
+                    <li>Cross-branch communication requires traversing root — inefficient</li>
+                    <li>Expensive hardware required at root and distribution layers</li>
+                    <li>Not inherently redundant — needs STP or dual root for resilience</li>
+                    <li>Root switch failure isolates all branches simultaneously</li>
+                    <li>Requires careful capacity planning at each layer</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 The Golden Rule of Tree Topology:</strong> Invest heavily in the <strong>Root and Distribution layers</strong>
+            — these carry ALL inter-branch traffic. Skimp on access layer hardware (it only serves one branch).
+            Always deploy <strong>redundant root switches</strong> (dual core) in production networks — a root failure 
+            without redundancy takes down your ENTIRE network. This is why the <strong>Redundant Tree (Collapsed Dual-Core)</strong>
+            design is the minimum standard for any network where downtime has real consequences.
+        </div>
+    </section>
+
+    <!-- ============ 3-TIER MODEL ============ -->
+    <section class="section" id="layers">
+        <h2>🏗️ Tree Topology Layers — Detailed Breakdown</h2>
+        <p>
+            The power of Tree Topology comes from its <strong>strict separation of responsibilities across three layers</strong>.
+            Each layer has a clearly defined role — and mixing responsibilities across layers leads to poor performance,
+            harder troubleshooting, and scalability headaches.
+        </p>
+
+        <div class="example-box">
+            <strong>🌳 Tree Topology — Layer by Layer:</strong><br><br>
+
+            <strong style="color:#818cf8;">LAYER 1 — ROOT (CORE) SWITCH</strong><br>
+            • Connects all Distribution switches into one unified network<br>
+            • Handles all inter-branch (inter-VLAN / inter-subnet) routing<br>
+            • Connects to WAN, internet, and data centre uplinks<br>
+            • Must have the highest throughput and lowest latency<br>
+            • NEVER apply filters or QoS here — speed only! Policy = core killer.<br><br>
+
+            <strong style="color:#4ade80;">LAYER 2 — DISTRIBUTION SWITCHES</strong><br>
+            • Aggregate traffic from multiple access switches per zone/building<br>
+            • Apply QoS, ACLs, and inter-VLAN routing policies here<br>
+            • Run Layer-3 routing between branches and to the root<br>
+            • Deploy in pairs for redundancy — each access switch uplinks to BOTH<br>
+            • Functions: Route summarization, VLAN boundary enforcement, policy<br><br>
+
+            <strong style="color:#fb923c;">LAYER 3 — ACCESS SWITCHES</strong><br>
+            • End devices connect here directly — PCs, phones, cameras, APs<br>
+            • Layer-2 only — assign VLANs based on port/device type<br>
+            • Enable port security, storm control, BPDU guard<br>
+            • Provide PoE (Power over Ethernet) for IP phones and APs<br>
+            • Uplink to distribution layer with redundant dual cables (LACP)<br><br>
+
+            Result: Root (routing/core) + Distribution (policy/aggregation) + Access (device connection) = Tree Topology! 🌳
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🎯</span>
+                <h4>Root Layer Design Rules</h4>
+                <p>
+                    Never configure ACLs or QoS at the root — it kills throughput.<br>
+                    Always deploy root switches in pairs (dual-core) for redundancy.<br>
+                    Use the fastest available hardware — 10G/40G/100G fiber uplinks.<br>
+                    Root-to-distribution links should be the fattest pipes in the network.<br>
+                    Enable BFD (Bidirectional Forwarding Detection) for sub-second failover.
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔀</span>
+                <h4>Distribution Layer Design Rules</h4>
+                <p>
+                    Always deploy in pairs — two distribution switches per building zone.<br>
+                    Connect each access switch to BOTH distribution switches (redundancy).<br>
+                    Apply inter-VLAN routing, QoS, and ACLs at this layer only.<br>
+                    Run STP or better yet — Layer-3 routing to avoid loops.<br>
+                    Summarize routes upward to reduce root switch routing table size.
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🚀</span>
+                <h4>Access Layer Design Rules</h4>
+                <p>
+                    Enable port security to block unauthorized MAC addresses.<br>
+                    Enable BPDU Guard on all access ports to prevent rogue switches.<br>
+                    Assign the correct VLAN per port based on device type.<br>
+                    Enable Storm Control to prevent broadcast storms.<br>
+                    Use PoE-capable switches if deploying IP phones or wireless APs.
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌐</span>
+                <h4>Spanning Tree Protocol (STP)</h4>
+                <p>
+                    STP is critical in tree networks with redundant links.<br>
+                    Without STP, redundant uplinks create switching loops — catastrophic broadcast storms.<br>
+                    Use Rapid-PVST+ or MSTP for fast convergence (sub-second failover).<br>
+                    Set the root bridge to your actual root switch using STP priorities.<br>
+                    PortFast on access ports — instant connectivity for end devices on plug-in.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ REAL WORLD ============ -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Tree Topology is not just a textbook diagram — it is <em>literally</em> what most large
+            structured networks look like. Here are real examples you interact with every day.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏢</span>
+                <h4>Corporate Office Networks</h4>
+                <p>Every multi-floor office building uses Tree Topology. Each floor has one access switch (or several for large floors). Each building wing has one distribution switch. The data centre has the root core switch. Cisco, Infosys, TCS, Wipro — the office network you work on follows exactly this 3-tier tree model. 24x7 NOC teams monitor this tree and resolve issues per branch.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🎓</span>
+                <h4>University & School Campus Networks</h4>
+                <p>IITs, NITs, and major universities use tree topology for their campus LANs. Root switch in the main data centre. Distribution switch per building (hostel block, academic block, library). Access switches on each floor of each building. Adding a new lab or hostel block is as simple as connecting a new access or distribution switch to the existing tree.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏥</span>
+                <h4>Hospital Networks</h4>
+                <p>ICUs, OTs, wards, pharmacy — all on separate branches of a hospital tree network. Critical infrastructure like life-support monitors connect to dedicated access switches per ward. The distribution layer enforces VLAN separation (clinical systems vs. admin vs. guest Wi-Fi). The root switch has fully redundant dual-core design — patient safety depends on network uptime.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏭</span>
+                <h4>Factory & Industrial Networks</h4>
+                <p>Manufacturing plants use tree topology to segment production lines. Each production line has its own access switch (for PLCs, SCADA sensors, and HMIs). Department distribution switches aggregate line-level traffic. The root switch connects the factory floor to the enterprise ERP systems and internet uplink. OT/IT convergence in Industry 4.0 factories follows this tree model.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏨</span>
+                <h4>Hotel & Hospitality Networks</h4>
+                <p>Large hotels deploy tree topology across floors. Each floor has an access switch in the network closet serving all guest room ports and hallway APs. Each wing or building block has a distribution switch. The root switch in the basement connects to the internet uplink and handles guest VLAN isolation. Marriott, ITC, Taj hotels all use this structured approach.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏦</span>
+                <h4>Bank Branch Networks</h4>
+                <p>Even a single bank branch uses a mini tree topology. Teller PCs, ATMs, manager systems, and guest kiosks connect to separate access switches. A small distribution switch (or just the root) sits in the branch server room. MPLS WAN then connects each branch's tree to the regional hub. SBI, HDFC, ICICI branches across India are all structured this way.</p>
+            </div>
+        </div>
+
+        <h3>📅 Evolution of Tree Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1980s — First Hierarchical Networks</h4>
+                <p>As early Ethernet Bus networks grew too large, network engineers began organizing segments hierarchically. Bridges were used to connect multiple Bus segments in a tree-like structure. The hierarchical concept — a root bridge connecting sub-networks — was born from the practical need to scale past a single bus segment's collision domain limitations.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990 — Spanning Tree Protocol (STP) Defined</h4>
+                <p>IEEE 802.1D (STP) was standardized, making tree topology with redundant links practical. STP automatically blocked redundant paths to prevent loops while still maintaining a backup path. The "spanning tree" concept — selecting a root bridge and building a loop-free tree — became foundational to all hierarchical network designs.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990 — Cisco Defines 3-Tier Hierarchical Model</h4>
+                <p>Cisco formalized Tree Topology into the famous Access-Distribution-Core (ADC) hierarchical model. This gave network engineers a clear blueprint for building scalable, manageable networks. The Cisco 3-tier model became the industry bible — still the standard every CCNA, CCNP, and network engineer learns today.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2001 — Rapid STP (RSTP) — 802.1W</h4>
+                <p>Classic STP had convergence times of 30–50 seconds — too slow for modern voice and video traffic. IEEE 802.1W introduced Rapid STP (RSTP), converging in under 1 second. RSTP made tree topology practical for real-time applications. Almost all modern enterprise tree networks use RSTP or its VLAN-aware variant, Rapid-PVST+.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2010s — Virtual Switching System (VSS) & StackWise</h4>
+                <p>Cisco introduced Virtual Switching System (VSS) for Catalyst 6500 and StackWise for access switches. Two physical distribution or core switches could now appear as ONE logical switch. This eliminated STP loops at the distribution/core layers, making tree networks even more resilient. VSS allowed active-active dual-root without blocking any links.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — SD-Access & Intent-Based Tree Networks</h4>
+                <p>Cisco's Software-Defined Access (SDA) brings Tree Topology into the programmable era. The physical tree structure remains — root, distribution, and access layers — but the VLAN and policy configuration is now automated via a central controller (Cisco DNA Center). Adding a new branch means clicking a button, not configuring 20 switches manually. Tree topology lives on, now smarter than ever.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ COMPARISON TABLE ============ -->
+    <section class="section" id="comparison">
+        <h2>📊 Tree Topology vs Other Topologies — Full Comparison</h2>
+        <p>How Tree Topology compares against Star, Mesh, Ring, and Bus topologies across all critical dimensions.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>🌳 Tree</th>
+                <th>⭐ Star</th>
+                <th>🕸️ Mesh</th>
+                <th>🔄 Ring</th>
+                <th>🚌 Bus</th>
+            </tr>
+            <tr>
+                <td><strong>Real-World Usage</strong></td>
+                <td>⭐ Standard for ALL large structured LANs</td>
+                <td>🟢 Small-medium LAN</td>
+                <td>🟢 Core/WAN only</td>
+                <td>🟡 Specialized legacy</td>
+                <td>🔴 Nearly obsolete</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>⭐ Excellent — add branches easily</td>
+                <td>🟡 Limited by central hub</td>
+                <td>🟡 Links grow n²</td>
+                <td>🟡 Disrupts ring</td>
+                <td>❌ Very limited</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance</strong></td>
+                <td>🟡 Branch isolated, root is SPOF</td>
+                <td>🟡 Hub failure = all fail</td>
+                <td>⭐ Maximum redundancy</td>
+                <td>🟡 Dual ring only</td>
+                <td>❌ One break = total</td>
+            </tr>
+            <tr>
+                <td><strong>Management</strong></td>
+                <td>⭐ Clear hierarchy — easy to manage</td>
+                <td>⭐ Simplest</td>
+                <td>❌ Complex routing</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Simplest</td>
+            </tr>
+            <tr>
+                <td><strong>Cost Efficiency</strong></td>
+                <td>🟡 Moderate — root needs expensive HW</td>
+                <td>🟡 Moderate</td>
+                <td>❌ Very expensive</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Cheapest</td>
+            </tr>
+            <tr>
+                <td><strong>Cross-Branch Performance</strong></td>
+                <td>🟡 Must pass through root — adds hops</td>
+                <td>⭐ Direct through central hub</td>
+                <td>⭐ Direct path always</td>
+                <td>🟡 Sequential hops</td>
+                <td>⭐ Shared broadcast</td>
+            </tr>
+            <tr>
+                <td><strong>Troubleshooting</strong></td>
+                <td>⭐ Per-branch isolation makes it easy</td>
+                <td>⭐ Simple star paths</td>
+                <td>❌ Many possible paths</td>
+                <td>🟡 Sequential search</td>
+                <td>❌ Entire bus suspect</td>
+            </tr>
+            <tr>
+                <td><strong>Expansion</strong></td>
+                <td>⭐ Add branch without disrupting others</td>
+                <td>🟡 Add port to hub</td>
+                <td>❌ Each node needs links to all</td>
+                <td>🟡 Breaks ring briefly</td>
+                <td>❌ Performance degrades</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============ QUICK REFERENCE ============ -->
+    <section class="section" id="qr">
+        <h2>📋 Tree Topology — Quick Reference</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">📐</span>
+                <h4>Structure</h4>
+                <p>Hierarchical parent-child tree. Root node at top, distribution nodes in middle, access nodes and end devices at leaves. Every device has exactly ONE parent. Communication between branches always passes through the nearest common ancestor.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Data Transmission</h4>
+                <p>Point-to-point between adjacent nodes. Unicast, multicast, and broadcast all supported. Cross-branch unicast travels UP to common ancestor, then DOWN to destination. No shared medium — no CSMA/CD needed. Full-duplex on each link.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">⚡</span>
+                <h4>Media & Speed</h4>
+                <p>Root-to-distribution: 10G/40G/100G fiber uplinks. Distribution-to-access: 1G/10G fiber or copper Cat6A. Access-to-end device: 100M/1G UTP Cat5e/Cat6. PoE support at access layer for IP phones, cameras, and wireless APs. Total throughput limited by root switch capacity.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🛡️</span>
+                <h4>Protocols Used</h4>
+                <p>STP/RSTP/MSTP for loop prevention. LACP (802.3ad) for link aggregation between layers. OSPF/EIGRP for Layer-3 routing between distribution switches. VLAN (802.1Q) for traffic segmentation. BFD for fast failure detection at root/distribution. LLDP/CDP for neighbor discovery.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>🌳 Tree Topology | Network Topology Complete Guide | Network Learning Hub</p>
+</footer>
+
+<!-- Progress bar scroll -->
+<script>
+window.addEventListener('scroll', () => {
+    const el = document.getElementById('progressBar');
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    if (el) el.style.width = scrolled + '%';
+});
+</script>
+
+<script>
+// ============================================================
+// TREE TOPOLOGY ANIMATION ENGINE
+// ============================================================
+
+// Node positions in 860×480 viewBox
+// Levels: Root=y60, Dist=y195, Access=y330, End=y430
+const TNODES = {
+    Root: { x:430, y:60 },
+    D1:   { x:215, y:195 },
+    D2:   { x:645, y:195 },
+    A1:   { x:108, y:330 },
+    A2:   { x:322, y:330 },
+    A3:   { x:538, y:330 },
+    A4:   { x:752, y:330 },
+    E1:   { x:60,  y:430 },
+    E2:   { x:156, y:430 },
+    E3:   { x:268, y:430 },
+    E4:   { x:376, y:430 },
+    E5:   { x:484, y:430 },
+    E6:   { x:592, y:430 },
+    E7:   { x:700, y:430 },
+    E8:   { x:804, y:430 },
+};
+
+// Parent-child links
+const TLINKS = [
+    { id:'lnk-root-d1',  from:'Root', to:'D1' },
+    { id:'lnk-root-d2',  from:'Root', to:'D2' },
+    { id:'lnk-d1-a1',    from:'D1',   to:'A1' },
+    { id:'lnk-d1-a2',    from:'D1',   to:'A2' },
+    { id:'lnk-d2-a3',    from:'D2',   to:'A3' },
+    { id:'lnk-d2-a4',    from:'D2',   to:'A4' },
+    { id:'lnk-a1-e1',    from:'A1',   to:'E1' },
+    { id:'lnk-a1-e2',    from:'A1',   to:'E2' },
+    { id:'lnk-a2-e3',    from:'A2',   to:'E3' },
+    { id:'lnk-a2-e4',    from:'A2',   to:'E4' },
+    { id:'lnk-a3-e5',    from:'A3',   to:'E5' },
+    { id:'lnk-a3-e6',    from:'A3',   to:'E6' },
+    { id:'lnk-a4-e7',    from:'A4',   to:'E7' },
+    { id:'lnk-a4-e8',    from:'A4',   to:'E8' },
+];
+
+const svg = document.getElementById('treeSvg');
+const canvas = document.getElementById('treeCanvas');
+
+function canvasW() { return canvas.getBoundingClientRect().width; }
+function canvasH() { return canvas.getBoundingClientRect().height; }
+function svgX(vx) { return (vx / 860) * canvasW(); }
+function svgY(vy) { return (vy / 480) * canvasH(); }
+
+// Draw all SVG links
+function initLinks() {
+    TLINKS.forEach(lnk => {
+        const f = TNODES[lnk.from], t = TNODES[lnk.to];
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', f.x); line.setAttribute('y1', f.y);
+        line.setAttribute('x2', t.x); line.setAttribute('y2', t.y);
+        line.setAttribute('class','t-link');
+        line.setAttribute('id', lnk.id);
+        svg.insertBefore(line, svg.firstChild);
+    });
+}
+
+// Position all device divs
+function positionDevices() {
+    const W = canvasW(), H = canvasH();
+    Object.entries(TNODES).forEach(([k, pos]) => {
+        const el = document.getElementById('dev' + k);
+        if (el) {
+            el.style.left = (pos.x / 860 * 100) + '%';
+            el.style.top  = (pos.y / 480 * 100) + '%';
+        }
+    });
+}
+
+function setLink(id, cls) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    ['active','fail','back'].forEach(c => el.classList.remove(c));
+    if (cls) el.classList.add(cls);
+}
+
+function setDev(key, cls) {
+    const el = document.getElementById('dev' + key);
+    if (!el) return;
+    ['dev-src','dev-dst','dev-fwd','dev-fail'].forEach(c => el.classList.remove(c));
+    if (cls) el.classList.add(cls);
+}
+
+function setStatus(msg) {
+    document.getElementById('treeStatus').innerHTML = msg;
+}
+function setPill(msg) {
+    document.getElementById('routePill').textContent = msg;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function animPkt(id, fromKey, toKey, ms, color) {
+    return new Promise(resolve => {
+        const pkt = document.getElementById(id);
+        if (!pkt) { resolve(); return; }
+        const W = canvasW(), H = canvasH();
+        const f = TNODES[fromKey], t = TNODES[toKey];
+        pkt.setAttribute('fill', color);
+        pkt.setAttribute('cx', f.x);
+        pkt.setAttribute('cy', f.y);
+        pkt.style.opacity = '1';
+        const startTime = performance.now();
+        function step(now) {
+            const p = Math.min((now - startTime) / ms, 1);
+            pkt.setAttribute('cx', f.x + (t.x - f.x) * p);
+            pkt.setAttribute('cy', f.y + (t.y - f.y) * p);
+            if (p < 1) requestAnimationFrame(step);
+            else { pkt.style.opacity = '0'; resolve(); }
+        }
+        requestAnimationFrame(step);
+    });
+}
+
+let treeAnimating = false;
+function lockBtns(v) {
+    document.querySelectorAll('.t-btn').forEach(b => {
+        if (!b.classList.contains('ghost')) b.disabled = v;
+    });
+}
+
+async function treeDemo(mode) {
+    if (treeAnimating) return;
+    treeAnimating = true;
+    lockBtns(true);
+    treeReset(true);
+    await sleep(200);
+
+    if (mode === 'upward') {
+        // PC-1 (E1) → Root
+        setPill('⬆️ Upward TX: PC-1 → ACC-SW1 → DIST-SW1 → ROOT');
+        setStatus('⬆️ <strong>PC-1</strong> wants to reach the internet. Data travels UP the tree branch-by-branch!');
+        setDev('E1','dev-src');
+        await sleep(600);
+        setLink('lnk-a1-e1','active');
+        setDev('A1','dev-fwd');
+        await animPkt('tpkt0','E1','A1',480,'#00ff88');
+        setStatus('🔌 <strong>ACC-SW1</strong> receives frame → checks MAC table → destination not local → forwards UPWARD to DIST-SW1...');
+        await sleep(300);
+        setLink('lnk-d1-a1','active');
+        setDev('D1','dev-fwd');
+        await animPkt('tpkt0','A1','D1',500,'#00ff88');
+        setStatus('🔀 <strong>DIST-SW1</strong> routes the packet → destination is beyond local subnet → sends UP to ROOT switch...');
+        await sleep(300);
+        setLink('lnk-root-d1','active');
+        setDev('Root','dev-dst');
+        await animPkt('tpkt0','D1','Root',520,'#00ff88');
+        await sleep(400);
+        setStatus('✅ <strong>ROOT switch received the packet!</strong> Now routing to the internet uplink. 3 hops: PC-1 → ACC-SW1 → DIST-SW1 → ROOT. This is the upward path in Tree Topology!');
+
+    } else if (mode === 'downward') {
+        // Root sends data down to SRV-1 (E6)
+        setPill('⬇️ Downward TX: ROOT → DIST-SW2 → ACC-SW3 → SRV-1');
+        setStatus('⬇️ <strong>ROOT switch</strong> received data from internet and needs to deliver to <strong>SRV-1</strong> in the right branch. Data flows DOWN the tree!');
+        setDev('Root','dev-src');
+        await sleep(600);
+        setLink('lnk-root-d2','active');
+        setDev('D2','dev-fwd');
+        await animPkt('tpkt0','Root','D2',520,'#a78bfa');
+        setStatus('🔀 <strong>DIST-SW2</strong> receives frame → looks up routing table → SRV-1 is on ACC-SW3 → forwards DOWN...');
+        await sleep(300);
+        setLink('lnk-d2-a3','active');
+        setDev('A3','dev-fwd');
+        await animPkt('tpkt0','D2','A3',500,'#a78bfa');
+        setStatus('🔌 <strong>ACC-SW3</strong> receives frame → SRV-1 is on Port 2 of this switch → delivers directly!');
+        await sleep(300);
+        setLink('lnk-a3-e6','active');
+        setDev('E6','dev-dst');
+        await animPkt('tpkt0','A3','E6',460,'#a78bfa');
+        await sleep(400);
+        setStatus('✅ <strong>SRV-1 received the data!</strong> ROOT → DIST-SW2 → ACC-SW3 → SRV-1. 3 hops down the right branch. PC-4, PC-5, PRN-2 saw ZERO of this traffic — tree isolation in action!');
+
+    } else if (mode === 'cross') {
+        // PC-1 (E1) → PC-4 (E4): E1 → A1 → D1 → Root → D1 → A2 → E4
+        setPill('🔀 Cross-Branch: PC-1 → (UP) ROOT → (DOWN) PC-4');
+        setStatus('🔀 <strong>PC-1</strong> (left branch) wants to reach <strong>PC-3</strong> (right side of left branch). Data must climb to common ancestor and come back down!');
+        setDev('E1','dev-src');
+        await sleep(600);
+        // UP: E1 → A1 → D1 → Root
+        setLink('lnk-a1-e1','active'); setDev('A1','dev-fwd');
+        await animPkt('tpkt0','E1','A1',420,'#00ff88');
+        setLink('lnk-d1-a1','active'); setDev('D1','dev-fwd');
+        await animPkt('tpkt0','A1','D1',460,'#00ff88');
+        setStatus('⬆️ Climbed to DIST-SW1 → PC-3 is in same distribution zone → DIST-SW1 routes directly to ACC-SW2...');
+        await sleep(300);
+        // DOWN: D1 → A2 → E4
+        setLink('lnk-d1-a2','active'); setDev('A2','dev-fwd');
+        await animPkt('tpkt0','D1','A2',460,'#f8b400');
+        setLink('lnk-a2-e4','active'); setDev('E4','dev-dst');
+        await animPkt('tpkt0','A2','E4',420,'#f8b400');
+        await sleep(400);
+        setStatus('✅ <strong>Cross-branch delivery complete!</strong> PC-1 → ACC-SW1 → DIST-SW1 → ACC-SW2 → PC-3. 4 hops total. DIST-SW1 was the common ancestor — no need to go all the way to ROOT for same-distribution traffic!');
+
+    } else if (mode === 'broadcast') {
+        // Root broadcasts to ALL nodes
+        setPill('📡 Root Broadcast — ALL nodes receive');
+        setStatus('📡 <strong>ROOT switch</strong> is sending a network-wide broadcast (e.g., ARP, DHCP discover). ALL devices in the tree will receive it!');
+        setDev('Root','dev-src');
+        await sleep(600);
+        // Root → both dist switches simultaneously
+        setLink('lnk-root-d1','active'); setLink('lnk-root-d2','active');
+        setDev('D1','dev-fwd'); setDev('D2','dev-fwd');
+        await Promise.all([
+            animPkt('tpkt0','Root','D1',480,'#fbbf24'),
+            animPkt('tpkt1','Root','D2',480,'#fbbf24'),
+        ]);
+        setStatus('📡 Both distribution switches received broadcast → flooding down to ALL access switches...');
+        await sleep(200);
+        // Dist → all access switches
+        setLink('lnk-d1-a1','active'); setLink('lnk-d1-a2','active');
+        setLink('lnk-d2-a3','active'); setLink('lnk-d2-a4','active');
+        setDev('A1','dev-fwd'); setDev('A2','dev-fwd');
+        setDev('A3','dev-fwd'); setDev('A4','dev-fwd');
+        await Promise.all([
+            animPkt('tpkt0','D1','A1',460,'#fbbf24'),
+            animPkt('tpkt1','D2','A3',460,'#fbbf24'),
+        ]);
+        await Promise.all([
+            animPkt('tpkt0','D1','A2',460,'#fbbf24'),
+            animPkt('tpkt1','D2','A4',460,'#fbbf24'),
+        ]);
+        setStatus('📡 All access switches flooding to end devices...');
+        await sleep(200);
+        setLink('lnk-a1-e1','active'); setLink('lnk-a1-e2','active');
+        setLink('lnk-a2-e3','active'); setLink('lnk-a2-e4','active');
+        setLink('lnk-a3-e5','active'); setLink('lnk-a3-e6','active');
+        setLink('lnk-a4-e7','active'); setLink('lnk-a4-e8','active');
+        ['E1','E2','E3','E4','E5','E6','E7','E8'].forEach(k => setDev(k,'dev-dst'));
+        await sleep(400);
+        setStatus('✅ <strong>All 8 end devices received the broadcast!</strong> This is why broadcasts in large tree networks are controlled with VLANs — a broadcast storm floods the ENTIRE tree hierarchically. Use STP and VLAN boundaries to contain broadcast domains!');
+
+    } else if (mode === 'fail') {
+        // DIST-SW1 fails — left branch isolated, right branch still works
+        setPill('💥 DIST-SW1 Fails — Left branch isolated, right branch continues!');
+        setStatus('💥 <strong>DIST-SW1 has failed!</strong> All devices in its branch (ACC-SW1, ACC-SW2 and their end devices) are now unreachable. Watch how the right branch continues normally!');
+        await sleep(700);
+        ['D1','A1','A2','E1','E2','E3','E4'].forEach(k => setDev(k,'dev-fail'));
+        setLink('lnk-root-d1','fail');
+        setLink('lnk-d1-a1','fail'); setLink('lnk-d1-a2','fail');
+        setLink('lnk-a1-e1','fail'); setLink('lnk-a1-e2','fail');
+        setLink('lnk-a2-e3','fail'); setLink('lnk-a2-e4','fail');
+        setStatus('❌ Left branch DOWN: PC-1, PRN-1, PC-2, PC-3 all offline. But DIST-SW2 branch is completely unaffected!');
+        await sleep(800);
+        // Right branch still works fine
+        setLink('lnk-root-d2','active'); setLink('lnk-d2-a3','active');
+        setDev('Root','dev-src'); setDev('D2','dev-fwd'); setDev('A3','dev-fwd'); setDev('E5','dev-dst');
+        await animPkt('tpkt0','Root','D2',500,'#a78bfa');
+        await animPkt('tpkt0','D2','A3',480,'#a78bfa');
+        await animPkt('tpkt0','A3','E5',440,'#a78bfa');
+        await sleep(400);
+        setStatus('✅ <strong>Right branch fully operational!</strong> PC-4, SRV-1, PC-5, PRN-2 — all still reachable. This is Tree Topology fault isolation — failures are contained to the failed branch. This is why <strong>Redundant Tree (Dual Distribution)</strong> is critical in production networks!');
+    }
+
+    treeAnimating = false;
+    lockBtns(false);
+}
+
+function treeReset(silent) {
+    treeAnimating = false;
+    lockBtns(false);
+    Object.keys(TNODES).forEach(k => setDev(k, null));
+    TLINKS.forEach(lnk => setLink(lnk.id, null));
+    ['tpkt0','tpkt1','tpkt2'].forEach(id => {
+        const p = document.getElementById(id);
+        if (p) p.style.opacity = '0';
+    });
+    setPill('🌳 Tree Network — Hierarchical & Ready');
+    if (!silent) setStatus('👆 Click a button to simulate traffic in the Tree Network!');
+}
+
+// Init on load
+window.addEventListener('load', () => {
+    initLinks();
+    positionDevices();
+});
+window.addEventListener('resize', positionDevices);
+</script>
+</body>
+</html>

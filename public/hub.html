@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub - Network Device | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid #ff6b35;
+            border-radius: 20px;
+            color: #ff6b35;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        .obsolete-badge {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff5555;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #ff6b35;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #ff6b35;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Hub Illustration */
+        .hub-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        /* Central Hub */
+        .hub-device {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: hubPulse 3s infinite;
+            box-shadow: 0 0 60px rgba(255, 107, 53, 0.8);
+            z-index: 10;
+        }
+
+        .hub-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        .hub-icon {
+            font-size: 3rem;
+        }
+
+        /* Port Indicators on Hub */
+        .hub-ports {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-evenly;
+            padding-bottom: 8px;
+            z-index: 11;
+        }
+
+        .port-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffaa00;
+            animation: portActive 1.5s infinite;
+            box-shadow: 0 0 8px #ffaa00;
+        }
+
+        .port-indicator:nth-child(2) { animation-delay: 0.2s; }
+        .port-indicator:nth-child(3) { animation-delay: 0.4s; }
+        .port-indicator:nth-child(4) { animation-delay: 0.6s; }
+        .port-indicator:nth-child(5) { animation-delay: 0.8s; }
+        .port-indicator:nth-child(6) { animation-delay: 1.0s; }
+
+        /* Connected Devices */
+        .network-device {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .network-device:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.6);
+            border-color: #ff6b35;
+        }
+
+        .device-icon {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .device-label {
+            font-size: 0.75rem;
+            color: #ff6b35;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Device Positions */
+        .device-pc1 { top: 8%; left: 20%; }
+        .device-pc2 { top: 8%; right: 20%; }
+        .device-laptop1 { top: 50%; left: 5%; }
+        .device-laptop2 { top: 50%; right: 5%; }
+        .device-printer { bottom: 12%; left: 25%; }
+        .device-server { bottom: 12%; right: 25%; }
+
+        /* Broadcast Lines (showing hub broadcasts to ALL) */
+        .broadcast-line {
+            position: absolute;
+            background: rgba(255, 107, 53, 0.4);
+            height: 3px;
+            z-index: 1;
+            animation: broadcast 2s infinite;
+        }
+
+        .broadcast-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(4px);
+            transform: translateY(-50%);
+        }
+
+        /* Broadcast line positions */
+        .line-pc1 {
+            top: calc(8% + 50px);
+            left: calc(20% + 50px);
+            width: calc(50% - 20% - 140px);
+            transform: rotate(-35deg);
+        }
+
+        .line-pc2 {
+            top: calc(8% + 50px);
+            right: calc(20% + 50px);
+            width: calc(50% - 20% - 140px);
+            transform: rotate(35deg);
+            transform-origin: 100% 50%;
+        }
+
+        .line-laptop1 {
+            top: calc(50%);
+            left: calc(5% + 50px);
+            width: calc(50% - 5% - 140px);
+        }
+
+        .line-laptop2 {
+            top: calc(50%);
+            right: calc(5% + 50px);
+            width: calc(50% - 5% - 140px);
+        }
+
+        .line-printer {
+            bottom: calc(12% + 50px);
+            left: calc(25% + 50px);
+            width: calc(50% - 25% - 140px);
+            transform: rotate(35deg);
+        }
+
+        .line-server {
+            bottom: calc(12% + 50px);
+            right: calc(25% + 50px);
+            width: calc(50% - 25% - 140px);
+            transform: rotate(-35deg);
+            transform-origin: 100% 50%;
+        }
+
+        /* Broadcast Packets (showing data going to ALL devices) */
+        .broadcast-packet {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ff6b35;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff6b35;
+            z-index: 5;
+            opacity: 0;
+        }
+
+        /* Collision Warning */
+        .collision-warning {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: collisionBlink 1.5s infinite;
+            z-index: 3;
+            opacity: 0;
+        }
+
+        /* Info Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .info-card h4 {
+            color: #ff6b35;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #c0c0c0;
+            text-align: left;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 4px solid #ff6b35;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #ff0000;
+        }
+
+        .highlight-box h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+
+        .warning-box h3 {
+            color: #ff5555;
+        }
+
+        .highlight-box ul {
+            list-style-position: inside;
+            color: #d0d0d0;
+        }
+
+        .highlight-box li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(30, 30, 30, 0.6);
+            border: 2px dashed rgba(255, 107, 53, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.95);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes heroGlow {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes hubPulse {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(255, 107, 53, 1);
+            }
+        }
+
+        @keyframes portActive {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes broadcast {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes collisionBlink {
+            0%, 100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        @keyframes broadcastFlow {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--packet-x), var(--packet-y));
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .hub-illustration {
+                min-height: 500px;
+            }
+
+            .network-device {
+                width: 70px;
+                height: 70px;
+            }
+
+            .device-icon {
+                font-size: 1.8rem;
+            }
+
+            .device-label {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">🌐 Network Learning Hub</a>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="nav-btn">📚 Dashboard</a>
+                <!--<a href="#" class="nav-btn">🔙 Back</a>-->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>📡 Network Hub</h1>
+                <p class="hero-subtitle">Simple Layer 1 Repeater - Broadcast to All Devices</p>
+                <div>
+                    <span class="hero-badge">Layer 1 Device</span>
+                    <span class="hero-badge">Half-Duplex</span>
+                    <span class="hero-badge">Collision Domain</span>
+                    <span class="hero-badge obsolete-badge">⚠️ OBSOLETE</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Hub Illustration -->
+        <section class="section">
+            <h2>📢 How Hub Works - Broadcast Visualization</h2>
+            <p>
+                Watch how a network hub operates - it's a simple repeater that broadcasts every received packet to ALL connected devices, 
+                regardless of the intended recipient. This creates a shared collision domain and inefficient bandwidth usage.
+            </p>
+
+            <div class="hub-illustration">
+                <!-- Central Hub -->
+                <div class="hub-device">
+                    <div class="hub-icon">📡</div>
+                    <div class="hub-label">HUB</div>
+                </div>
+
+                <!-- Port Indicators -->
+                <div class="hub-ports">
+                    <div class="port-indicator"></div>
+                    <div class="port-indicator"></div>
+                    <div class="port-indicator"></div>
+                    <div class="port-indicator"></div>
+                    <div class="port-indicator"></div>
+                    <div class="port-indicator"></div>
+                </div>
+
+                <!-- Broadcast Lines to All Devices -->
+                <div class="broadcast-line line-pc1"></div>
+                <div class="broadcast-line line-pc2"></div>
+                <div class="broadcast-line line-laptop1"></div>
+                <div class="broadcast-line line-laptop2"></div>
+                <div class="broadcast-line line-printer"></div>
+                <div class="broadcast-line line-server"></div>
+
+                <!-- Collision Warning (appears periodically) -->
+                <div class="collision-warning">
+                    ⚠️
+                </div>
+
+                <!-- Connected Devices -->
+                <div class="network-device device-pc1">
+                    <div class="device-icon">🖥️</div>
+                    <div class="device-label">PC 1</div>
+                </div>
+
+                <div class="network-device device-pc2">
+                    <div class="device-icon">🖥️</div>
+                    <div class="device-label">PC 2</div>
+                </div>
+
+                <div class="network-device device-laptop1">
+                    <div class="device-icon">💻</div>
+                    <div class="device-label">Laptop A</div>
+                </div>
+
+                <div class="network-device device-laptop2">
+                    <div class="device-icon">💻</div>
+                    <div class="device-label">Laptop B</div>
+                </div>
+
+                <div class="network-device device-printer">
+                    <div class="device-icon">🖨️</div>
+                    <div class="device-label">Printer</div>
+                </div>
+
+                <div class="network-device device-server">
+                    <div class="device-icon">🗄️</div>
+                    <div class="device-label">Server</div>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <h3>⚠️ Critical Problems Observed:</h3>
+                <ul>
+                    <li><strong>Broadcast Storm:</strong> Every packet goes to EVERY device, wasting massive bandwidth</li>
+                    <li><strong>No Privacy:</strong> All devices can see everyone else's traffic (security nightmare)</li>
+                    <li><strong>Collision Domain:</strong> If two devices transmit simultaneously, collision occurs - red warning appears</li>
+                    <li><strong>Half-Duplex:</strong> Devices cannot send and receive at same time - must wait</li>
+                    <li><strong>Shared Bandwidth:</strong> 100 Mbps hub with 10 devices = ~10 Mbps per device under load</li>
+                    <li><strong>Performance Degrades:</strong> More devices = more collisions = slower network</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- What is a Hub -->
+        <section class="section">
+            <h2>🔍 What is a Network Hub?</h2>
+            <p>
+                A <strong>network hub</strong> is the simplest and most primitive networking device. It operates at Layer 1 (Physical layer) 
+                of the OSI model as a basic multi-port repeater. When it receives an electrical signal on any port, it simply amplifies 
+                and broadcasts that signal to ALL other ports - no intelligence, no filtering, no addressing.
+            </p>
+
+            <div class="highlight-box">
+                <h3>🔧 Core Characteristics:</h3>
+                <ul>
+                    <li><strong>Layer 1 Device:</strong> Only understands electrical signals, not data or addresses</li>
+                    <li><strong>Broadcast Everything:</strong> Every frame goes to every connected device</li>
+                    <li><strong>Half-Duplex:</strong> Devices can send OR receive, not both simultaneously</li>
+                    <li><strong>Single Collision Domain:</strong> All ports share same collision domain</li>
+                    <li><strong>No Intelligence:</strong> Cannot learn, filter, or make forwarding decisions</li>
+                    <li><strong>Shared Bandwidth:</strong> Total bandwidth divided among all active devices</li>
+                </ul>
+            </div>
+
+            <h3>🔧 How Hub Operates</h3>
+            <p>
+                Hub's operation is extremely simple:
+            </p>
+            <ol style="margin-left: 40px; color: #d0d0d0;">
+                <li><strong>Receive Signal:</strong> Gets electrical signal on any port</li>
+                <li><strong>Amplify:</strong> Regenerates/amplifies the signal</li>
+                <li><strong>Broadcast:</strong> Sends amplified signal to ALL other ports</li>
+                <li><strong>Done:</strong> No checking destination, no filtering, just blast everywhere</li>
+            </ol>
+
+            <div class="example-box">
+                <strong>📦 Example Data Flow:</strong><br>
+                1. PC 1 wants to send file to Server (only needs 1-to-1 communication)<br>
+                2. PC 1 transmits frame with destination = Server's MAC address<br>
+                3. Hub receives frame on Port 1<br>
+                4. Hub broadcasts frame to ALL ports (2, 3, 4, 5, 6) - everyone gets it!<br>
+                5. PC 2, Laptop A, Laptop B, Printer ALL receive frame even though it's for Server<br>
+                6. Each device checks destination MAC - only Server accepts it, others discard<br>
+                7. Meanwhile, Laptop A wanted to transmit but had to wait (collision avoidance)<br>
+                <br>
+                <strong>🎯 Problems:</strong> Wasted bandwidth, no privacy, collisions, slow performance!
+            </div>
+        </section>
+
+        <!-- Hub vs Switch vs Router -->
+        <section class="section">
+            <h2>⚖️ Hub vs Switch vs Router</h2>
+            <p>Understanding why hub is obsolete compared to modern devices:</p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Hub</th>
+                    <th>Switch</th>
+                    <th>Router</th>
+                </tr>
+                <tr>
+                    <td><strong>OSI Layer</strong></td>
+                    <td>Layer 1 (Physical)</td>
+                    <td>Layer 2 (Data Link)</td>
+                    <td>Layer 3 (Network)</td>
+                </tr>
+                <tr>
+                    <td><strong>Intelligence</strong></td>
+                    <td>❌ None - dumb repeater</td>
+                    <td>✅ MAC learning & filtering</td>
+                    <td>✅✅ Routing decisions</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Delivery</strong></td>
+                    <td>❌ Broadcasts to ALL ports</td>
+                    <td>✅ Targeted to specific port</td>
+                    <td>✅ Routes between networks</td>
+                </tr>
+                <tr>
+                    <td><strong>Collision Domain</strong></td>
+                    <td>❌ Single (entire network)</td>
+                    <td>✅ Per port (isolated)</td>
+                    <td>N/A (Layer 3)</td>
+                </tr>
+                <tr>
+                    <td><strong>Bandwidth</strong></td>
+                    <td>❌ Shared among all devices</td>
+                    <td>✅ Dedicated per port</td>
+                    <td>✅ Dedicated per interface</td>
+                </tr>
+                <tr>
+                    <td><strong>Duplex Mode</strong></td>
+                    <td>❌ Half-duplex only</td>
+                    <td>✅ Full-duplex capable</td>
+                    <td>✅ Full-duplex</td>
+                </tr>
+                <tr>
+                    <td><strong>Security</strong></td>
+                    <td>❌ Zero - everyone sees everything</td>
+                    <td>✅ Port isolation</td>
+                    <td>✅✅ Firewall, NAT</td>
+                </tr>
+                <tr>
+                    <td><strong>Performance</strong></td>
+                    <td>❌ Degrades with more devices</td>
+                    <td>✅ Consistent</td>
+                    <td>✅ Optimized routing</td>
+                </tr>
+                <tr>
+                    <td><strong>Price</strong></td>
+                    <td>💰 Cheapest (obsolete)</td>
+                    <td>💰💰 Moderate</td>
+                    <td>💰💰💰 More expensive</td>
+                </tr>
+                <tr>
+                    <td><strong>Status</strong></td>
+                    <td>🔴 OBSOLETE</td>
+                    <td>🟢 Standard for LANs</td>
+                    <td>🟢 Essential for WAN</td>
+                </tr>
+            </table>
+
+            <div class="warning-box" style="margin-top: 25px;">
+                <h3>⚠️ Bottom Line:</h3>
+                <p style="margin: 0;">
+                    <strong>DO NOT BUY A HUB!</strong> They are obsolete, slow, insecure, and inefficient. 
+                    Even the cheapest modern switch is vastly superior. Hubs only exist in old networks or for educational purposes to understand networking history.
+                </p>
+            </div>
+        </section>
+
+        <!-- Why Hub is Obsolete -->
+        <section class="section">
+            <h2>🚫 Why Hub is Completely Obsolete</h2>
+            <p>
+                Hubs are no longer manufactured or used in modern networks. Here's why switches completely replaced them:
+            </p>
+
+            <div class="cards-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🐌</span>
+                    <h4>Terrible Performance</h4>
+                    <p>
+                        Shared bandwidth means 100 Mbps hub with 10 active devices gives each only ~10 Mbps. Switch gives each 
+                        device full 100 Mbps or 1 Gbps simultaneously. Performance gap is enormous. Networks slow to crawl with hubs. 
+                        Collisions get worse with more devices. Modern networks need speed.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💥</span>
+                    <h4>Collision Nightmare</h4>
+                    <p>
+                        Entire network is single collision domain. If two devices transmit simultaneously, collision occurs - 
+                        both must stop, wait random time, retry. More devices = more collisions = exponentially worse performance. 
+                        Switches eliminated collisions entirely - each port is separate collision domain.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔓</span>
+                    <h4>Zero Security</h4>
+                    <p>
+                        Every device receives all traffic. Anyone can run packet sniffer and capture everyone's data. Passwords, 
+                        emails, files - all visible to everyone on network. Complete privacy nightmare. Unacceptable in any 
+                        modern environment. Switches isolate traffic per port - much more secure.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <h4>Half-Duplex Limitation</h4>
+                    <p>
+                        Can only send OR receive, never both simultaneously. Like walkie-talkie - one person talks, others listen. 
+                        Wastes half the potential bandwidth. Switches support full-duplex - send and receive at same time. 
+                        Doubles effective bandwidth. Hub's half-duplex is archaic limitation.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📉</span>
+                    <h4>Bandwidth Waste</h4>
+                    <p>
+                        Broadcasting everything wastes massive bandwidth. If PC 1 sends to Server, why should Printer, Laptop A, 
+                        Laptop B all receive it? They check destination, realize it's not for them, discard it. Complete waste of 
+                        bandwidth and processing power. Switches only send to destination - efficient use of bandwidth.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🧠</span>
+                    <h4>No Intelligence</h4>
+                    <p>
+                        Hub is completely dumb - just repeats signals. Cannot learn, filter, prioritize, or optimize. No MAC 
+                        address table, no VLAN support, no QoS, no monitoring. Switches are intelligent - learn topology, 
+                        make forwarding decisions, support advanced features. Hub is just wires with power.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>No Cost Advantage</h4>
+                    <p>
+                        Used to be cheaper than switches decades ago. Now switches cost same or less due to mass production. 
+                        No reason to buy hub. Even cheapest $15 unmanaged switch vastly superior to any hub. Hubs not even 
+                        manufactured anymore. You won't find them in stores - only obsolete stock or e-waste.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🚫</span>
+                    <h4>Cannot Scale</h4>
+                    <p>
+                        Adding more devices makes performance worse exponentially. 5 devices = manageable but slow. 10 devices = 
+                        frequent collisions, very slow. 20+ devices = network becomes unusable. Switches scale beautifully - 
+                        can have 48 ports all running at wire speed. Hubs died because they couldn't scale.
+                    </p>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <h3>🎓 Educational Value Only:</h3>
+                <p>
+                    Hubs are still taught in networking courses to help students understand:
+                </p>
+                <ul>
+                    <li>The difference between Layer 1 and Layer 2 devices</li>
+                    <li>How collision domains work and why they're bad</li>
+                    <li>The importance of MAC-based forwarding</li>
+                    <li>Why switches revolutionized networking</li>
+                    <li>Historical evolution of networking technology</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    <strong>But remember:</strong> This is historical knowledge, not practical guidance. Never use a hub in a real network!
+                </p>
+            </div>
+        </section>
+
+        <!-- The Death of Hub -->
+        <section class="section">
+            <h2>⚰️ The Death of the Network Hub</h2>
+            <p>
+                Here's how switches completely killed hubs in just a few years:
+            </p>
+
+            <div class="highlight-box">
+                <h3>📅 Timeline of Hub's Demise:</h3>
+                <ul>
+                    <li><strong>1980s-1990s:</strong> Hubs were standard - switches expensive and rare</li>
+                    <li><strong>Mid-1990s:</strong> Switches become affordable, businesses start switching</li>
+                    <li><strong>Late 1990s:</strong> Gigabit Ethernet emerges - hubs can't keep up</li>
+                    <li><strong>Early 2000s:</strong> Switch prices drop dramatically - cost parity with hubs</li>
+                    <li><strong>2005-2010:</strong> Hubs disappear from mainstream market</li>
+                    <li><strong>Today:</strong> Hubs only in old networks, labs, or museums</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <strong>💡 Real-World Example - Why Everyone Switched:</strong><br><br>
+                <strong>1995 Office Network (20 devices):</strong><br>
+                - Hub: 10 Mbps shared = ~0.5 Mbps per device under load<br>
+                - Constant collisions, very slow file transfers<br>
+                - Anyone could sniff everyone's traffic<br>
+                - Cost: $200<br>
+                <br>
+                <strong>2000 Office Network (same 20 devices):</strong><br>
+                - Switch: 100 Mbps per port = 100 Mbps per device<br>
+                - Zero collisions, fast transfers<br>
+                - Traffic isolated per port - secure<br>
+                - Cost: $250 (became cheaper than hubs by 2005)<br>
+                <br>
+                <strong>Result:</strong> 200x performance improvement, better security, similar price → Everyone switched! 🚀
+            </div>
+
+            <div class="info-card" style="margin-top: 30px;">
+                <span class="info-card-icon">🎯</span>
+                <h4>The Final Nail in the Coffin</h4>
+                <p>
+                    What truly killed hubs wasn't just that switches were better - it was that switches became CHEAPER while being 
+                    100x better. When a superior technology costs the same or less, the inferior one dies instantly. By 2005, 
+                    you literally couldn't find hubs in stores anymore because nobody manufactured them. They became e-waste overnight. 
+                    This is rare in tech - usually old technology lingers. Hubs died fast because the improvement was so dramatic.
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="warning-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>Layer 1 Device:</strong> Hub is dumb repeater - just amplifies and broadcasts electrical signals</li>
+                    <li><strong>Broadcast Everything:</strong> Every frame goes to every port - massive bandwidth waste and zero privacy</li>
+                    <li><strong>Single Collision Domain:</strong> All devices share collision domain - more devices = more collisions = slower network</li>
+                    <li><strong>Half-Duplex Only:</strong> Cannot send and receive simultaneously - wastes half potential bandwidth</li>
+                    <li><strong>Shared Bandwidth:</strong> Total bandwidth divided among active devices - performance degrades with more users</li>
+                    <li><strong>No Intelligence:</strong> Cannot learn MAC addresses, cannot filter, cannot optimize - just blindly repeats</li>
+                    <li><strong>Security Nightmare:</strong> Everyone can see everyone else's traffic - packet sniffing trivial</li>
+                    <li><strong>Completely Obsolete:</strong> Replaced by switches which are faster, smarter, more secure, and now cheaper</li>
+                    <li><strong>Educational Only:</strong> Taught in networking courses to understand Layer 1 and collision domains</li>
+                    <li><strong>Never Buy One:</strong> If you see a hub for sale, it's old stock or mistake - get a switch instead!</li>
+                </ul>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>🎓 Summary: The Hub Story</strong><br><br>
+                Hubs were revolutionary in the 1980s-90s - they made LANs possible when they were new technology. 
+                But they had fundamental flaws that couldn't be fixed: broadcast nature, collision domains, shared bandwidth, 
+                half-duplex, zero security. When switches arrived with MAC-based forwarding, collision-free full-duplex 
+                operation, and dedicated bandwidth per port, hubs became obsolete almost overnight. Today, hubs are historical 
+                artifacts - important to understand networking evolution, but never to actually use. They represent what 
+                networking was before it became truly efficient and intelligent. Study hubs to appreciate how far we've come!
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 🧡 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Broadcast Packet Animation - shows packets going to ALL devices simultaneously
+        function createBroadcastWave() {
+            const illustration = document.querySelector('.hub-illustration');
+            const hub = document.querySelector('.hub-device');
+            const devices = document.querySelectorAll('.network-device');
+            
+            const hubRect = hub.getBoundingClientRect();
+            const illustrationRect = illustration.getBoundingClientRect();
+            
+            const hubCenterX = hubRect.left - illustrationRect.left + hubRect.width / 2;
+            const hubCenterY = hubRect.top - illustrationRect.top + hubRect.height / 2;
+            
+            // Create packet for EACH device (hub broadcasts to all)
+            devices.forEach(device => {
+                const deviceRect = device.getBoundingClientRect();
+                const deviceCenterX = deviceRect.left - illustrationRect.left + deviceRect.width / 2;
+                const deviceCenterY = deviceRect.top - illustrationRect.top + deviceRect.height / 2;
+                
+                const packet = document.createElement('div');
+                packet.className = 'broadcast-packet';
+                packet.style.left = hubCenterX + 'px';
+                packet.style.top = hubCenterY + 'px';
+                packet.style.setProperty('--packet-x', (deviceCenterX - hubCenterX) + 'px');
+                packet.style.setProperty('--packet-y', (deviceCenterY - hubCenterY) + 'px');
+                
+                illustration.appendChild(packet);
+                
+                // Animate
+                packet.style.animation = 'broadcastFlow 2s ease-out forwards';
+                
+                setTimeout(() => packet.remove(), 2000);
+            });
+        }
+
+        // Show collision warning periodically
+        function showCollisionWarning() {
+            const warning = document.querySelector('.collision-warning');
+            warning.style.animation = 'collisionBlink 1.5s ease-in-out 3';
+            
+            setTimeout(() => {
+                warning.style.animation = '';
+            }, 4500);
+        }
+
+        // Generate broadcast waves every 3 seconds
+        setInterval(createBroadcastWave, 3000);
+        
+        // Show collision warning every 8 seconds
+        setInterval(showCollisionWarning, 8000);
+
+        // Initial animations
+        setTimeout(createBroadcastWave, 1000);
+        setTimeout(showCollisionWarning, 5000);
+
+        // Interactive hover effects
+        document.querySelectorAll('.network-device').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15)';
+            });
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

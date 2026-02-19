@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repeater - Network Device | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Animation Container */
+        .animation-box {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        /* Repeater Visualization */
+        .repeater-demo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Devices */
+        .device {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+            animation: devicePulse 2s infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            z-index: 10;
+        }
+
+        .device-label {
+            position: absolute;
+            bottom: -35px;
+            font-size: 0.85rem;
+            color: #667eea;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        /* Repeater Device */
+        .repeater {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            z-index: 10;
+            animation: repeaterPulse 2s infinite;
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.8);
+        }
+
+        .repeater::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            animation: ripple 2s infinite;
+        }
+
+        .repeater-label {
+            position: absolute;
+            bottom: -35px;
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Signal Lines */
+        .signal-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 0.2) 0%, 
+                rgba(102, 126, 234, 1) 50%, 
+                rgba(102, 126, 234, 0.2) 100%);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .signal-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(6px);
+            transform: translateY(-50%);
+        }
+
+        .line-input {
+            left: calc(90px + 20px);
+            width: calc(50% - 90px - 70px);
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 0.3) 0%, 
+                rgba(102, 126, 234, 0.6) 50%, 
+                rgba(102, 126, 234, 0.2) 100%);
+        }
+
+        .line-output {
+            left: calc(50% + 50px);
+            width: calc(50% - 90px - 70px);
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 1) 0%, 
+                rgba(118, 75, 162, 1) 50%, 
+                rgba(102, 126, 234, 1) 100%);
+            animation: strongSignal 1.5s infinite;
+        }
+
+        /* Signal Labels */
+        .signal-label {
+            position: absolute;
+            top: calc(50% - 50px);
+            font-size: 0.8rem;
+            color: #b0b0b0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            white-space: nowrap;
+        }
+
+        .label-weak {
+            left: calc(25%);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        .label-strong {
+            right: calc(25%);
+            color: #51cf66;
+            border-color: rgba(81, 207, 102, 0.5);
+        }
+
+        /* Signal Waves */
+        .signal-wave {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            z-index: 5;
+        }
+
+        .wave-weak {
+            animation: waveWeakFlow 4s infinite;
+            opacity: 0.4;
+        }
+
+        .wave-strong {
+            animation: waveStrongFlow 4s infinite;
+            opacity: 1;
+        }
+
+        /* Distance Markers */
+        .distance-marker {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.75rem;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .marker-line {
+            width: 2px;
+            height: 30px;
+            background: rgba(136, 136, 136, 0.5);
+        }
+
+        .marker-left {
+            left: calc(50% - 50px);
+        }
+
+        .marker-right {
+            left: calc(50% + 50px);
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .info-card h4 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #c0c0c0;
+            text-align: left;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .highlight-box ul {
+            list-style-position: inside;
+            color: #d0d0d0;
+            margin-left: 20px;
+        }
+
+        .highlight-box li {
+            margin: 10px 0;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(30, 30, 30, 0.6);
+            border: 2px dashed rgba(102, 126, 234, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.95);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes devicePulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+            }
+        }
+
+        @keyframes repeaterPulse {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(102, 126, 234, 1);
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes strongSignal {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes waveWeakFlow {
+            0% {
+                left: calc(90px + 20px);
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            45% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
+            50% {
+                left: calc(50% - 50px);
+                opacity: 0.2;
+                transform: scale(0.5);
+            }
+            100% {
+                left: calc(50% - 50px);
+                opacity: 0;
+                transform: scale(0.3);
+            }
+        }
+
+        @keyframes waveStrongFlow {
+            0% {
+                left: calc(50% + 50px);
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            95% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                left: calc(100% - 110px);
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .animation-box {
+                padding: 40px 20px;
+            }
+
+            .repeater-demo {
+                flex-direction: column;
+                gap: 100px;
+            }
+
+            .signal-line {
+                display: none;
+            }
+
+            .device, .repeater {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+            <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🔁 Network Repeater</h1>
+            <p class="hero-subtitle">Signal Regeneration & Range Extension Device</p>
+        </section>
+
+        <!-- Interactive Repeater Visualization -->
+        <section class="section">
+            <h2>⚡ How Repeater Works - Live Visualization</h2>
+            <p>
+                Watch how a repeater receives weak, degraded signals and regenerates them into strong, clean signals. 
+                This extends the maximum distance data can travel across a network cable.
+            </p>
+
+            <div class="animation-box">
+                <div class="repeater-demo">
+                    <!-- Source Device -->
+                    <div class="device">
+                        <div>💻</div>
+                        <div class="device-label">Computer A</div>
+                    </div>
+
+                    <!-- Repeater -->
+                    <div class="repeater">
+                        <div>🔁</div>
+                        <div class="repeater-label">REPEATER</div>
+                    </div>
+
+                    <!-- Destination Device -->
+                    <div class="device">
+                        <div>🖥️</div>
+                        <div class="device-label">Computer B</div>
+                    </div>
+
+                    <!-- Signal Lines -->
+                    <div class="signal-line line-input"></div>
+                    <div class="signal-line line-output"></div>
+
+                    <!-- Signal Labels -->
+                    <div class="signal-label label-weak">
+                        ⚠️ Weak Signal<br>
+                        (Degraded)
+                    </div>
+                    <div class="signal-label label-strong">
+                        ✅ Strong Signal<br>
+                        (Regenerated)
+                    </div>
+
+                    <!-- Animated Signal Waves -->
+                    <div class="signal-wave wave-weak"></div>
+                    <div class="signal-wave wave-strong"></div>
+
+                    <!-- Distance Markers -->
+                    <div class="distance-marker marker-left">
+                        <div class="marker-line"></div>
+                        <div>100m</div>
+                    </div>
+                    <div class="distance-marker marker-right">
+                        <div class="marker-line"></div>
+                        <div>+100m</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🎯 Key Observations:</h3>
+                <ul>
+                    <li><strong>Weak Input:</strong> Signal becomes degraded after traveling 100 meters from source</li>
+                    <li><strong>Regeneration:</strong> Repeater receives weak signal and regenerates it to full strength</li>
+                    <li><strong>Strong Output:</strong> Clean, strong signal can travel another 100 meters</li>
+                    <li><strong>Range Extension:</strong> Total distance doubled from 100m to 200m</li>
+                    <li><strong>Signal Quality:</strong> Output signal is as clean as original transmission</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- What is a Repeater -->
+        <section class="section">
+            <h2>🔍 What is a Network Repeater?</h2>
+            <p>
+                A <strong>network repeater</strong> is a simple Layer 1 (Physical layer) device that receives electrical or optical signals, 
+                amplifies them, and retransmits them to extend the maximum distance a signal can travel. Think of it as a "signal booster" 
+                for network cables - it takes a weak, degraded signal and regenerates it back to full strength.
+            </p>
+
+            <h3>🔧 Why Repeaters Are Needed</h3>
+            <p>
+                Network signals naturally weaken as they travel through cables due to resistance, interference, and signal attenuation. 
+                For example:
+            </p>
+            <ul style="margin-left: 40px; color: #d0d0d0;">
+                <li><strong>Ethernet (Cat5/Cat6):</strong> Maximum 100 meters before signal becomes too weak</li>
+                <li><strong>Fiber Optic:</strong> Can go kilometers but eventually signal weakens</li>
+                <li><strong>Coaxial Cable:</strong> Maximum 185-500 meters depending on type</li>
+            </ul>
+            <p>
+                When you need to connect devices beyond these distances, a repeater regenerates the signal so it can travel further.
+            </p>
+
+            <div class="example-box">
+                <strong>📡 Real-World Example:</strong><br><br>
+                Imagine a large warehouse where Computer A is at one end (entrance) and Server is at the other end (back office) - 
+                total distance 180 meters. Direct connection won't work because Ethernet max is 100m.<br><br>
+                
+                <strong>Solution:</strong><br>
+                1. Run cable from Computer A → Repeater (90 meters) - Signal still strong<br>
+                2. Repeater regenerates signal to full strength<br>
+                3. Run cable from Repeater → Server (90 meters) - Signal strong again<br>
+                4. Total distance: 180 meters ✅ Network works perfectly!<br><br>
+                
+                Without repeater: Signal too weak at 180m, connection fails ❌
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Core Functions:</h3>
+                <ul>
+                    <li><strong>Signal Reception:</strong> Receives incoming electrical/optical signal</li>
+                    <li><strong>Signal Regeneration:</strong> Cleans up and amplifies signal to original strength</li>
+                    <li><strong>Signal Retransmission:</strong> Sends regenerated signal on to next segment</li>
+                    <li><strong>Noise Filtering:</strong> Removes electrical noise and interference</li>
+                    <li><strong>Bit-Level Operation:</strong> Works with raw bits (0s and 1s), no understanding of data</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- How Repeater Works -->
+        <section class="section">
+            <h2>⚙️ How Repeater Works Technically</h2>
+            <p>
+                Repeaters operate at the Physical layer (Layer 1) of the OSI model. Here's the step-by-step process:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">1️⃣</span>
+                    <h4>Receive Weak Signal</h4>
+                    <p>
+                        Incoming signal has traveled distance and become degraded. Voltage levels are lower, signal may have 
+                        noise and distortion. Repeater's receiver detects this weak signal on its input port.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">2️⃣</span>
+                    <h4>Amplify Signal</h4>
+                    <p>
+                        Repeater boosts the electrical signal strength back to standard levels. For digital signals, this means 
+                        restoring proper voltage levels for binary 0s and 1s (e.g., 0V for 0, +5V for 1).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">3️⃣</span>
+                    <h4>Clean & Reshape</h4>
+                    <p>
+                        Filters out noise and interference accumulated during transmission. Reshapes signal waveform to clean 
+                        square waves. Removes jitter and timing errors. Output is clean, crisp signal.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">4️⃣</span>
+                    <h4>Retransmit Signal</h4>
+                    <p>
+                        Sends regenerated signal out on output port at full strength. Signal can now travel maximum distance 
+                        again. Process happens in microseconds - nearly instantaneous.
+                    </p>
+                </div>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>🔬 Technical Detail - Signal Regeneration:</strong><br><br>
+                <strong>Input Signal:</strong> Degraded sine wave with noise<br>
+                - Voltage: 1.5V (should be 5V for binary 1)<br>
+                - Noise: Random fluctuations ±0.3V<br>
+                - Shape: Distorted, rounded edges<br><br>
+                
+                <strong>Repeater Processing:</strong><br>
+                - Amplification: Boost to 5V<br>
+                - Noise filtering: Remove ±0.3V fluctuations<br>
+                - Reshaping: Convert to clean square wave<br>
+                - Timing: Resynchronize bit boundaries<br><br>
+                
+                <strong>Output Signal:</strong> Clean digital signal<br>
+                - Voltage: 5V (perfect binary 1)<br>
+                - Noise: Eliminated<br>
+                - Shape: Sharp square wave<br>
+                - Ready to travel full distance again! ✨
+            </div>
+        </section>
+
+        <!-- Types of Repeaters -->
+        <section class="section">
+            <h2>📦 Types of Repeaters</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Analog Repeater</h4>
+                    <p>
+                        Amplifies entire analog signal including any noise. Used in older systems like telephone lines and 
+                        cable TV. Problem: noise gets amplified too. Each repeater adds more noise. Limited number of 
+                        repeaters before signal unusable.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💾</span>
+                    <h4>Digital Repeater</h4>
+                    <p>
+                        Interprets digital signal (0s and 1s), regenerates clean version. Filters out noise completely. 
+                        Can chain many repeaters without signal degradation. Modern networks use digital repeaters. 
+                        Much better than analog for data transmission.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Ethernet Repeater</h4>
+                    <p>
+                        Specifically for Ethernet networks. Extends 100m cable limit. Usually has 2 ports (in and out). 
+                        Can be powered or unpowered. Maintains Ethernet timing and signal integrity. Common in large office 
+                        buildings and warehouses.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💡</span>
+                    <h4>Fiber Optic Repeater</h4>
+                    <p>
+                        Converts optical signal to electrical, amplifies, converts back to optical. Used in long-distance 
+                        fiber links. Can extend fiber runs to hundreds of kilometers. Critical for undersea cables and 
+                        backbone networks. More complex than copper repeaters.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Wireless Repeater</h4>
+                    <p>
+                        Receives Wi-Fi signal and rebroadcasts it. Extends wireless coverage area. Common in homes and 
+                        offices to eliminate dead zones. Can halve bandwidth if using same channel. Better alternative: 
+                        mesh Wi-Fi systems.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📞</span>
+                    <h4>Telephone Repeater</h4>
+                    <p>
+                        Amplifies voice signals in long-distance phone lines. Used in traditional landline networks. 
+                        Prevents voice degradation over distance. Mostly obsolete with digital telephone systems and VoIP. 
+                        Still found in very old infrastructure.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of Repeaters</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">📏</span>
+                    <h4>Extended Range</h4>
+                    <p>
+                        Doubles or triples maximum cable distance. Ethernet: from 100m to 200m or 300m with repeaters. 
+                        Enables networking across large buildings, campuses, or facilities. Cost-effective way to extend 
+                        network without expensive infrastructure upgrades.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Low Cost</h4>
+                    <p>
+                        Simple devices, very affordable. Much cheaper than switches or routers. No complex electronics or 
+                        processors needed. Just amplification circuits. Can save money in extending networks versus laying 
+                        new infrastructure or upgrading to fiber.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Simple Operation</h4>
+                    <p>
+                        Plug and play - no configuration needed. No software, no management interface. Just connect cables 
+                        and power. Cannot misconfigure because there's nothing to configure. Anyone can install. No IT 
+                        expertise required.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Transparent to Network</h4>
+                    <p>
+                        Devices don't know repeater exists. Works at Physical layer - higher layers unaffected. No impact 
+                        on protocols, addressing, or routing. Simply extends the physical medium. Network operates normally 
+                        as if it's one continuous cable.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Signal Quality Restoration</h4>
+                    <p>
+                        Regenerates clean signal from degraded input. Removes noise and interference. Reshapes waveform to 
+                        original specification. Prevents data errors from weak signals. Each segment gets fresh, strong signal 
+                        - maintains network reliability over distance.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Low Power Consumption</h4>
+                    <p>
+                        Simple electronics consume minimal power. Many repeaters can run on power from the data cable itself 
+                        (passive). Active repeaters use very little electricity. Lower operational costs. Environmentally 
+                        friendly compared to more complex networking equipment.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages & Limitations -->
+        <section class="section">
+            <h2>❌ Disadvantages & Limitations</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🚫</span>
+                    <h4>No Intelligence</h4>
+                    <p>
+                        Layer 1 device - just amplifies everything. Cannot filter traffic, cannot make decisions. Passes 
+                        all data including errors, collisions, and noise. No MAC address learning, no packet inspection. 
+                        Completely "dumb" - just a signal booster.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💥</span>
+                    <h4>Extends Collision Domain</h4>
+                    <p>
+                        All segments connected by repeaters share same collision domain. Collisions on one segment affect 
+                        entire network. More devices = more collisions = slower network. Cannot segment network or improve 
+                        performance. This is why switches replaced repeaters in most applications.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔢</span>
+                    <h4>Limited Cascading</h4>
+                    <p>
+                        Ethernet allows maximum 4 repeaters between devices (5-4-3 rule). More repeaters = timing issues 
+                        and signal degradation. Cannot infinitely extend network with repeaters. Eventually must use routers 
+                        or switches to segment network properly.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <h4>Adds Latency</h4>
+                    <p>
+                        Each repeater adds small delay (microseconds). Multiple repeaters accumulate delay. Not huge impact 
+                        but measurable. Can affect time-sensitive applications. Switch or router might be better choice for 
+                        latency-critical applications.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>No Security Features</h4>
+                    <p>
+                        Cannot filter malicious traffic. No firewall capability. Cannot prevent unauthorized access. 
+                        Physical layer only - no awareness of data content. All traffic passes through unchanged. Security 
+                        must be handled at higher layers.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Cannot Connect Different Networks</h4>
+                    <p>
+                        Only extends existing network segment. Cannot connect different network types (e.g., Ethernet to 
+                        Wi-Fi). Cannot perform protocol conversion. Cannot route between different IP networks. For that, 
+                        need router or gateway.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>No Network Management</h4>
+                    <p>
+                        Cannot monitor traffic, detect problems, or provide statistics. No SNMP support for network 
+                        management. Cannot diagnose issues. Black box - you don't know what's happening inside. 
+                        Managed switches provide much better visibility.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚠️</span>
+                    <h4>Single Point of Failure</h4>
+                    <p>
+                        If repeater fails, entire network segment disconnected. No redundancy in simple repeater setup. 
+                        Power failure affects connectivity. Must ensure repeater reliability with UPS and quality equipment. 
+                        Critical networks need redundant paths.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Repeater vs Other Devices -->
+        <section class="section">
+            <h2>⚖️ Repeater vs Hub vs Switch</h2>
+            <p>Understanding how repeater compares to other basic networking devices:</p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Repeater</th>
+                    <th>Hub</th>
+                    <th>Switch</th>
+                </tr>
+                <tr>
+                    <td><strong>OSI Layer</strong></td>
+                    <td>Layer 1 (Physical)</td>
+                    <td>Layer 1 (Physical)</td>
+                    <td>Layer 2 (Data Link)</td>
+                </tr>
+                <tr>
+                    <td><strong>Primary Function</strong></td>
+                    <td>Signal regeneration</td>
+                    <td>Multi-port repeater</td>
+                    <td>Intelligent forwarding</td>
+                </tr>
+                <tr>
+                    <td><strong>Number of Ports</strong></td>
+                    <td>Usually 2 (in/out)</td>
+                    <td>Multiple (4-48)</td>
+                    <td>Multiple (4-48+)</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Case</strong></td>
+                    <td>Extend cable distance</td>
+                    <td>Connect many devices</td>
+                    <td>LAN connectivity</td>
+                </tr>
+                <tr>
+                    <td><strong>Intelligence</strong></td>
+                    <td>❌ None</td>
+                    <td>❌ None</td>
+                    <td>✅ MAC learning</td>
+                </tr>
+                <tr>
+                    <td><strong>Collision Domain</strong></td>
+                    <td>Extends existing</td>
+                    <td>Single (all ports)</td>
+                    <td>Per port (isolated)</td>
+                </tr>
+                <tr>
+                    <td><strong>Signal Quality</strong></td>
+                    <td>✅ Regenerates</td>
+                    <td>❌ No regeneration</td>
+                    <td>✅ Regenerates</td>
+                </tr>
+                <tr>
+                    <td><strong>Configuration</strong></td>
+                    <td>None needed</td>
+                    <td>None needed</td>
+                    <td>Optional (managed)</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>💰 Very cheap</td>
+                    <td>💰 Cheap (obsolete)</td>
+                    <td>💰💰 Moderate</td>
+                </tr>
+                <tr>
+                    <td><strong>Modern Usage</strong></td>
+                    <td>🟡 Specialized</td>
+                    <td>🔴 Obsolete</td>
+                    <td>🟢 Standard</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Modern Usage -->
+        <section class="section">
+            <h2>🔮 Modern Usage & Alternatives</h2>
+            <p>
+                While repeaters still exist, they've largely been replaced by more intelligent devices in modern networks:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🏢</span>
+                    <h4>Where Repeaters Still Used</h4>
+                    <p>
+                        Industrial networks with long cable runs. Legacy systems that can't be upgraded. Temporary network 
+                        extensions. Budget-constrained installations. Point-to-point connections where switching not needed. 
+                        Fiber optic long-haul links (optical amplifiers).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Modern Alternative: Switch</h4>
+                    <p>
+                        Switches can extend distance AND provide intelligence. Isolate collision domains per port. Better 
+                        performance, security, management. Only slightly more expensive. Can support VLANs, QoS, monitoring. 
+                        This is why switches replaced repeaters in most applications.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💡</span>
+                    <h4>Modern Alternative: Fiber Optic</h4>
+                    <p>
+                        Fiber can go much longer distances (2km+ for multimode, 10km+ for single-mode). No repeaters needed 
+                        for most campus networks. Better bandwidth (1/10/40/100 Gbps). Immune to electrical interference. 
+                        Prices have dropped significantly. Often better investment than copper + repeaters.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Modern Alternative: Wireless Bridge</h4>
+                    <p>
+                        For distance extension without cables. Point-to-point wireless links. Can span kilometers. No cable 
+                        installation costs. Easier deployment in difficult terrain. Good for connecting separate buildings. 
+                        Avoids repeater limitations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>💡 Modern Best Practice:</strong><br><br>
+                Instead of using repeaters to extend Ethernet beyond 100m:<br><br>
+                
+                <strong>Option 1:</strong> Use fiber optic cables (2km+ range, no repeater needed)<br>
+                <strong>Option 2:</strong> Use managed switches to segment network and extend range<br>
+                <strong>Option 3:</strong> Use wireless point-to-point bridges for building-to-building<br>
+                <strong>Option 4:</strong> Use network extenders (intelligent repeaters with additional features)<br><br>
+                
+                These solutions provide better performance, more features, and easier management than traditional repeaters.
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li>A <strong>repeater</strong> is a simple Layer 1 device that regenerates network signals to extend cable distance</li>
+                    <li>Works by receiving weak signals, amplifying them, and retransmitting at full strength</li>
+                    <li>Extends maximum cable length (e.g., Ethernet from 100m to 200m or more)</li>
+                    <li>Has no intelligence - cannot filter, route, or make decisions about traffic</li>
+                    <li>Extends collision domain - all connected segments share same collision issues</li>
+                    <li>Very simple and cheap, but limited in functionality compared to switches</li>
+                    <li>Still used in specialized applications but largely replaced by switches and fiber optics</li>
+                    <li>Maximum 4 repeaters can be cascaded in Ethernet (5-4-3 rule)</li>
+                    <li>Transparent to network - devices don't know repeater exists</li>
+                    <li>Modern alternatives (switches, fiber, wireless) usually better choice for new installations</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Add multiple weak signal waves
+        function createWeakWave() {
+            const demo = document.querySelector('.repeater-demo');
+            const wave = document.createElement('div');
+            wave.className = 'signal-wave wave-weak';
+            wave.style.top = 'calc(50% - 10px)';
+            demo.appendChild(wave);
+            
+            setTimeout(() => wave.remove(), 4000);
+        }
+
+        // Add multiple strong signal waves
+        function createStrongWave() {
+            const demo = document.querySelector('.repeater-demo');
+            const wave = document.createElement('div');
+            wave.className = 'signal-wave wave-strong';
+            wave.style.top = 'calc(50% - 10px)';
+            demo.appendChild(wave);
+            
+            setTimeout(() => wave.remove(), 4000);
+        }
+
+        // Create waves periodically
+        setInterval(createWeakWave, 2000);
+        setInterval(createStrongWave, 2000);
+
+        // Initial waves
+        setTimeout(createWeakWave, 500);
+        setTimeout(createStrongWave, 500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Protocols & Ports — Complete Guide | Network Learning Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1e1e1e 0%,#2d2d2d 100%);color:#e0e0e0;line-height:1.8;}
+.navbar{background:rgba(30,30,30,0.95);padding:15px 0;position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);}
+.nav-container{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
+.nav-logo{font-size:1.5rem;font-weight:bold;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;}
+.back-btn{padding:10px 25px;background:rgba(102,126,234,0.2);color:#667eea;border:1px solid #667eea;border-radius:25px;text-decoration:none;transition:all 0.3s ease;}
+.back-btn:hover{background:rgba(102,126,234,0.4);transform:translateY(-2px);}
+.container{max-width:1200px;margin:0 auto;padding:40px 20px;}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#667eea,#764ba2);z-index:9999;width:0%;transition:width 0.2s;}
+
+/* HERO */
+.hero{text-align:center;padding:60px 20px;margin-bottom:50px;background:rgba(45,45,45,0.6);border-radius:20px;border:1px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(102,126,234,0.08) 0%,transparent 70%);pointer-events:none;}
+.hero h1{font-size:3.5rem;margin-bottom:20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:fadeInDown 0.8s ease;}
+.hero-subtitle{font-size:1.3rem;color:#b0b0b0;animation:fadeInUp 0.8s ease;}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);padding:6px 18px;border-radius:20px;font-size:0.9rem;margin-top:15px;font-weight:bold;color:#fff;}
+
+/* SECTION */
+.section{background:rgba(45,45,45,0.6);border-radius:15px;padding:40px;margin-bottom:40px;border:1px solid rgba(255,255,255,0.1);}
+.section h2{font-size:2.2rem;margin-bottom:25px;color:#fff;border-left:4px solid #667eea;padding-left:20px;}
+.section h3{font-size:1.6rem;margin:30px 0 15px 0;color:#667eea;}
+.section p{font-size:1.1rem;color:#d0d0d0;margin-bottom:20px;text-align:justify;}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;margin:30px 0;}
+.info-card{background:rgba(30,30,30,0.6);border:1px solid rgba(102,126,234,0.3);border-radius:12px;padding:25px;transition:all 0.3s ease;}
+.info-card:hover{transform:translateY(-5px);border-color:#667eea;box-shadow:0 10px 30px rgba(102,126,234,0.3);}
+.info-card-icon{font-size:2.5rem;display:block;margin-bottom:15px;}
+.info-card h4{color:#667eea;font-size:1.2rem;margin-bottom:12px;}
+.info-card p{font-size:1rem;line-height:1.7;color:#c0c0c0;text-align:left;}
+
+/* HIGHLIGHT BOX */
+.highlight-box{background:rgba(102,126,234,0.1);border-left:4px solid #667eea;border-radius:8px;padding:25px;margin:25px 0;}
+.highlight-box ul{list-style-position:inside;color:#d0d0d0;margin-left:20px;}
+.highlight-box li{margin:10px 0;}
+
+/* EXAMPLE BOX */
+.example-box{background:rgba(30,30,30,0.6);border:2px dashed rgba(102,126,234,0.4);border-radius:12px;padding:25px;margin:25px 0;font-family:'Courier New',monospace;color:#d0d0d0;font-size:0.97rem;line-height:2;}
+
+/* COMPARISON TABLE */
+.comparison-table{width:100%;border-collapse:collapse;margin:25px 0;background:rgba(30,30,30,0.6);border-radius:12px;overflow:hidden;}
+.comparison-table th{background:rgba(102,126,234,0.2);color:#667eea;padding:15px;text-align:left;font-size:1rem;}
+.comparison-table td{padding:13px 15px;border-bottom:1px solid rgba(255,255,255,0.07);color:#d0d0d0;font-size:0.95rem;}
+.comparison-table tr:hover{background:rgba(102,126,234,0.08);}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:30px;margin:25px 0;}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#667eea,#764ba2);}
+.timeline-item{position:relative;margin-bottom:28px;}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:6px;width:14px;height:14px;border-radius:50%;background:#667eea;border:2px solid #764ba2;box-shadow:0 0 10px rgba(102,126,234,0.6);}
+.timeline-item h4{color:#a5b4fc;font-size:1rem;margin-bottom:5px;}
+.timeline-item p{font-size:0.95rem;color:#c0c0c0;margin:0;text-align:left;}
+
+/* STEPS */
+.steps-box{counter-reset:step;margin:25px 0;}
+.step{display:flex;gap:20px;align-items:flex-start;margin-bottom:20px;padding:20px;background:rgba(30,30,30,0.6);border-radius:12px;border:1px solid rgba(102,126,234,0.2);transition:all 0.3s;}
+.step:hover{border-color:#667eea;background:rgba(102,126,234,0.08);}
+.step-num{width:44px;height:44px;min-width:44px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:bold;color:#fff;}
+.step-content h5{color:#a5b4fc;font-size:1.05rem;margin-bottom:6px;}
+.step-content p{font-size:0.97rem;color:#c0c0c0;margin:0;}
+.step-content code{display:block;font-family:'Courier New',monospace;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:6px;margin-top:8px;font-size:0.93rem;color:#86efac;border-left:3px solid #22c55e;}
+
+/* BADGE */
+.badge{padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:bold;display:inline-block;margin:2px;}
+.badge.purple{background:rgba(102,126,234,0.2);color:#a5b4fc;border:1px solid rgba(102,126,234,0.4);}
+.badge.green{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.4);}
+.badge.orange{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.4);}
+.badge.red{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.4);}
+.badge.yellow{background:rgba(234,179,8,0.15);color:#fbbf24;border:1px solid rgba(234,179,8,0.4);}
+.badge.blue{background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.4);}
+.badge.teal{background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.4);}
+
+/* ANIMATION BOX */
+.animation-box{background:rgba(12,12,22,0.97);border-radius:15px;padding:30px;margin:30px 0;border:2px solid rgba(102,126,234,0.3);position:relative;overflow:hidden;}
+.route-pill{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(102,126,234,0.15);border:1px solid rgba(102,126,234,0.4);border-radius:20px;padding:5px 16px;font-size:0.78rem;color:#a5b4fc;z-index:30;white-space:nowrap;}
+
+/* PORT TABLE (mega) */
+.port-table{width:100%;border-collapse:collapse;margin:20px 0;background:rgba(18,18,30,0.9);border-radius:14px;overflow:hidden;font-size:0.92rem;}
+.port-table thead tr{background:rgba(102,126,234,0.2);}
+.port-table th{padding:14px 12px;text-align:left;color:#a5b4fc;font-weight:700;border-bottom:2px solid rgba(102,126,234,0.3);}
+.port-table td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,0.06);vertical-align:top;}
+.port-table tr:hover td{background:rgba(102,126,234,0.07);}
+.port-num{font-family:'Courier New',monospace;font-weight:bold;font-size:1rem;color:#818cf8;white-space:nowrap;}
+.port-service{font-weight:600;color:#e2e8f0;}
+.port-desc{color:#94a3b8;font-size:0.88rem;line-height:1.6;}
+.attack-tag{display:inline-block;background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.25);border-radius:6px;padding:2px 8px;font-size:0.78rem;margin:2px 2px 2px 0;font-family:'Courier New',monospace;}
+.defense-tag{display:inline-block;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.25);border-radius:6px;padding:2px 8px;font-size:0.78rem;margin:2px 2px 2px 0;font-family:'Courier New',monospace;}
+.proto-tcp{background:rgba(102,126,234,0.18);color:#a5b4fc;padding:2px 8px;border-radius:5px;font-size:0.75rem;font-weight:bold;}
+.proto-udp{background:rgba(34,197,94,0.15);color:#4ade80;padding:2px 8px;border-radius:5px;font-size:0.75rem;font-weight:bold;}
+.proto-both{background:rgba(234,179,8,0.15);color:#fbbf24;padding:2px 8px;border-radius:5px;font-size:0.75rem;font-weight:bold;}
+
+/* PROTOCOL CATEGORY CARDS */
+.proto-category{background:rgba(30,30,30,0.7);border-radius:14px;padding:24px;border:1px solid rgba(102,126,234,0.25);margin-bottom:18px;transition:all 0.3s;}
+.proto-category:hover{border-color:#667eea;box-shadow:0 8px 24px rgba(102,126,234,0.2);}
+.proto-category h4{font-size:1.15rem;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.proto-category p{font-size:0.97rem;color:#c0c0c0;margin-bottom:12px;}
+.proto-category .members{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+
+/* NIC DIAGRAM */
+.nic-diagram{background:rgba(12,12,22,0.97);border-radius:15px;padding:30px;margin:25px 0;border:2px solid rgba(102,126,234,0.3);}
+.nic-layers{display:flex;flex-direction:column;gap:0;}
+.nic-layer{padding:16px 24px;text-align:center;border-radius:0;border-bottom:2px solid rgba(0,0,0,0.5);position:relative;transition:all 0.3s;cursor:default;}
+.nic-layer:first-child{border-radius:12px 12px 0 0;}
+.nic-layer:last-child{border-radius:0 0 12px 12px;border-bottom:none;}
+.nic-layer:hover{filter:brightness(1.15);}
+.nic-layer h5{font-size:1rem;font-weight:bold;margin-bottom:4px;}
+.nic-layer p{font-size:0.87rem;color:rgba(255,255,255,0.7);margin:0;}
+.nic-layer .layer-num{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:0.75rem;opacity:0.6;font-family:'Courier New',monospace;}
+
+/* PORT ANIMATION CANVAS */
+.port-canvas{position:relative;width:100%;height:420px;}
+.port-svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+.pnode{position:absolute;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.3rem;z-index:20;border:2px solid;transform:translate(-50%,-50%);transition:all 0.3s;cursor:default;}
+.pnode:hover{transform:translate(-50%,-50%) scale(1.08);}
+.pnode.sz-lg{width:64px;height:64px;}
+.pnode.sz-md{width:54px;height:54px;font-size:1.1rem;}
+.pnode.sz-sm{width:44px;height:44px;font-size:1rem;}
+.pnode.client{background:linear-gradient(135deg,#667eea,#764ba2);border-color:rgba(102,126,234,0.5);box-shadow:0 0 16px rgba(102,126,234,0.4);}
+.pnode.server{background:linear-gradient(135deg,#22c55e,#15803d);border-color:rgba(34,197,94,0.5);box-shadow:0 0 16px rgba(34,197,94,0.4);}
+.pnode.router{background:linear-gradient(135deg,#f97316,#c2410c);border-color:rgba(249,115,22,0.5);box-shadow:0 0 16px rgba(249,115,22,0.4);}
+.pnode.attacker{background:linear-gradient(135deg,#ef4444,#b91c1c);border-color:rgba(239,68,68,0.5);box-shadow:0 0 16px rgba(239,68,68,0.4);}
+.pnode.firewall{background:linear-gradient(135deg,#eab308,#92400e);border-color:rgba(234,179,8,0.5);box-shadow:0 0 16px rgba(234,179,8,0.4);}
+.pnode.dns{background:linear-gradient(135deg,#8b5cf6,#4c1d95);border-color:rgba(139,92,246,0.5);box-shadow:0 0 16px rgba(139,92,246,0.4);}
+.pnode.dev-src{border-color:#00ff88!important;box-shadow:0 0 40px rgba(0,255,136,0.9)!important;animation:devSrc 0.55s infinite;}
+.pnode.dev-dst{border-color:#a78bfa!important;box-shadow:0 0 40px rgba(167,139,250,0.9)!important;animation:devDst 0.55s infinite;}
+.pnode.dev-fwd{border-color:#f8b400!important;box-shadow:0 0 34px rgba(248,180,0,0.8)!important;animation:devFwd 0.55s infinite;}
+.pnode.dev-block{border-color:#ef4444!important;box-shadow:0 0 34px rgba(239,68,68,0.8)!important;animation:devBlock 0.55s infinite;}
+.pnode.dev-fail{opacity:0.3!important;filter:grayscale(80%)!important;animation:none!important;}
+.p-label{position:absolute;font-size:0.65rem;color:#94a3b8;font-weight:bold;white-space:nowrap;pointer-events:none;z-index:25;}
+.pkt{opacity:0;position:absolute;pointer-events:none;z-index:40;}
+.p-link{fill:none;stroke:rgba(102,126,234,0.18);stroke-width:2.5;stroke-linecap:round;transition:stroke 0.3s,stroke-width 0.3s;}
+.p-link.active{stroke:#00ff88;stroke-width:4;filter:drop-shadow(0 0 5px #00ff88);}
+.p-link.blocked{stroke:#ef4444;stroke-width:3;stroke-dasharray:6 4;opacity:0.7;}
+.p-link.attack{stroke:#ef4444;stroke-width:3.5;filter:drop-shadow(0 0 5px #ef4444);}
+.p-link.secure{stroke:#a78bfa;stroke-width:3.5;filter:drop-shadow(0 0 5px #a78bfa);}
+.p-status{flex:1;min-width:220px;background:rgba(0,0,0,0.3);border:1px solid rgba(102,126,234,0.25);border-radius:10px;padding:10px 16px;font-size:0.88rem;color:#a5b4fc;}
+.p-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;align-items:center;}
+.p-btn{padding:10px 20px;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:25px;color:#fff;font-size:0.88rem;cursor:pointer;font-weight:bold;transition:all 0.3s;box-shadow:0 4px 14px rgba(102,126,234,0.3);}
+.p-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(102,126,234,0.5);}
+.p-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+.p-btn.green{background:linear-gradient(135deg,#22c55e,#15803d);}
+.p-btn.red{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+.p-btn.orange{background:linear-gradient(135deg,#f97316,#c2410c);}
+.p-btn.purple{background:linear-gradient(135deg,#8b5cf6,#4c1d95);}
+.p-btn.yellow{background:linear-gradient(135deg,#eab308,#92400e);}
+.p-btn.teal{background:linear-gradient(135deg,#14b8a6,#0f766e);}
+.p-btn.ghost{background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.2);box-shadow:none;}
+.port-badge-anim{position:absolute;background:rgba(102,126,234,0.25);border:1px solid #667eea;border-radius:8px;padding:4px 10px;font-family:'Courier New',monospace;font-size:0.75rem;color:#a5b4fc;pointer-events:none;z-index:35;white-space:nowrap;opacity:0;transition:opacity 0.3s;}
+.port-badge-anim.show{opacity:1;}
+
+/* PORT RANGE VISUAL */
+.port-range-bar{width:100%;height:60px;background:rgba(18,18,30,0.9);border-radius:10px;position:relative;margin:20px 0;overflow:hidden;border:1px solid rgba(102,126,234,0.2);}
+.port-range-segment{position:absolute;height:100%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold;cursor:pointer;transition:filter 0.2s;}
+.port-range-segment:hover{filter:brightness(1.2);}
+.port-range-segment span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;pointer-events:none;}
+
+/* ADV GRID */
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:25px 0;}
+@media(max-width:700px){.adv-grid{grid-template-columns:1fr;}}
+.adv-card{border-radius:12px;padding:25px;border:1px solid;}
+.adv-card.green{background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.3);}
+.adv-card.red{background:rgba(248,113,113,0.07);border-color:rgba(248,113,113,0.3);}
+.adv-card h4.green-title{color:#4ade80;margin-bottom:14px;font-size:1.15rem;}
+.adv-card h4.red-title{color:#f87171;margin-bottom:14px;font-size:1.15rem;}
+.adv-card ul{list-style:none;padding:0;}
+.adv-card ul li{padding:5px 0;color:#d0d0d0;font-size:0.97rem;}
+.adv-card.green ul li::before{content:"✅ ";}
+.adv-card.red ul li::before{content:"❌ ";}
+
+/* OSI MODEL */
+.osi-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;margin:20px 0;}
+.osi-table th{background:rgba(102,126,234,0.2);color:#a5b4fc;padding:12px 16px;text-align:left;}
+.osi-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.95rem;}
+.osi-table td:first-child{font-weight:bold;font-family:'Courier New',monospace;width:70px;}
+
+footer{background:rgba(30,30,30,0.95);text-align:center;padding:30px 20px;margin-top:60px;border-top:1px solid rgba(255,255,255,0.1);}
+footer p{color:#b0b0b0;font-size:1rem;}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes devSrc{0%,100%{box-shadow:0 0 28px rgba(0,255,136,0.6);}50%{box-shadow:0 0 60px rgba(0,255,136,1);}}
+@keyframes devDst{0%,100%{box-shadow:0 0 28px rgba(167,139,250,0.7);}50%{box-shadow:0 0 60px rgba(167,139,250,1);}}
+@keyframes devFwd{0%,100%{box-shadow:0 0 22px rgba(248,180,0,0.6);}50%{box-shadow:0 0 50px rgba(248,180,0,1);}}
+@keyframes devBlock{0%,100%{box-shadow:0 0 22px rgba(239,68,68,0.6);}50%{box-shadow:0 0 50px rgba(239,68,68,1);}}
+@media(max-width:768px){.hero h1{font-size:2.2rem;}.section{padding:25px;}.port-canvas{height:320px;}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+    <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+  </div>
+</nav>
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <h1>🔌 Protocols & Ports — Complete Guide</h1>
+  <p class="hero-subtitle">What is a Protocol · NIC · OSI Model · Port Numbers · Well-Known & Registered Ports · Attacks & Defenses</p>
+  <span class="hero-badge">📡 Every Network Engineer Must Know This!</span>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 1: WHAT IS A PROTOCOL ═══ -->
+<section class="section" id="protocol">
+  <h2>📋 What is a Network Protocol?</h2>
+  <p>A <strong>network protocol</strong> is a set of rules and conventions that define how data is formatted, transmitted, received, and acknowledged between devices on a network. Think of it like a <em>language</em> — for two devices to communicate, they must both speak the same protocol. Without protocols, a Windows PC couldn't talk to a Linux server, your phone couldn't reach Google, and the internet simply wouldn't exist.</p>
+  <p>Protocols define: <strong>message format</strong> (how packets are structured), <strong>addressing</strong> (how devices are identified), <strong>sequencing</strong> (in what order packets arrive), <strong>error handling</strong> (what to do when data is corrupted), and <strong>flow control</strong> (how to prevent one fast sender from overwhelming a slow receiver).</p>
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">📬</span>
+      <h4>Protocol = A Set of Rules</h4>
+      <p>When you send a WhatsApp message, it goes through multiple protocols simultaneously: WiFi/Ethernet (physical delivery), IP (routing across networks), TCP (reliable delivery), TLS (encryption), and WhatsApp's own app-level protocol. Each layer does its job independently — this is <strong>layered protocol architecture</strong>.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🤝</span>
+      <h4>Handshake — Protocols in Action</h4>
+      <p>Before most communication, devices perform a <strong>handshake</strong> — a formal exchange establishing the connection. TCP's 3-way handshake (SYN → SYN-ACK → ACK) is the most famous. TLS has its own handshake for encryption. This ensures both sides agree on parameters before sending real data. It's like two people confirming they both speak English before starting a conversation.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📦</span>
+      <h4>Encapsulation — Protocols Wrap Data</h4>
+      <p>Each protocol layer <strong>wraps (encapsulates)</strong> the data from the layer above with its own header (and sometimes trailer). An HTTP response gets wrapped in TLS, wrapped in TCP, wrapped in IP, wrapped in Ethernet frames. At the receiving end, each layer strips off its header and passes the payload up. This "Russian nesting doll" structure is how layered networking works.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">⚙️</span>
+      <h4>Stateless vs Stateful Protocols</h4>
+      <p><strong>Stateless protocols</strong> (HTTP/1.0, UDP, DNS) treat each request independently — no memory of previous interactions. Fast and simple. <strong>Stateful protocols</strong> (TCP, FTP, SSH) maintain session state — they remember the connection. TCP knows which packets were sent, received, and acknowledged. HTTPS is stateless HTTP made stateful by TLS session management.</p>
+    </div>
+  </div>
+
+  <h3>🔢 Protocol Categories</h3>
+  <div class="proto-category">
+    <h4>🌐 Application Layer Protocols <span class="badge purple">Layer 7</span></h4>
+    <p>These protocols define how applications communicate. They're the ones end users interact with — directly or indirectly. They depend on lower layers for actual delivery.</p>
+    <div class="members">
+      <span class="badge green">HTTP/HTTPS</span><span class="badge green">FTP/SFTP</span><span class="badge green">SMTP/IMAP/POP3</span><span class="badge green">DNS</span><span class="badge green">SSH</span><span class="badge green">Telnet</span><span class="badge green">SNMP</span><span class="badge green">DHCP</span><span class="badge green">LDAP</span><span class="badge green">NTP</span><span class="badge green">Kerberos</span><span class="badge green">SIP/H.323</span>
+    </div>
+  </div>
+  <div class="proto-category">
+    <h4>🚚 Transport Layer Protocols <span class="badge blue">Layer 4</span></h4>
+    <p>Handle end-to-end data delivery between applications. The two key protocols here are <strong>TCP</strong> (reliable, ordered, connection-oriented) and <strong>UDP</strong> (fast, connectionless, no guarantee). Port numbers live at this layer.</p>
+    <div class="members">
+      <span class="badge blue">TCP</span><span class="badge blue">UDP</span><span class="badge blue">SCTP</span><span class="badge blue">DCCP</span>
+    </div>
+  </div>
+  <div class="proto-category">
+    <h4>🗺️ Network Layer Protocols <span class="badge yellow">Layer 3</span></h4>
+    <p>Handle logical addressing and routing between different networks. IP addresses live here. Routers operate at this layer, reading destination IPs and forwarding packets hop-by-hop across the internet.</p>
+    <div class="members">
+      <span class="badge yellow">IPv4</span><span class="badge yellow">IPv6</span><span class="badge yellow">ICMP</span><span class="badge yellow">OSPF</span><span class="badge yellow">BGP</span><span class="badge yellow">EIGRP</span><span class="badge yellow">RIP</span><span class="badge yellow">ARP</span>
+    </div>
+  </div>
+  <div class="proto-category">
+    <h4>🔗 Data Link & Physical Layer Protocols <span class="badge orange">Layer 2 / 1</span></h4>
+    <p>Handle physical delivery within a local network segment. MAC addresses live at Layer 2. Switches operate here. These protocols define how bits are physically transmitted over wires, fiber, or radio waves.</p>
+    <div class="members">
+      <span class="badge orange">Ethernet (802.3)</span><span class="badge orange">Wi-Fi (802.11)</span><span class="badge orange">PPP</span><span class="badge orange">HDLC</span><span class="badge orange">STP/RSTP</span><span class="badge orange">VLAN (802.1Q)</span><span class="badge orange">LACP</span>
+    </div>
+  </div>
+
+  <h3>⚔️ TCP vs UDP — The Core Transport Protocols</h3>
+  <table class="comparison-table">
+    <tr><th>Feature</th><th>🔵 TCP (Transmission Control Protocol)</th><th>🟢 UDP (User Datagram Protocol)</th></tr>
+    <tr><td><strong>Connection</strong></td><td>Connection-oriented (3-way handshake)</td><td>Connectionless — send and forget</td></tr>
+    <tr><td><strong>Reliability</strong></td><td>✅ Guaranteed delivery — retransmits lost packets</td><td>❌ No guarantee — packets may be lost</td></tr>
+    <tr><td><strong>Order</strong></td><td>✅ Packets delivered in order</td><td>❌ Packets may arrive out of order</td></tr>
+    <tr><td><strong>Speed</strong></td><td>🐢 Slower — overhead from headers + acks</td><td>🚀 Much faster — minimal overhead</td></tr>
+    <tr><td><strong>Header Size</strong></td><td>20–60 bytes</td><td>8 bytes only</td></tr>
+    <tr><td><strong>Flow Control</strong></td><td>✅ Yes — sliding window prevents overflow</td><td>❌ None</td></tr>
+    <tr><td><strong>Use Cases</strong></td><td>HTTP, HTTPS, SSH, FTP, SMTP, database queries</td><td>DNS, video streaming, VoIP, gaming, DHCP, TFTP</td></tr>
+    <tr><td><strong>Real Example</strong></td><td>Loading a webpage — every byte must arrive correctly</td><td>YouTube live stream — occasional dropped frame is fine</td></tr>
+  </table>
+
+  <div class="highlight-box">
+    <strong>🎯 TCP 3-Way Handshake — How TCP Connections Start:</strong>
+    <ul>
+      <li><strong>SYN</strong> — Client sends: "I want to connect! My sequence number is X."</li>
+      <li><strong>SYN-ACK</strong> — Server replies: "OK! I acknowledge X. My sequence number is Y."</li>
+      <li><strong>ACK</strong> — Client confirms: "I acknowledge Y. Connection established! Let's talk."</li>
+      <li>After this 3-way handshake, data can flow in both directions reliably.</li>
+      <li>To close: TCP uses a 4-way FIN handshake — FIN → FIN-ACK → FIN → FIN-ACK.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 2: NIC ═══ -->
+<section class="section" id="nic">
+  <h2>🖥️ NIC — Network Interface Card</h2>
+  <p>A <strong>NIC (Network Interface Card)</strong> is the hardware component that physically connects a device to a network. It's the bridge between your computer's internal bus and the network medium (Ethernet cable, Wi-Fi radio, fiber optic). Every device that communicates on a network — PC, server, phone, router, IoT device — has at least one NIC.</p>
+  <p>The NIC operates at <strong>both Layer 1 (Physical) and Layer 2 (Data Link)</strong> of the OSI model. It converts digital data from the computer into electrical signals (copper), light pulses (fiber), or radio waves (Wi-Fi) — and does the reverse on reception.</p>
+
+  <div class="nic-diagram">
+    <div style="color:#a5b4fc;font-weight:bold;margin-bottom:20px;font-size:1.1rem;">🖥️ What a NIC Does — Layer by Layer</div>
+    <div class="nic-layers">
+      <div class="nic-layer" style="background:linear-gradient(90deg,rgba(102,126,234,0.25),rgba(102,126,234,0.1));">
+        <h5 style="color:#a5b4fc;">💾 OS / Driver Interface</h5>
+        <p>Receives data from OS (TCP/IP stack). Queues outgoing packets. Passes incoming frames to the OS network stack for processing.</p>
+        <span class="layer-num">SW Layer</span>
+      </div>
+      <div class="nic-layer" style="background:linear-gradient(90deg,rgba(34,197,94,0.2),rgba(34,197,94,0.08));">
+        <h5 style="color:#4ade80;">🏷️ MAC Controller (Layer 2)</h5>
+        <p>Adds/strips Ethernet frame headers. Manages MAC addressing. Handles CRC (error detection). Runs CSMA/CD (for older half-duplex). Controls access to the shared medium.</p>
+        <span class="layer-num">Layer 2</span>
+      </div>
+      <div class="nic-layer" style="background:linear-gradient(90deg,rgba(249,115,22,0.2),rgba(249,115,22,0.08));">
+        <h5 style="color:#fb923c;">🔌 PHY Chip (Layer 1)</h5>
+        <p>Converts digital bits ↔ analog signals. Handles encoding/decoding (Manchester, 4B/5B, NRZ). Manages auto-negotiation (10M/100M/1G/10G). Detects cable connection and link state (carrier sense).</p>
+        <span class="layer-num">Layer 1</span>
+      </div>
+      <div class="nic-layer" style="background:linear-gradient(90deg,rgba(234,179,8,0.2),rgba(234,179,8,0.08));">
+        <h5 style="color:#fbbf24;">🔌 Physical Port (RJ-45 / SFP / Antenna)</h5>
+        <p>RJ-45 for copper Ethernet. SFP/SFP+ for fiber. 802.11 antenna for Wi-Fi. Physically sends/receives signals on the medium at the specified bit rate.</p>
+        <span class="layer-num">Medium</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">🔢</span>
+      <h4>NIC & MAC Address</h4>
+      <p>Every NIC has a <strong>burned-in MAC address</strong> (48-bit, globally unique) assigned by the manufacturer during production. The NIC uses this address at Layer 2 to identify itself on the local network. The MAC address is stored in EEPROM on the NIC chip. While the OS can "spoof" a different MAC in software, the hardware MAC remains unchanged.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">⚡</span>
+      <h4>NIC Offloading (Modern NICs)</h4>
+      <p>Modern high-performance NICs offload tasks FROM the CPU to NIC hardware:<br>
+      <strong>TCP Segmentation Offload (TSO)</strong> — NIC splits large TCP frames<br>
+      <strong>Checksum Offload</strong> — NIC calculates checksums, not CPU<br>
+      <strong>Receive-Side Scaling (RSS)</strong> — distributes packets across CPU cores<br>
+      This dramatically reduces CPU usage on servers handling millions of packets/sec.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🌐</span>
+      <h4>Types of NICs</h4>
+      <p>
+      <strong>Ethernet NIC</strong> — RJ-45, 1G/10G/25G/100G copper/fiber. Most common.<br>
+      <strong>Wi-Fi NIC</strong> — 802.11a/b/g/n/ac/ax (Wi-Fi 6). Laptops, phones.<br>
+      <strong>Fiber NIC</strong> — SFP/SFP+/QSFP. Servers, data centres.<br>
+      <strong>Virtual NIC (vNIC)</strong> — Software-defined in VMs and containers.<br>
+      <strong>SmartNIC / DPU</strong> — Has its own CPU — offloads entire networking stack (used in hyperscale clouds).
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🔍</span>
+      <h4>How to Check Your NIC</h4>
+      <p>
+      <strong>Windows:</strong> Device Manager → Network Adapters<br>
+      <code style="background:rgba(0,0,0,0.3);padding:1px 7px;border-radius:3px;font-family:monospace;color:#86efac;">ipconfig /all</code> → shows NIC name + MAC<br>
+      <strong>Linux:</strong> <code style="background:rgba(0,0,0,0.3);padding:1px 7px;border-radius:3px;font-family:monospace;color:#86efac;">lspci | grep -i net</code> or <code style="background:rgba(0,0,0,0.3);padding:1px 7px;border-radius:3px;font-family:monospace;color:#86efac;">ip link show</code><br>
+      <strong>ethtool:</strong> <code style="background:rgba(0,0,0,0.3);padding:1px 7px;border-radius:3px;font-family:monospace;color:#86efac;">ethtool eth0</code> → speed, duplex, link status
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 3: OSI MODEL ═══ -->
+<section class="section" id="osi">
+  <h2>🏛️ OSI Model — Where Protocols Live</h2>
+  <p>The <strong>OSI (Open Systems Interconnection) Model</strong> is a 7-layer conceptual framework that standardizes how network functions are organized. Each layer has a specific role and communicates with the layers directly above and below it. Understanding which layer a protocol operates at is essential for troubleshooting and security.</p>
+
+  <table class="osi-table">
+    <tr><th>Layer</th><th>Name</th><th>Function</th><th>Key Protocols</th><th>Device</th></tr>
+    <tr style="background:rgba(102,126,234,0.1);"><td style="color:#818cf8;">7</td><td><strong style="color:#a5b4fc;">Application</strong></td><td style="color:#c0c0c0;">User-facing services, data formatting</td><td><span class="badge purple">HTTP</span><span class="badge purple">SMTP</span><span class="badge purple">DNS</span><span class="badge purple">SSH</span><span class="badge purple">FTP</span></td><td style="color:#94a3b8;">Applications</td></tr>
+    <tr style="background:rgba(139,92,246,0.07);"><td style="color:#818cf8;">6</td><td><strong style="color:#a5b4fc;">Presentation</strong></td><td style="color:#c0c0c0;">Encryption, compression, data translation</td><td><span class="badge purple">TLS/SSL</span><span class="badge purple">JPEG</span><span class="badge purple">ASCII</span></td><td style="color:#94a3b8;">—</td></tr>
+    <tr style="background:rgba(139,92,246,0.05);"><td style="color:#818cf8;">5</td><td><strong style="color:#a5b4fc;">Session</strong></td><td style="color:#c0c0c0;">Manages sessions and dialog control</td><td><span class="badge purple">NetBIOS</span><span class="badge purple">RPC</span><span class="badge purple">PPTP</span></td><td style="color:#94a3b8;">—</td></tr>
+    <tr style="background:rgba(34,197,94,0.07);"><td style="color:#4ade80;">4</td><td><strong style="color:#4ade80;">Transport</strong></td><td style="color:#c0c0c0;">End-to-end delivery, ports, flow control</td><td><span class="badge green">TCP</span><span class="badge green">UDP</span><span class="badge green">SCTP</span></td><td style="color:#94a3b8;">Firewall</td></tr>
+    <tr style="background:rgba(249,115,22,0.07);"><td style="color:#fb923c;">3</td><td><strong style="color:#fb923c;">Network</strong></td><td style="color:#c0c0c0;">Logical addressing, routing between networks</td><td><span class="badge orange">IP</span><span class="badge orange">ICMP</span><span class="badge orange">OSPF</span><span class="badge orange">BGP</span></td><td style="color:#94a3b8;">Router</td></tr>
+    <tr style="background:rgba(234,179,8,0.07);"><td style="color:#fbbf24;">2</td><td><strong style="color:#fbbf24;">Data Link</strong></td><td style="color:#c0c0c0;">Physical addressing (MAC), frame delivery</td><td><span class="badge yellow">Ethernet</span><span class="badge yellow">Wi-Fi</span><span class="badge yellow">ARP</span><span class="badge yellow">STP</span></td><td style="color:#94a3b8;">Switch</td></tr>
+    <tr style="background:rgba(239,68,68,0.07);"><td style="color:#f87171;">1</td><td><strong style="color:#f87171;">Physical</strong></td><td style="color:#c0c0c0;">Raw bits over physical medium (signals)</td><td><span class="badge red">Ethernet PHY</span><span class="badge red">USB</span><span class="badge red">RS-232</span></td><td style="color:#94a3b8;">Hub, NIC, Cable</td></tr>
+  </table>
+
+  <div class="highlight-box">
+    <strong>🧠 OSI Mnemonic — Remember Layers 7→1:</strong><br>
+    <strong style="color:#a5b4fc;">"All People Seem To Need Data Processing"</strong><br>
+    Application → Presentation → Session → Transport → Network → Data Link → Physical<br><br>
+    <strong style="color:#4ade80;">Troubleshooting tip:</strong> Always start from Layer 1 (Physical) and work UP.
+    <ul>
+      <li><strong>L1 issue?</strong> — Cable unplugged, NIC dead, no link light → fix physical first</li>
+      <li><strong>L2 issue?</strong> — Wrong VLAN, MAC table full, STP loop → check switch config</li>
+      <li><strong>L3 issue?</strong> — Wrong IP/subnet/gateway, routing misconfiguration → check IP config</li>
+      <li><strong>L4+ issue?</strong> — Firewall blocking port, application crash, TLS cert expired → check services</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 4: PORT NUMBERS ═══ -->
+<section class="section" id="ports">
+  <h2>🔢 Port Numbers — The Door Numbers of Networking</h2>
+  <p>A <strong>port number</strong> is a 16-bit unsigned integer (0–65535) that identifies a specific <em>service</em> or <em>application</em> on a device. While an IP address identifies a device, a port number identifies a specific program running on that device. Together, IP + Port form a <strong>socket</strong> — the unique endpoint for every network connection.</p>
+  <p>When your browser connects to Google, it uses your IP + a random high port (e.g., 49.205.10.15:<strong>54321</strong>) to connect to Google's IP + port <strong>443</strong> (HTTPS). The port 443 tells Google's server: "This connection is for the web server process, not the mail server or DNS."</p>
+
+  <div class="example-box">
+<strong style="color:#a5b4fc;">Socket = IP Address + Port Number</strong>
+
+Client (Your PC):   192.168.1.5  : 54321  ←── randomly chosen "ephemeral port"
+Server (Google):  142.250.182.46 : 443    ←── HTTPS service, always port 443
+
+Full connection identified by 5-tuple:
+  Protocol + Src IP + Src Port + Dst IP + Dst Port
+  TCP  +  192.168.1.5:54321  +  142.250.182.46:443
+
+This 5-tuple uniquely identifies ONE connection among millions on the internet!
+Your PC can have 65,535 simultaneous outbound connections (one per ephemeral port).
+  </div>
+
+  <h3>📊 Port Range Classification</h3>
+  <div class="port-range-bar" id="portRangeBar" title="Click a segment to learn more">
+    <div class="port-range-segment" style="left:0%;width:0.1%;background:linear-gradient(135deg,#667eea,#764ba2);" title="Well-Known: 0-1023"><span></span></div>
+  </div>
+  <div id="portRangeLabels" style="display:flex;gap:0;margin-top:8px;font-size:0.8rem;flex-wrap:wrap;gap:10px;">
+    <span style="color:#818cf8;">⬛ 0–1023: <strong>Well-Known Ports</strong> (1,024 ports)</span>
+    <span style="color:#4ade80;">⬛ 1024–49151: <strong>Registered Ports</strong> (48,128 ports)</span>
+    <span style="color:#fb923c;">⬛ 49152–65535: <strong>Ephemeral/Dynamic Ports</strong> (16,384 ports)</span>
+  </div>
+
+  <div class="info-grid" style="margin-top:25px;">
+    <div class="info-card">
+      <span class="info-card-icon">🔑</span>
+      <h4>Well-Known Ports (0–1023)</h4>
+      <p>Assigned by IANA and reserved for core internet services. Requires <strong>root/admin privileges</strong> on Linux/Unix to listen on. These are the "sacred" ports — HTTP is always 80, HTTPS is always 443, SSH is always 22. Every protocol you've heard of lives here. Total: <strong>1,024 ports</strong>.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📝</span>
+      <h4>Registered Ports (1024–49151)</h4>
+      <p>Registered with IANA for specific applications but can be used without special privileges. Enterprise software, databases, custom services live here. Examples: MySQL (3306), PostgreSQL (5432), RDP (3389), MongoDB (27017), Redis (6379). Total: <strong>48,128 ports</strong>.</p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🎲</span>
+      <h4>Ephemeral / Dynamic Ports (49152–65535)</h4>
+      <p>Automatically assigned by the OS when a client initiates a connection. No registration needed. Your browser picks a random port from this range for every new connection. After the connection closes, the port is freed and can be reused. Also called "source ports" or "high ports". Total: <strong>16,384 ports</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 5: PORT ANIMATION ═══ -->
+<section class="section" id="animation">
+  <h2>⚡ Live Protocol Simulation — See Ports in Action</h2>
+  <p>This interactive simulation shows how real protocols use their port numbers to establish connections. Watch packets travel between client, server, firewall, DNS, and even an attacker — each labeled with the actual port being used!</p>
+
+  <div class="animation-box">
+    <div class="route-pill" id="routePill">🔌 Protocol Simulator — Ready</div>
+    <div class="port-canvas" id="portCanvas">
+      <svg class="port-svg" id="portSvg" viewBox="0 0 860 420" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow-g"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-r"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-y"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-p"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- packet dots -->
+        <circle class="pkt" id="pp0" r="10" fill="#00ff88" filter="url(#glow-g)"/>
+        <circle class="pkt" id="pp1" r="10" fill="#a78bfa" filter="url(#glow-p)"/>
+        <circle class="pkt" id="pp2" r="10" fill="#f8b400" filter="url(#glow-y)"/>
+        <circle class="pkt" id="pp3" r="10" fill="#ef4444" filter="url(#glow-r)"/>
+      </svg>
+      <!-- Nodes -->
+      <div class="pnode sz-md client" id="pn-client">💻<div class="p-label" id="pl-client" style="bottom:-22px;left:50%;transform:translateX(-50%);">Client PC</div></div>
+      <div class="pnode sz-sm dns" id="pn-dns">🌐<div class="p-label" id="pl-dns" style="bottom:-22px;left:50%;transform:translateX(-50%);">DNS Server</div></div>
+      <div class="pnode sz-md firewall" id="pn-fw">🛡️<div class="p-label" id="pl-fw" style="bottom:-22px;left:50%;transform:translateX(-50%);">Firewall</div></div>
+      <div class="pnode sz-md server" id="pn-web">🖥️<div class="p-label" id="pl-web" style="bottom:-22px;left:50%;transform:translateX(-50%);">Web Server</div></div>
+      <div class="pnode sz-sm server" id="pn-mail">📧<div class="p-label" id="pl-mail" style="bottom:-22px;left:50%;transform:translateX(-50%);">Mail Server</div></div>
+      <div class="pnode sz-sm server" id="pn-ssh">🔐<div class="p-label" id="pl-ssh" style="bottom:-22px;left:50%;transform:translateX(-50%);">SSH Server</div></div>
+      <div class="pnode sz-sm attacker" id="pn-atk">☠️<div class="p-label" id="pl-atk" style="bottom:-22px;left:50%;transform:translateX(-50%);">Attacker</div></div>
+      <!-- port badge overlays -->
+      <div class="port-badge-anim" id="pb0">:443</div>
+      <div class="port-badge-anim" id="pb1">:80</div>
+      <div class="port-badge-anim" id="pb2">:22</div>
+      <div class="port-badge-anim" id="pb3">BLOCKED</div>
+    </div>
+    <div class="p-controls">
+      <button class="p-btn green" id="btnHTTPS" onclick="portDemo('https')">🔒 HTTPS :443</button>
+      <button class="p-btn" id="btnDNS" onclick="portDemo('dns')">🌐 DNS :53</button>
+      <button class="p-btn purple" id="btnSSH" onclick="portDemo('ssh')">🔐 SSH :22</button>
+      <button class="p-btn yellow" id="btnSMTP" onclick="portDemo('smtp')">📧 SMTP :25</button>
+      <button class="p-btn teal" id="btnDHCP" onclick="portDemo('dhcp')">🤖 DHCP :67/68</button>
+      <button class="p-btn red" id="btnAtk" onclick="portDemo('attack')">☠️ Attack Blocked</button>
+      <button class="p-btn orange" id="btnScan" onclick="portDemo('scan')">🔍 Port Scan</button>
+      <button class="p-btn ghost" onclick="portReset()">↺ Reset</button>
+      <div class="p-status" id="portStatus">👆 Click a button to simulate a real protocol connection!</div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:25px;">
+    <h3 style="margin-top:0;margin-bottom:10px;">🎯 Key Observations:</h3>
+    <ul>
+      <li><strong>Port Numbers Are Public Knowledge:</strong> Everyone knows HTTP=80, HTTPS=443, SSH=22. This is by design — standardization enables interoperability. Security doesn't come from hiding ports, but from proper authentication and encryption.</li>
+      <li><strong>Firewall = Port-Level Guardian:</strong> A firewall decides which ports are allowed through based on rules. "Allow TCP:443 inbound" lets HTTPS; "Block TCP:23" blocks Telnet. Port-based access control is the first line of defense.</li>
+      <li><strong>Client Uses Ephemeral Port:</strong> The CLIENT always picks a random high port (49152–65535) for its side of the connection. The SERVER listens on the well-known port. This asymmetry is fundamental to how socket connections work.</li>
+      <li><strong>Port Scan = Attacker Reconnaissance:</strong> Before attacking, hackers scan target IPs for open ports using tools like nmap. Each open port is a potential attack surface. Closing unused ports reduces the attack surface significantly.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 6: PORT TABLE ═══ -->
+<section class="section" id="porttable">
+  <h2>📋 Common Ports — Attacks & Defenses</h2>
+  <p>Every open port is a potential attack surface. Understanding <em>what each port does</em>, <em>how attackers exploit it</em>, and <em>how to defend it</em> is the foundation of network security hardening.</p>
+
+  <table class="port-table" id="mainPortTable">
+    <thead>
+      <tr>
+        <th>Port</th>
+        <th>Service</th>
+        <th>Protocol</th>
+        <th>Description & Real Use</th>
+        <th>Common Attacks</th>
+        <th>Hardening / Defense</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="port-num">7</span></td>
+        <td><span class="port-service">Echo</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Echoes back whatever it receives. Originally for network testing — send data, get it back. Almost never legitimately used today. Present on older routers and embedded systems.</td>
+        <td><span class="attack-tag">Reflection DoS</span><span class="attack-tag">Amplification DDoS</span></td>
+        <td><span class="defense-tag">Disable service</span><span class="defense-tag">Block at firewall</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">20/21</span></td>
+        <td><span class="port-service">FTP</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">File Transfer Protocol. Port 21 = control channel (commands), Port 20 = data channel (file transfer). Sends credentials and data in <strong>cleartext</strong> — anyone with a packet sniffer on the network can see your username, password, and all files transferred. <em>Real use: legacy file sharing, some legacy hosting panels.</em></td>
+        <td><span class="attack-tag">Cleartext creds sniffing</span><span class="attack-tag">Brute force</span><span class="attack-tag">Anonymous abuse</span><span class="attack-tag">Bounce attacks</span></td>
+        <td><span class="defense-tag">Replace with SFTP/FTPS</span><span class="defense-tag">Disable anonymous</span><span class="defense-tag">IP whitelist</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">22</span></td>
+        <td><span class="port-service">SSH</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Secure Shell. Encrypted remote terminal access, file transfer (SCP/SFTP), and port forwarding. The secure replacement for Telnet. Uses public-key cryptography. <em>Real use: every sysadmin uses SSH daily to manage Linux servers, network devices, and cloud instances.</em></td>
+        <td><span class="attack-tag">Brute force password</span><span class="attack-tag">Key theft</span><span class="attack-tag">Weak crypto (SSHv1)</span><span class="attack-tag">Credential stuffing</span></td>
+        <td><span class="defense-tag">Keys only, no passwords</span><span class="defense-tag">Restrict source IPs</span><span class="defense-tag">Fail2Ban / rate limit</span><span class="defense-tag">Change port (security by obscurity)</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">23</span></td>
+        <td><span class="port-service">Telnet</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Older remote terminal protocol — like SSH but completely <strong>unencrypted</strong>. Everything including passwords goes in cleartext. Was standard before SSH existed (1995). Still found on legacy routers, embedded systems, and IoT devices. <em>Should never be used in 2024.</em></td>
+        <td><span class="attack-tag">Credential sniffing</span><span class="attack-tag">Session hijacking</span><span class="attack-tag">Botnet abuse</span><span class="attack-tag">MITM</span></td>
+        <td><span class="defense-tag">Disable entirely</span><span class="defense-tag">Use SSH instead</span><span class="defense-tag">Block at firewall</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">25</span></td>
+        <td><span class="port-service">SMTP</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Simple Mail Transfer Protocol. Used for sending email between mail servers. Port 25 is server-to-server. Port 587 is for authenticated client submission (use this instead). ISPs block outbound port 25 from home IPs to prevent spam. <em>Real use: Gmail, Outlook, every mail server uses SMTP to relay email.</em></td>
+        <td><span class="attack-tag">Open relay spam</span><span class="attack-tag">Phishing</span><span class="attack-tag">User enumeration (VRFY)</span><span class="attack-tag">SMTP injection</span></td>
+        <td><span class="defense-tag">Disable open relay</span><span class="defense-tag">SPF/DKIM/DMARC</span><span class="defense-tag">Block port 25 egress</span><span class="defense-tag">Use port 587+TLS</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">53</span></td>
+        <td><span class="port-service">DNS</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Domain Name System. Translates domain names (google.com) to IP addresses. UDP for normal queries (&lt;512 bytes), TCP for zone transfers and large responses. Every internet action starts with a DNS lookup. <em>Real use: 8.8.8.8 (Google DNS), 1.1.1.1 (Cloudflare DNS) — your device queries these constantly.</em></td>
+        <td><span class="attack-tag">DNS cache poisoning</span><span class="attack-tag">Amplification DDoS</span><span class="attack-tag">Zone transfer (AXFR)</span><span class="attack-tag">DNS tunneling</span><span class="attack-tag">NXDOMAIN flood</span></td>
+        <td><span class="defense-tag">DNSSEC</span><span class="defense-tag">Disable recursion (authoritative)</span><span class="defense-tag">Restrict AXFR</span><span class="defense-tag">Rate limiting</span><span class="defense-tag">DNS over HTTPS (DoH)</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">67/68</span></td>
+        <td><span class="port-service">DHCP</span></td>
+        <td><span class="proto-udp">UDP</span></td>
+        <td class="port-desc">Dynamic Host Configuration Protocol. Server listens on 67, client on 68. Auto-assigns IP addresses, subnet mask, gateway, and DNS to connecting devices. Uses broadcast (255.255.255.255) since client has no IP yet. <em>Real use: your home router is a DHCP server assigning IPs to all your devices.</em></td>
+        <td><span class="attack-tag">Rogue DHCP server</span><span class="attack-tag">DHCP starvation</span><span class="attack-tag">MITM via rogue gateway</span></td>
+        <td><span class="defense-tag">DHCP snooping (switch feature)</span><span class="defense-tag">Port security</span><span class="defense-tag">802.1X authentication</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">69</span></td>
+        <td><span class="port-service">TFTP</span></td>
+        <td><span class="proto-udp">UDP</span></td>
+        <td class="port-desc">Trivial File Transfer Protocol. Extremely simple, no authentication, no encryption. Used for network booting (PXE), uploading firmware to routers/switches, and delivering config files. <em>Real use: Cisco routers use TFTP to download IOS firmware from a TFTP server during upgrade.</em></td>
+        <td><span class="attack-tag">Config exfiltration</span><span class="attack-tag">Unauthorized file access</span><span class="attack-tag">Firmware poisoning</span></td>
+        <td><span class="defense-tag">Disable if unused</span><span class="defense-tag">Restrict by IP</span><span class="defense-tag">Firewall ACL</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">80</span></td>
+        <td><span class="port-service">HTTP</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Hypertext Transfer Protocol. Unencrypted web traffic. The foundation of the World Wide Web. Every website request starts as HTTP (or is redirected to HTTPS). Browsers, APIs, and web scraping all use HTTP at the base layer. <em>Real use: any website URL starting with http:// uses this port.</em></td>
+        <td><span class="attack-tag">SQL Injection</span><span class="attack-tag">XSS (Cross-Site Scripting)</span><span class="attack-tag">Session hijacking</span><span class="attack-tag">CSRF</span><span class="attack-tag">Directory traversal</span></td>
+        <td><span class="defense-tag">Redirect all HTTP→HTTPS</span><span class="defense-tag">WAF (Web App Firewall)</span><span class="defense-tag">Secure headers (HSTS)</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">88</span></td>
+        <td><span class="port-service">Kerberos</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Network authentication protocol used by Microsoft Active Directory and MIT Kerberos. Issues "tickets" that prove identity without sending passwords over the network. Used for SSO (Single Sign-On) in enterprise Windows environments. <em>Real use: every Windows domain login (your office PC) uses Kerberos.</em></td>
+        <td><span class="attack-tag">Kerberoasting</span><span class="attack-tag">AS-REP Roasting</span><span class="attack-tag">Pass-the-ticket</span><span class="attack-tag">Golden/Silver ticket</span><span class="attack-tag">Overpass-the-hash</span></td>
+        <td><span class="defense-tag">Strong service account passwords</span><span class="defense-tag">Disable RC4 encryption</span><span class="defense-tag">Protected Users group</span><span class="defense-tag">Privileged Account monitoring</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">110</span></td>
+        <td><span class="port-service">POP3</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Post Office Protocol v3. Downloads emails from mail server to local client and (usually) deletes them from server. Simpler than IMAP. Sends credentials in cleartext on port 110. <em>Real use: older email clients like Outlook 2003 used POP3. Mostly replaced by IMAP and IMAPS today.</em></td>
+        <td><span class="attack-tag">Cleartext credential sniffing</span><span class="attack-tag">Brute force</span><span class="attack-tag">Email harvesting</span></td>
+        <td><span class="defense-tag">Disable port 110</span><span class="defense-tag">Use POP3S (port 995)</span><span class="defense-tag">Rate limiting</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">123</span></td>
+        <td><span class="port-service">NTP</span></td>
+        <td><span class="proto-udp">UDP</span></td>
+        <td class="port-desc">Network Time Protocol. Synchronizes clocks across all devices on a network. Critical for security — certificates check timestamps, logs need accurate times, Kerberos requires clocks within 5 minutes. <em>Real use: every computer, server, phone, and router syncs time via NTP. India uses pool.ntp.org.</em></td>
+        <td><span class="attack-tag">NTP amplification DDoS</span><span class="attack-tag">Time desync (breaks Kerberos/TLS)</span><span class="attack-tag">monlist reflection</span></td>
+        <td><span class="defense-tag">Disable monlist command</span><span class="defense-tag">Restrict NTP peers</span><span class="defense-tag">NTPv4 with authentication</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">137–139</span></td>
+        <td><span class="port-service">NetBIOS</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Network Basic Input/Output System. Legacy Windows networking for name resolution, session establishment, and file sharing. Predates DNS. Port 137=name service, 138=datagram, 139=session. Extremely legacy, but still enabled on many Windows systems. <em>Real use: older Windows file sharing (\\Server\Share paths).</em></td>
+        <td><span class="attack-tag">NetBIOS name poisoning</span><span class="attack-tag">NTLM hash capture</span><span class="attack-tag">Responder attack</span><span class="attack-tag">LLMNR/NBT-NS poisoning</span></td>
+        <td><span class="defense-tag">Disable NetBIOS over TCP/IP</span><span class="defense-tag">Block at firewall (external)</span><span class="defense-tag">Use DNS instead</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">143</span></td>
+        <td><span class="port-service">IMAP</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Internet Message Access Protocol. Keeps emails on server, allows multiple devices to access same mailbox. Unlike POP3, emails stay on server. Better for mobile + desktop access. Port 143 is unencrypted; port 993 (IMAPS) is the secure version. <em>Real use: Gmail, Outlook, Apple Mail all use IMAP to sync your inbox across devices.</em></td>
+        <td><span class="attack-tag">Credential brute force</span><span class="attack-tag">Mailbox takeover</span><span class="attack-tag">IMAP injection</span></td>
+        <td><span class="defense-tag">Enforce IMAPS (port 993)</span><span class="defense-tag">OAuth 2.0 instead of passwords</span><span class="defense-tag">Rate limiting / Geo-blocking</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">161</span></td>
+        <td><span class="port-service">SNMP</span></td>
+        <td><span class="proto-udp">UDP</span></td>
+        <td class="port-desc">Simple Network Management Protocol. Monitors and manages network devices — routers, switches, servers. Collects stats: CPU usage, interface traffic, error counts. SNMPv1/v2 use cleartext "community strings" (like "public" or "private") as passwords. <em>Real use: Nagios, Zabbix, PRTG monitoring tools all use SNMP to poll network devices.</em></td>
+        <td><span class="attack-tag">Community string brute force</span><span class="attack-tag">Device enumeration</span><span class="attack-tag">Config modification (write community)</span><span class="attack-tag">DDoS amplification</span></td>
+        <td><span class="defense-tag">SNMPv3 only (with auth+encryption)</span><span class="defense-tag">Restrict source IPs (ACL)</span><span class="defense-tag">Change default community strings</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">194</span></td>
+        <td><span class="port-service">IRC</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Internet Relay Chat. Old-school real-time text messaging protocol from 1988. Popular before Slack, Discord, and WhatsApp. Still used by open-source project communities. <em>Infamously used as botnet command-and-control channels — infected devices connect to IRC channel for attacker commands.</em></td>
+        <td><span class="attack-tag">Botnet C2 channel</span><span class="attack-tag">DDoS coordination</span><span class="attack-tag">Malware distribution</span></td>
+        <td><span class="defense-tag">Block outbound IRC unless required</span><span class="defense-tag">Monitor egress traffic anomalies</span><span class="defense-tag">Endpoint detection (EDR)</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">389</span></td>
+        <td><span class="port-service">LDAP</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Lightweight Directory Access Protocol. Queries and modifies directory services like Microsoft Active Directory. Used for user authentication and authorization. Unencrypted on port 389. <em>Real use: when you log in to your office Windows domain, LDAP queries Active Directory to verify your password and group memberships.</em></td>
+        <td><span class="attack-tag">Anonymous bind (no auth required)</span><span class="attack-tag">AD user enumeration</span><span class="attack-tag">LDAP injection</span><span class="attack-tag">BloodHound AD reconnaissance</span></td>
+        <td><span class="defense-tag">Disable anonymous binds</span><span class="defense-tag">Require LDAP signing</span><span class="defense-tag">Use LDAPS (port 636)</span><span class="defense-tag">Restrict access by IP</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">443</span></td>
+        <td><span class="port-service">HTTPS</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">HTTP over TLS/SSL. Encrypted web traffic. The padlock in your browser. TLS handshake establishes encrypted session, then HTTP runs inside the tunnel. Certificates verify server identity. Modern web = HTTPS mandatory. <em>Real use: every banking website, Google, Amazon, Instagram — all HTTPS. HTTP/3 uses QUIC (UDP:443).</em></td>
+        <td><span class="attack-tag">Web app exploits (SQLi, XSS)</span><span class="attack-tag">TLS downgrade attacks</span><span class="attack-tag">Expired/invalid certificates</span><span class="attack-tag">Mixed content attacks</span></td>
+        <td><span class="defense-tag">TLS 1.2+ minimum (disable TLS 1.0/1.1)</span><span class="defense-tag">HSTS (HTTP Strict Transport Security)</span><span class="defense-tag">Secure cookie flags</span><span class="defense-tag">WAF</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">445</span></td>
+        <td><span class="port-service">SMB</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Server Message Block. Windows file sharing, printer sharing, and named pipes. Runs directly over TCP/IP (vs old NetBIOS). Critical in Windows environments for shared folders (\\server\share). <em>Real use: every Windows network drive mapping uses SMB. Also the reason WannaCry ransomware spread so catastrophically in 2017.</em></td>
+        <td><span class="attack-tag">EternalBlue / WannaCry</span><span class="attack-tag">NTLM relay</span><span class="attack-tag">Pass-the-hash</span><span class="attack-tag">SMB brute force</span><span class="attack-tag">Ransomware lateral movement</span></td>
+        <td><span class="defense-tag">Disable SMBv1 immediately</span><span class="defense-tag">Require SMB signing</span><span class="defense-tag">Block port 445 at perimeter</span><span class="defense-tag">Patch (MS17-010)</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">464</span></td>
+        <td><span class="port-service">Kerberos pwchange</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Kerberos password change port. Used to change Kerberos passwords across the network. Part of Active Directory domain operations. Domain Controllers listen on this port. <em>Real use: when you change your domain password in a Windows environment, this port is used to propagate the change to the Domain Controller.</em></td>
+        <td><span class="attack-tag">Password spraying</span><span class="attack-tag">DC abuse</span><span class="attack-tag">Kerberos pre-auth attacks</span></td>
+        <td><span class="defense-tag">Monitor bulk password changes</span><span class="defense-tag">Restrict DC access</span><span class="defense-tag">Fine-grained password policies</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">547</span></td>
+        <td><span class="port-service">DHCPv6</span></td>
+        <td><span class="proto-udp">UDP</span></td>
+        <td class="port-desc">DHCP for IPv6 networks. Assigns IPv6 addresses, DNS, and other configuration to clients. Works alongside or instead of IPv6 SLAAC (Stateless Address Autoconfiguration). <em>Real use: any enterprise or ISP network deploying IPv6 uses DHCPv6 for managed address assignment and DNS delivery.</em></td>
+        <td><span class="attack-tag">Rogue DHCPv6 server</span><span class="attack-tag">MITM via IPv6 gateway hijack</span><span class="attack-tag">mitm6 attack tool</span></td>
+        <td><span class="defense-tag">Disable IPv6 if unused</span><span class="defense-tag">RA Guard on switches</span><span class="defense-tag">DHCPv6 Guard</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">636</span></td>
+        <td><span class="port-service">LDAPS</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">LDAP over TLS/SSL. The secure version of LDAP. All directory queries are encrypted. Required for compliance (PCI-DSS, HIPAA) in environments handling sensitive data. <em>Real use: modern enterprise Active Directory environments should use LDAPS for all authentication and directory queries.</em></td>
+        <td><span class="attack-tag">Certificate misconfiguration</span><span class="attack-tag">LDAP injection through TLS</span><span class="attack-tag">Certificate spoofing</span></td>
+        <td><span class="defense-tag">Enforce valid certificates</span><span class="defense-tag">Disable plain LDAP (port 389)</span><span class="defense-tag">Mutual TLS authentication</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">1720</span></td>
+        <td><span class="port-service">H.323</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">H.323 is a VoIP and video conferencing protocol. Used for IP telephony call setup and signaling (similar to SIP). Found in older enterprise video conferencing systems. <em>Real use: Cisco Unified Communications, older Polycom and Tandberg video conferencing systems use H.323 for call signaling.</em></td>
+        <td><span class="attack-tag">VoIP hijacking</span><span class="attack-tag">Toll fraud (free calls)</span><span class="attack-tag">H.323 DoS</span><span class="attack-tag">Gatekeeper bypass</span></td>
+        <td><span class="defense-tag">Segment VoIP on separate VLAN</span><span class="defense-tag">Restrict gateway access</span><span class="defense-tag">Replace with SIP/TLS</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">3389</span></td>
+        <td><span class="port-service">RDP</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">Remote Desktop Protocol. Microsoft's remote desktop GUI access. Allows full graphical remote control of a Windows PC or server. Widely used for IT administration and remote work. <em>Real use: IT admins RDP into Windows servers to manage them. Work-from-home users RDP into office PCs. Azure VMs are managed via RDP.</em></td>
+        <td><span class="attack-tag">Brute force (common!)</span><span class="attack-tag">BlueKeep (CVE-2019-0708)</span><span class="attack-tag">Credential stuffing</span><span class="attack-tag">Lateral movement in enterprise</span><span class="attack-tag">Ransomware entry point</span></td>
+        <td><span class="defense-tag">VPN only — never expose 3389 to internet</span><span class="defense-tag">MFA required</span><span class="defense-tag">NLA (Network Level Auth) enabled</span><span class="defense-tag">Account lockout policy</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">5060</span></td>
+        <td><span class="port-service">SIP</span></td>
+        <td><span class="proto-both">TCP/UDP</span></td>
+        <td class="port-desc">Session Initiation Protocol. The dominant VoIP signaling protocol. Controls call setup, modification, and teardown for internet telephony. Used by IP phones, softphones, and PBX systems. Actual voice travels via RTP (not SIP). <em>Real use: Zoom, WebRTC, Asterisk PBX, every IP phone in offices worldwide uses SIP for call signaling.</em></td>
+        <td><span class="attack-tag">Toll fraud (expensive calls)</span><span class="attack-tag">SIP scanning & enumeration</span><span class="attack-tag">Registration hijacking</span><span class="attack-tag">Call interception</span></td>
+        <td><span class="defense-tag">Strong SIP authentication</span><span class="defense-tag">Rate limiting / geo-blocking</span><span class="defense-tag">Use SIP-TLS (port 5061)</span><span class="defense-tag">Fail2Ban for SIP</span></td>
+      </tr>
+      <tr>
+        <td><span class="port-num">5061</span></td>
+        <td><span class="port-service">SIP-TLS</span></td>
+        <td><span class="proto-tcp">TCP</span></td>
+        <td class="port-desc">SIP over TLS. Encrypted version of SIP signaling. Prevents call metadata (who's calling whom) from being intercepted. Pair with SRTP (Secure RTP) for encrypted voice media. <em>Real use: enterprise VoIP deployments and modern UCaaS platforms use SIP-TLS for all signaling to protect call privacy.</em></td>
+        <td><span class="attack-tag">Certificate abuse</span><span class="attack-tag">TLS misconfiguration</span><span class="attack-tag">SRTP key extraction</span></td>
+        <td><span class="defense-tag">Valid trusted certificates only</span><span class="defense-tag">Restrict SIP signaling IPs</span><span class="defense-tag">SRTP for media encryption</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 7: REAL WORLD ═══ -->
+<section class="section" id="realworld">
+  <h2>🌍 Real World Scenarios — Protocols Working Together</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-card-icon">🏦</span>
+      <h4>Online Banking (SBI/HDFC Net Banking)</h4>
+      <p>
+        1. Browser does <strong>DNS (53/UDP)</strong> → resolves netbanking.sbi.co.in to IP<br>
+        2. Browser connects <strong>HTTPS (443/TCP)</strong> → TLS handshake, certificate verified<br>
+        3. Login credentials encrypted inside TLS — never in cleartext<br>
+        4. Session token in secure cookie after login<br>
+        5. OTP delivered via SMS (separate channel) — <strong>2FA via out-of-band</strong><br>
+        6. All done — HTTPS + DNSSEC + 2FA protects your banking session.
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🏢</span>
+      <h4>Logging Into Office Windows PC</h4>
+      <p>
+        1. PC boots → gets IP via <strong>DHCP (67/68 UDP)</strong> from domain DHCP server<br>
+        2. PC queries <strong>DNS (53)</strong> to find Domain Controller<br>
+        3. <strong>Kerberos (88)</strong> handles authentication → issues Ticket Granting Ticket<br>
+        4. Desktop loads → <strong>LDAP (389/636)</strong> queries AD for group policies<br>
+        5. Network drives map via <strong>SMB (445)</strong> → \\fileserver\home<br>
+        6. Email client connects via <strong>IMAP (143/993)</strong> to Exchange server
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">💻</span>
+      <h4>DevOps Engineer Deploying Code</h4>
+      <p>
+        1. <strong>SSH (22/TCP)</strong> → connects to production server securely (key auth)<br>
+        2. <strong>SFTP (22/TCP)</strong> → uploads deployment package over SSH channel<br>
+        3. <strong>HTTPS (443)</strong> → pulls Docker image from registry<br>
+        4. Application starts → listens on internal port 8080<br>
+        5. Nginx reverse proxy listens on <strong>443</strong> → forwards to :8080<br>
+        6. <strong>SNMP (161)</strong> + monitoring agent → reports server metrics to Grafana
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">📡</span>
+      <h4>Zoom Video Call</h4>
+      <p>
+        1. Zoom app → <strong>DNS (53)</strong> resolves zoom.us<br>
+        2. Signaling via <strong>HTTPS (443)</strong> → call setup and participant management<br>
+        3. Audio/Video via <strong>RTP over UDP</strong> (ports 8801-8802) → low latency<br>
+        4. If UDP blocked → fallback to TCP:443 (through firewall)<br>
+        5. Screen share: additional RTP stream on same session<br>
+        6. Chat messages via Zoom's HTTPS API (443)<br>
+        7. <strong>NTP (123)</strong> ensures clock sync for AV lip-sync
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">🛡️</span>
+      <h4>WannaCry Ransomware — SMB Attack (2017)</h4>
+      <p>
+        One of history's most damaging cyberattacks exploited <strong>SMB port 445</strong>:<br>
+        1. Attacker scanned internet for open port <strong>445</strong> (SMB)<br>
+        2. Exploited <strong>EternalBlue</strong> (NSA exploit leaked by Shadow Brokers)<br>
+        3. SMBv1 vulnerability → Remote Code Execution, no password needed<br>
+        4. Ransomware installed → spread laterally across networks via same exploit<br>
+        5. NHS UK, Nissan, hundreds of companies — all infected in hours<br>
+        <strong style="color:#f87171;">Lesson:</strong> Patch MS17-010, disable SMBv1, block 445 at perimeter.
+      </p>
+    </div>
+    <div class="info-card">
+      <span class="info-card-icon">☁️</span>
+      <h4>Cloud Web Server (AWS EC2)</h4>
+      <p>
+        1. EC2 instance → Security Group allows <strong>only 443/TCP</strong> inbound from internet<br>
+        2. <strong>22/TCP (SSH)</strong> allowed only from admin IP (not world!)<br>
+        3. <strong>3306/TCP (MySQL)</strong> allowed only from application server IP (not internet!)<br>
+        4. All outbound: allows 443, 53, 123 (HTTPS updates, DNS, NTP)<br>
+        5. Internal: <strong>SMB (445)</strong> blocked — Linux server, not needed<br>
+        6. This minimal port exposure = least-privilege network security.
+      </p>
+    </div>
+  </div>
+
+  <h3>🔐 Port Security Best Practices</h3>
+  <div class="adv-grid">
+    <div class="adv-card green">
+      <h4 class="green-title">✅ DO — Network Hardening</h4>
+      <ul>
+        <li>Close all ports not actively needed (default-deny)</li>
+        <li>Use encrypted versions of every protocol (SSH not Telnet, HTTPS not HTTP, IMAPS not IMAP)</li>
+        <li>Require MFA on all remotely accessible services (RDP, SSH, VPN)</li>
+        <li>Firewall rules: whitelist source IPs for admin ports (SSH, RDP, SNMP)</li>
+        <li>Regularly scan your own open ports (nmap from external IP)</li>
+        <li>Disable SMBv1, TLS 1.0/1.1, SSLv3 — all broken protocols</li>
+        <li>Monitor port 443 egress — attackers use HTTPS for C2 too</li>
+        <li>Use DNSSEC + DNS over HTTPS/TLS for DNS protection</li>
+        <li>Patch critical services immediately (RDP, SMB, Exchange)</li>
+      </ul>
+    </div>
+    <div class="adv-card red">
+      <h4 class="red-title">❌ DON'T — Common Mistakes</h4>
+      <ul>
+        <li>Never expose RDP (3389) directly to the internet</li>
+        <li>Never leave Telnet (23) enabled anywhere</li>
+        <li>Never use SNMPv1/v2 with default community strings (public/private)</li>
+        <li>Never run FTP (21) where SFTP is possible</li>
+        <li>Never allow anonymous LDAP binds in production AD</li>
+        <li>Never expose MySQL (3306) or PostgreSQL (5432) to internet</li>
+        <li>Never trust port-based auth alone without encryption</li>
+        <li>Never ignore unrecognized open ports — investigate immediately</li>
+        <li>Never assume internal network = trusted — lateral movement is real</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ SECTION 8: QUICK REF ═══ -->
+<section class="section" id="quickref">
+  <h2>📋 Quick Reference — Essential Port Numbers</h2>
+  <table class="comparison-table">
+    <tr><th>Port</th><th>Service</th><th>Protocol</th><th>Remember As</th></tr>
+    <tr><td><strong>20/21</strong></td><td>FTP</td><td>TCP</td><td>📁 File transfer — use SFTP instead!</td></tr>
+    <tr><td><strong>22</strong></td><td>SSH / SFTP / SCP</td><td>TCP</td><td>🔐 Secure remote shell — use keys!</td></tr>
+    <tr><td><strong>23</strong></td><td>Telnet</td><td>TCP</td><td>💀 Insecure remote shell — DISABLE IT</td></tr>
+    <tr><td><strong>25</strong></td><td>SMTP</td><td>TCP</td><td>📨 Send email (server-to-server)</td></tr>
+    <tr><td><strong>53</strong></td><td>DNS</td><td>TCP/UDP</td><td>🌐 Name resolution — everything uses it</td></tr>
+    <tr><td><strong>67/68</strong></td><td>DHCP</td><td>UDP</td><td>🤖 Auto IP assignment</td></tr>
+    <tr><td><strong>80</strong></td><td>HTTP</td><td>TCP</td><td>🌍 Web — unencrypted</td></tr>
+    <tr><td><strong>88</strong></td><td>Kerberos</td><td>TCP/UDP</td><td>🎟️ Windows domain auth</td></tr>
+    <tr><td><strong>110</strong></td><td>POP3</td><td>TCP</td><td>📬 Download email (legacy)</td></tr>
+    <tr><td><strong>123</strong></td><td>NTP</td><td>UDP</td><td>⏰ Time sync — critical for security</td></tr>
+    <tr><td><strong>143</strong></td><td>IMAP</td><td>TCP</td><td>📥 Read email (modern)</td></tr>
+    <tr><td><strong>161</strong></td><td>SNMP</td><td>UDP</td><td>📊 Network monitoring</td></tr>
+    <tr><td><strong>389</strong></td><td>LDAP</td><td>TCP/UDP</td><td>📂 Directory queries (Active Directory)</td></tr>
+    <tr><td><strong>443</strong></td><td>HTTPS</td><td>TCP</td><td>🔒 Secure web — the one everyone knows</td></tr>
+    <tr><td><strong>445</strong></td><td>SMB</td><td>TCP</td><td>📂 Windows file sharing — WannaCry port</td></tr>
+    <tr><td><strong>587</strong></td><td>SMTP Submission</td><td>TCP</td><td>📨 Send email from client (use this!)</td></tr>
+    <tr><td><strong>636</strong></td><td>LDAPS</td><td>TCP</td><td>🔒 Encrypted LDAP</td></tr>
+    <tr><td><strong>993</strong></td><td>IMAPS</td><td>TCP</td><td>🔒 Encrypted IMAP</td></tr>
+    <tr><td><strong>995</strong></td><td>POP3S</td><td>TCP</td><td>🔒 Encrypted POP3</td></tr>
+    <tr><td><strong>3306</strong></td><td>MySQL</td><td>TCP</td><td>🗄️ MySQL database</td></tr>
+    <tr><td><strong>3389</strong></td><td>RDP</td><td>TCP</td><td>🖥️ Windows Remote Desktop</td></tr>
+    <tr><td><strong>5432</strong></td><td>PostgreSQL</td><td>TCP</td><td>🗄️ PostgreSQL database</td></tr>
+    <tr><td><strong>5060/5061</strong></td><td>SIP / SIP-TLS</td><td>TCP/UDP</td><td>📞 VoIP call signaling</td></tr>
+    <tr><td><strong>8080</strong></td><td>HTTP Alt</td><td>TCP</td><td>🌐 Web development / proxy</td></tr>
+    <tr><td><strong>27017</strong></td><td>MongoDB</td><td>TCP</td><td>🗄️ MongoDB database</td></tr>
+  </table>
+</section>
+
+</div>
+<footer>
+  <p>🔌 Protocols & Ports — Complete Guide | Network Learning Hub</p>
+</footer>
+
+<script>
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('progressBar').style.width=pct+'%';
+});
+
+// ── FADE IN SECTIONS ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.section').forEach(s=>{
+  s.style.opacity='0';s.style.transform='translateY(18px)';s.style.transition='opacity 0.55s ease,transform 0.55s ease';
+  obs.observe(s);
+});
+
+// ── PORT RANGE BAR ──
+(function(){
+  const bar=document.getElementById('portRangeBar');
+  if(!bar) return;
+  const segments=[
+    {left:'0%',width:'1.56%',bg:'linear-gradient(90deg,#667eea,#764ba2)',label:'0–1023\nWell-Known'},
+    {left:'1.56%',width:'73.6%',bg:'linear-gradient(90deg,#22c55e,#15803d)',label:'1024–49151\nRegistered'},
+    {left:'75.2%',width:'24.8%',bg:'linear-gradient(90deg,#f97316,#c2410c)',label:'49152–65535\nEphemeral'},
+  ];
+  bar.innerHTML='';
+  segments.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='port-range-segment';
+    d.style.cssText=`left:${s.left};width:${s.width};background:${s.bg};`;
+    d.innerHTML=`<span style="color:rgba(255,255,255,0.9);font-size:0.68rem;font-weight:bold;text-align:center;line-height:1.3;">${s.label.replace('\n','<br>')}</span>`;
+    bar.appendChild(d);
+  });
+})();
+
+// ── ANIMATION ENGINE ──
+const PNODES={
+  client:{x:80, y:210},
+  dns:   {x:210,y:80},
+  fw:    {x:390,y:210},
+  web:   {x:620,y:120},
+  mail:  {x:760,y:100},
+  ssh:   {x:760,y:220},
+  atk:   {x:210,y:340},
+};
+
+const canvas=document.getElementById('portCanvas');
+const svg=document.getElementById('portSvg');
+let PLINKS={};
+let animating=false;
+
+function cW(){return canvas.getBoundingClientRect().width||860;}
+function cH(){return canvas.getBoundingClientRect().height||420;}
+
+function placeNodes(){
+  const W=cW(),H=cH();
+  Object.entries(PNODES).forEach(([k,pos])=>{
+    const el=document.getElementById('pn-'+k);
+    if(el){el.style.left=(pos.x/860*100)+'%';el.style.top=(pos.y/420*100)+'%';}
+  });
+}
+
+function drawLinks(){
+  // clear old links
+  svg.querySelectorAll('.p-link').forEach(e=>e.remove());
+  PLINKS={};
+  const pairs=[
+    {id:'cl-dns', a:'client',b:'dns'},
+    {id:'cl-fw',  a:'client',b:'fw'},
+    {id:'fw-web', a:'fw',    b:'web'},
+    {id:'fw-mail',a:'fw',    b:'mail'},
+    {id:'fw-ssh', a:'fw',    b:'ssh'},
+    {id:'atk-fw', a:'atk',   b:'fw'},
+    {id:'atk-cl', a:'atk',   b:'client'},
+  ];
+  pairs.forEach(p=>{
+    const a=PNODES[p.a],b=PNODES[p.b];
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);
+    line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);
+    line.setAttribute('class','p-link');line.setAttribute('id',p.id);
+    svg.insertBefore(line,svg.firstChild);
+    PLINKS[p.id]=line;
+  });
+}
+
+function setLink(id,cls){
+  const el=document.getElementById(id);
+  if(!el)return;
+  ['active','blocked','attack','secure'].forEach(c=>el.classList.remove(c));
+  if(cls)el.classList.add(cls);
+}
+function setNode(id,cls){
+  const el=document.getElementById('pn-'+id);
+  if(!el)return;
+  ['dev-src','dev-dst','dev-fwd','dev-block','dev-fail'].forEach(c=>el.classList.remove(c));
+  if(cls)el.classList.add(cls);
+}
+function setStatus(msg){document.getElementById('portStatus').innerHTML=msg;}
+function setPill(msg){document.getElementById('routePill').textContent=msg;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function animPkt(id,fromKey,toKey,ms,color){
+  return new Promise(resolve=>{
+    const pkt=document.getElementById(id);
+    if(!pkt){resolve();return;}
+    const f=PNODES[fromKey],t=PNODES[toKey];
+    pkt.setAttribute('fill',color);
+    pkt.setAttribute('cx',f.x);pkt.setAttribute('cy',f.y);
+    pkt.style.opacity='1';
+    const start=performance.now();
+    function step(now){
+      const p=Math.min((now-start)/ms,1);
+      pkt.setAttribute('cx',f.x+(t.x-f.x)*p);
+      pkt.setAttribute('cy',f.y+(t.y-f.y)*p);
+      if(p<1)requestAnimationFrame(step);
+      else{pkt.style.opacity='0';resolve();}
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+function showBadge(id,text,nodeKey,color){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const pos=PNODES[nodeKey];
+  el.style.left=(pos.x/860*100)+'%';
+  el.style.top=((pos.y-40)/420*100)+'%';
+  el.style.transform='translateX(-50%)';
+  el.textContent=text;
+  el.style.borderColor=color||'#667eea';
+  el.style.color=color||'#a5b4fc';
+  el.classList.add('show');
+}
+function hideBadge(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+function hideBadges(){['pb0','pb1','pb2','pb3'].forEach(hideBadge);}
+
+function lockBtns(v){document.querySelectorAll('.p-btn').forEach(b=>{if(!b.classList.contains('ghost'))b.disabled=v;});}
+
+async function portDemo(mode){
+  if(animating)return;
+  animating=true;lockBtns(true);
+  portReset(true);hideBadges();
+  await sleep(150);
+
+  if(mode==='https'){
+    setPill('🔒 HTTPS :443 — Client → Firewall → Web Server');
+    setStatus('🔒 Client opens browser → navigates to HTTPS website. TCP connection to port <strong>443</strong>...');
+    setNode('client','dev-src');
+    await sleep(500);
+    showBadge('pb0','TCP SYN → :443','client','#667eea');
+    setLink('cl-fw','active');setNode('fw','dev-fwd');
+    await animPkt('pp0','client','fw',500,'#00ff88');
+    setStatus('🛡️ <strong>Firewall</strong> checks rules: TCP:443 inbound → <strong>ALLOWED</strong>. Forwarding to Web Server...');
+    await sleep(300);
+    setLink('fw-web','active');setNode('web','dev-dst');
+    await animPkt('pp0','fw','web',480,'#00ff88');
+    showBadge('pb1','🔒 TLS Handshake','web','#22c55e');
+    setStatus('🤝 <strong>TLS Handshake</strong>: Server sends certificate → Client verifies → Session keys negotiated → Encrypted tunnel established!');
+    await sleep(600);
+    hideBadge('pb1');
+    showBadge('pb0','📦 Encrypted Data','fw','#a78bfa');
+    setLink('cl-fw','secure');setLink('fw-web','secure');
+    await animPkt('pp1','client','fw',420,'#a78bfa');
+    await animPkt('pp1','fw','web',420,'#a78bfa');
+    await sleep(300);
+    setLink('fw-web','secure');
+    await animPkt('pp1','web','fw',400,'#a78bfa');
+    await animPkt('pp1','fw','client',400,'#a78bfa');
+    await sleep(300);
+    setStatus('✅ <strong>HTTPS complete!</strong> Client (random port 54321) ↔ Web Server (:443). All data encrypted with TLS 1.3. Eavesdropper sees only encrypted bytes. 🔒');
+
+  }else if(mode==='dns'){
+    setPill('🌐 DNS :53 — Name Resolution (UDP)');
+    setStatus('🌐 Browser needs IP for "google.com". Sends <strong>DNS query to port 53 (UDP)</strong>...');
+    setNode('client','dev-src');setNode('dns','dev-dst');
+    await sleep(500);
+    showBadge('pb0','UDP :53\nQuery: google.com?','client','#8b5cf6');
+    setLink('cl-dns','active');
+    await animPkt('pp0','client','dns',500,'#a78bfa');
+    setStatus('🌐 <strong>DNS Server</strong> received query → looking up google.com in cache/zone data...');
+    await sleep(500);
+    hideBadge('pb0');
+    showBadge('pb1','Response:\n142.250.182.46','dns','#4ade80');
+    await animPkt('pp1','dns','client',500,'#4ade80');
+    setStatus('✅ <strong>DNS resolved!</strong> google.com → 142.250.182.46. Entire lookup: ~5ms. Now browser can connect to Google\'s IP on port 443. DNS uses UDP:53 (fast, single request/response). TCP:53 used for large responses or zone transfers.');
+    hideBadge('pb1');
+
+  }else if(mode==='ssh'){
+    setPill('🔐 SSH :22 — Secure Remote Shell');
+    setStatus('🔐 Admin initiates <strong>SSH connection to port 22</strong>. Server must authenticate the client...');
+    setNode('client','dev-src');
+    await sleep(500);
+    showBadge('pb2','TCP :22\nSSH Connect','client','#667eea');
+    setLink('cl-fw','active');setNode('fw','dev-fwd');
+    await animPkt('pp0','client','fw',480,'#00ff88');
+    setStatus('🛡️ Firewall: SSH rule "Allow TCP:22 from admin IP only" → <strong>ALLOWED</strong>. Forwarding...');
+    await sleep(300);
+    setLink('fw-ssh','active');setNode('ssh','dev-dst');
+    await animPkt('pp0','fw','ssh',480,'#00ff88');
+    setStatus('🤝 SSH Key Exchange: Client sends public key → Server verifies against authorized_keys → <strong>Authenticated without password!</strong>');
+    await sleep(700);
+    showBadge('pb0','✅ Key Auth\nSession Open','ssh','#4ade80');
+    setLink('cl-fw','secure');setLink('fw-ssh','secure');
+    await animPkt('pp1','client','fw',400,'#a78bfa');
+    await animPkt('pp1','fw','ssh',400,'#a78bfa');
+    hideBadge('pb0');
+    setStatus('✅ <strong>SSH session established!</strong> Client now has encrypted remote shell. All commands encrypted. Key-based auth = no password to brute-force. Best practice: disable password auth entirely (PasswordAuthentication no in sshd_config).');
+
+  }else if(mode==='smtp'){
+    setPill('📧 SMTP :25 — Email Delivery');
+    setStatus('📧 Client sends email. Mail server needs to relay it outbound. Uses <strong>SMTP port 25</strong>...');
+    setNode('client','dev-src');
+    await sleep(500);
+    setLink('cl-fw','active');setNode('fw','dev-fwd');
+    showBadge('pb0','TCP :587\nSMTP Submit','client','#f97316');
+    await animPkt('pp0','client','fw',480,'#fbbf24');
+    await sleep(200);
+    setLink('fw-mail','active');setNode('mail','dev-dst');
+    await animPkt('pp0','fw','mail',480,'#fbbf24');
+    setStatus('📧 <strong>Mail Server</strong> receives email on port 587 (authenticated submission). Queues for delivery. Performs SPF/DKIM/DMARC checks...');
+    await sleep(600);
+    showBadge('pb1','SPF ✅\nDKIM ✅\nDMARC ✅','mail','#4ade80');
+    await sleep(600);
+    hideBadge('pb1');hideBadge('pb0');
+    setStatus('✅ <strong>Email relayed!</strong> Port 587 (with auth+TLS) is correct for client submission. Port 25 is server-to-server only. SPF/DKIM/DMARC prevent your domain from being spoofed for phishing.');
+
+  }else if(mode==='dhcp'){
+    setPill('🤖 DHCP :67/68 — Auto IP Assignment (DORA)');
+    setStatus('🤖 New device connected to network. No IP yet. Starting <strong>DHCP DORA process</strong>...');
+    setNode('client','dev-src');
+    await sleep(500);
+    showBadge('pb0','UDP BROADCAST\n:67 DISCOVER','client','#14b8a6');
+    setLink('cl-fw','active');
+    await animPkt('pp2','client','fw',500,'#f8b400');
+    setStatus('📡 DHCP DISCOVER broadcast (src: 0.0.0.0, dst: 255.255.255.255:67). DHCP server responds with OFFER...');
+    await sleep(400);
+    hideBadge('pb0');
+    showBadge('pb1','OFFER:\n192.168.1.50\ngw: 192.168.1.1','fw','#4ade80');
+    setLink('cl-fw','active');
+    await animPkt('pp2','fw','client',500,'#4ade80');
+    await sleep(400);
+    hideBadge('pb1');
+    showBadge('pb0','REQUEST\n:67','client','#14b8a6');
+    await animPkt('pp2','client','fw',450,'#f8b400');
+    await sleep(300);
+    hideBadge('pb0');
+    showBadge('pb2','✅ ACK\n192.168.1.50/24\nLease: 24h','fw','#22c55e');
+    await animPkt('pp2','fw','client',450,'#4ade80');
+    await sleep(300);
+    setStatus('✅ <strong>DHCP DORA complete!</strong> Device has IP 192.168.1.50/24, gateway 192.168.1.1, DNS 8.8.8.8. Lease = 24 hours. After 12h, device will renew lease. DHCP Snooping on switches prevents rogue DHCP servers.');
+
+  }else if(mode==='attack'){
+    setPill('☠️ Port 3389 (RDP) Attack — BLOCKED by Firewall');
+    setStatus('☠️ <strong>Attacker</strong> attempts RDP brute force against Windows server on port <strong>3389</strong>...');
+    setNode('atk','dev-src');
+    await sleep(500);
+    showBadge('pb3','TCP :3389\nBrute Force!','atk','#ef4444');
+    setLink('atk-fw','attack');
+    await animPkt('pp3','atk','fw',500,'#ef4444');
+    setStatus('🛡️ <strong>Firewall rule: BLOCK TCP:3389 from internet</strong>. RDP not exposed externally — only accessible via VPN.');
+    setNode('fw','dev-block');
+    await sleep(400);
+    hideBadge('pb3');
+    showBadge('pb3','🚫 BLOCKED\nPort 3389\nDenied','fw','#ef4444');
+    await sleep(700);
+    hideBadge('pb3');
+    showBadge('pb0','⚠️ IPS Alert!\nBrute Force\nDetected','fw','#f97316');
+    setStatus('🚨 <strong>IPS (Intrusion Prevention System) triggered!</strong> Multiple SYN packets to port 3389 from same source → attacker IP automatically blacklisted for 24 hours. Alert sent to SOC team.');
+    await sleep(600);
+    hideBadge('pb0');
+    setLink('atk-fw','blocked');
+    setStatus('✅ <strong>Attack blocked!</strong> RDP (3389) should NEVER be exposed to internet. Use VPN + MFA for remote access. This is the #1 entry point for ransomware gangs targeting enterprises. Check your firewall — NOW.');
+
+  }else if(mode==='scan'){
+    setPill('🔍 Nmap Port Scan — Attacker Reconnaissance');
+    setStatus('🔍 Attacker runs <code style="background:rgba(0,0,0,0.3);padding:1px 6px;border-radius:3px;font-family:monospace;">nmap -sS 192.168.1.1</code> — <strong>SYN scan</strong> to find open ports...');
+    setNode('atk','dev-src');
+    await sleep(500);
+    // scan multiple ports
+    const scanPorts=[':22',':80',':443',':3389',':445',':25'];
+    for(let i=0;i<scanPorts.length;i++){
+      showBadge('pb3',`SYN ${scanPorts[i]}?`,'atk','#ef4444');
+      setLink('atk-fw','attack');
+      await animPkt('pp3','atk','fw',280,'#ef4444');
+      await sleep(120);
+      hideBadge('pb3');
+    }
+    setStatus('📊 Scan complete. <strong>Open ports found: 22 (SSH), 443 (HTTPS), 25 (SMTP)</strong>. Closed: 3389, 445, 80. Attacker now knows attack surface. Next: targeted exploitation of open services.');
+    await sleep(500);
+    showBadge('pb0','Port 22: OPEN\nPort 443: OPEN\nPort 25: OPEN','fw','#fbbf24');
+    await sleep(600);
+    hideBadge('pb0');
+    setStatus('⚠️ <strong>Port scanning is how ALL attacks begin.</strong> Close every port you don\'t need. Change SSH default port. Use port knocking or VPN for admin ports. Run your own nmap scan regularly — find what attackers see before they do!');
+  }
+
+  animating=false;lockBtns(false);
+}
+
+function portReset(silent){
+  animating=false;lockBtns(false);
+  ['client','dns','fw','web','mail','ssh','atk'].forEach(k=>setNode(k,null));
+  ['cl-dns','cl-fw','fw-web','fw-mail','fw-ssh','atk-fw','atk-cl'].forEach(k=>setLink(k,null));
+  ['pp0','pp1','pp2','pp3'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.opacity='0';});
+  hideBadges();
+  setPill('🔌 Protocol Simulator — Ready');
+  if(!silent)setStatus('👆 Click a button to simulate a real protocol connection!');
+}
+
+window.addEventListener('load',()=>{drawLinks();placeNodes();});
+window.addEventListener('resize',()=>{placeNodes();});
+</script>
+</body>
+</html>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Learning Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        /* Search */
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 25px;
+            background: rgba(45, 45, 45, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-box::placeholder {
+            color: #888;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .progress-count {
+            font-size: 0.95rem;
+            color: #a5b4fc;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 60px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25));
+            border-radius: 10px;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: #666;
+        }
+
+        /* Category Filter */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .filter-btn {
+            padding: 7px 18px;
+            background: rgba(45, 45, 45, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            color: #a5b4fc;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Card */
+        .topic-card {
+            background: rgba(45, 45, 45, 0.8);
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        .topic-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Category color accents */
+        .topic-card[data-cat="foundation"]::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .topic-card[data-cat="foundation"]:hover {
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .topic-card[data-cat="network-type"]::before {
+            background: linear-gradient(90deg, #22c55e, #15803d);
+        }
+
+        .topic-card[data-cat="network-type"]:hover {
+            box-shadow: 0 12px 40px rgba(34, 197, 94, 0.25);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .topic-card[data-cat="hardware"]::before {
+            background: linear-gradient(90deg, #f97316, #c2410c);
+        }
+
+        .topic-card[data-cat="hardware"]:hover {
+            box-shadow: 0 12px 40px rgba(249, 115, 22, 0.25);
+            border-color: rgba(249, 115, 22, 0.4);
+        }
+
+        .topic-card[data-cat="protocol"]::before {
+            background: linear-gradient(90deg, #8b5cf6, #4c1d95);
+        }
+
+        .topic-card[data-cat="protocol"]:hover {
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .topic-card[data-cat="topology"]::before {
+            background: linear-gradient(90deg, #eab308, #92400e);
+        }
+
+        .topic-card[data-cat="topology"]:hover {
+            box-shadow: 0 12px 40px rgba(234, 179, 8, 0.22);
+            border-color: rgba(234, 179, 8, 0.4);
+        }
+
+        .topic-card[data-cat="addressing"]::before {
+            background: linear-gradient(90deg, #14b8a6, #0f766e);
+        }
+
+        .topic-card[data-cat="addressing"]:hover {
+            box-shadow: 0 12px 40px rgba(20, 184, 166, 0.25);
+            border-color: rgba(20, 184, 166, 0.4);
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 14px;
+            display: block;
+            line-height: 1;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: #a0a0a0;
+            line-height: 1.65;
+            margin-bottom: 18px;
+            font-size: 0.97rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-tag {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .tag-foundation {
+            background: rgba(102, 126, 234, 0.18);
+            color: #a5b4fc;
+        }
+
+        .tag-network-type {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .tag-hardware {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+        }
+
+        .tag-protocol {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c4b5fd;
+        }
+
+        .tag-topology {
+            background: rgba(234, 179, 8, 0.15);
+            color: #fbbf24;
+        }
+
+        .tag-addressing {
+            background: rgba(20, 184, 166, 0.15);
+            color: #2dd4bf;
+        }
+
+        .card-arrow {
+            color: #667eea;
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .topic-card:hover .card-arrow {
+            transform: translateX(5px);
+        }
+
+        /* Completed badge */
+        .card-done {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            color: #4ade80;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topic-card {
+                padding: 22px;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            header {
+                padding: 25px 15px;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <header>
+            <h1>🌐 Networking Learning Hub</h1>
+            <p>Master Computer Networking — One Topic at a Time</p>
+        </header>
+
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search networking topics...">
+        </div>
+
+        <!-- Progress Section -->
+        <!--<div class="progress-section">
+        <div class="progress-header">
+            <div class="progress-title">📊 Your Learning Progress</div>
+            <div class="progress-count" id="progressCount">0 / 16 Topics</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-labels">
+            <span>Getting Started</span>
+            <span id="progressPct">0%</span>
+            <span>Network Expert 🏆</span>
+        </div>
+    </div>-->
+
+        <!-- Category Filter -->
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" onclick="filterCards('all', this)">📋 All Topics</button>
+            <button class="filter-btn" onclick="filterCards('foundation', this)">🌐 Foundation</button>
+            <button class="filter-btn" onclick="filterCards('network-type', this)">🔗 Network Types</button>
+            <button class="filter-btn" onclick="filterCards('hardware', this)">🔧 Hardware</button>
+            <button class="filter-btn" onclick="filterCards('protocol', this)">📡 Protocols</button>
+            <button class="filter-btn" onclick="filterCards('topology', this)">🕸️ Topologies</button>
+            <button class="filter-btn" onclick="filterCards('addressing', this)">🔢 Addressing</button>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="cards-grid" id="cardsGrid">
+
+            <!-- 1. What is Network -->
+            <div class="topic-card" data-cat="foundation" onclick="navigateToTopic('what-is-network.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🌐</span>
+                <h2 class="card-title">What is a Network?</h2>
+                <p class="card-description">
+                    Learn the fundamental concepts of computer networks — how devices communicate,
+                    what makes a network, and the basic principles that power the entire internet.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-foundation">Foundation</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 2. PAN -->
+            <div class="topic-card" data-cat="network-type" onclick="navigateToTopic('pan.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">📱</span>
+                <h2 class="card-title">Personal Area Network (PAN)</h2>
+                <p class="card-description">
+                    Explore the smallest network type — Bluetooth, USB, and ZigBee connections
+                    that link your personal devices within arm's reach. The network in your pocket.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-network-type">Network Type</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 3. LAN -->
+            <div class="topic-card" data-cat="network-type" onclick="navigateToTopic('lan.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🔗</span>
+                <h2 class="card-title">Local Area Network (LAN)</h2>
+                <p class="card-description">
+                    Understand how devices within a building or campus connect and share resources.
+                    From home Wi-Fi to office Ethernet — LAN is the foundation of all local networking.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-network-type">Network Type</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 4. MAN -->
+            <div class="topic-card" data-cat="network-type" onclick="navigateToTopic('man.html')">
+                <span class="card-icon">🏙️</span>
+                <h2 class="card-title">Metropolitan Area Network (MAN)</h2>
+                <p class="card-description">
+                    Discover how city-wide networks connect multiple buildings and campuses.
+                    Fiber optic backbones linking banks, universities, and ISP nodes across a city.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-network-type">Network Type</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 5. WAN -->
+            <div class="topic-card" data-cat="network-type" onclick="navigateToTopic('wan.html')">
+                <span class="card-icon">🌍</span>
+                <h2 class="card-title">Wide Area Network (WAN)</h2>
+                <p class="card-description">
+                    Explore networks that span countries and continents — submarine cables, MPLS links,
+                    and satellite connections that make the global internet possible.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-network-type">Network Type</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 6. Router -->
+            <div class="topic-card" data-cat="hardware" onclick="navigateToTopic('router.html')">
+                <span class="card-icon">📡</span>
+                <h2 class="card-title">Router</h2>
+                <p class="card-description">
+                    Learn how routers direct traffic between different networks using IP addresses
+                    and routing tables. The device that connects your home to the entire internet.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-hardware">Hardware</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 7. Switch -->
+            <div class="topic-card" data-cat="hardware" onclick="navigateToTopic('switch.html')">
+                <span class="card-icon">🔀</span>
+                <h2 class="card-title">Switch</h2>
+                <p class="card-description">
+                    Understand how switches intelligently forward frames using MAC address tables.
+                    The core device of every LAN — faster, smarter, and more secure than a hub.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-hardware">Hardware</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 8. Hub -->
+            <div class="topic-card" data-cat="hardware" onclick="navigateToTopic('hub.html')">
+                <span class="card-icon">🔌</span>
+                <h2 class="card-title">Hub</h2>
+                <p class="card-description">
+                    Explore the simplest network device that broadcasts data to all connected ports.
+                    Understand why hubs are legacy hardware and how they differ from modern switches.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-hardware">Hardware</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 9. Repeater -->
+            <div class="topic-card" data-cat="hardware" onclick="navigateToTopic('repeater.html')">
+                <span class="card-icon">📶</span>
+                <h2 class="card-title">Repeater</h2>
+                <p class="card-description">
+                    Learn how repeaters amplify and regenerate signals to extend network range.
+                    The Layer 1 device that fights signal attenuation over long cable distances.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-hardware">Hardware</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 10. Bridge -->
+            <div class="topic-card" data-cat="hardware" onclick="navigateToTopic('Bridge.html')">
+                <span class="card-icon">🌉</span>
+                <h2 class="card-title">Bridge</h2>
+                <p class="card-description">
+                    Discover how bridges connect two network segments at Layer 2, filtering traffic
+                    using MAC addresses. The predecessor to the modern switch — divide and conquer collisions.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-hardware">Hardware</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 11. BUS Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('bus.html')">
+                <span class="card-icon">🚌</span>
+                <h2 class="card-title">BUS Topology</h2>
+                <p class="card-description">
+                    Explore the classic single-backbone network where all devices share one cable.
+                    Understand CSMA/CD, collision domains, and why Bus topology is mostly legacy
+                    but still taught in every networking course.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 12. STAR Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('star.html')">
+                <span class="card-icon">⭐</span>
+                <h2 class="card-title">STAR Topology</h2>
+                <p class="card-description">
+                    Learn the most widely used topology — all devices connect to a central switch
+                    or hub. Easy to manage, easy to troubleshoot, and the standard for every
+                    modern home and office LAN.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 13. RING Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('ring.html')">
+                <span class="card-icon">🔄</span>
+                <h2 class="card-title">RING Topology</h2>
+                <p class="card-description">
+                    Understand how token-passing rings connect devices in a circular loop.
+                    From Token Ring to SONET fiber rings — see how this deterministic topology
+                    guarantees every device gets a turn to transmit.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 14. MESH Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('mesh.html')">
+                <span class="card-icon">🕸️</span>
+                <h2 class="card-title">MESH Topology</h2>
+                <p class="card-description">
+                    Explore the most redundant topology where every device connects to every other.
+                    Full vs partial mesh, dynamic routing, and why core internet routers
+                    use mesh for zero-downtime networks.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 15. HYBRID Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('hybrid.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🔀</span>
+                <h2 class="card-title">HYBRID Topology</h2>
+                <p class="card-description">
+                    Discover how real enterprise networks combine Star, Bus, Ring, and Mesh zones
+                    into one unified hybrid network. Live animation shows cross-zone traffic,
+                    failover, and zone isolation in action.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 16. TREE Topology -->
+            <div class="topic-card" data-cat="topology" onclick="navigateToTopic('tree.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🌳</span>
+                <h2 class="card-title">TREE Topology</h2>
+                <p class="card-description">
+                    Learn the hierarchical 3-tier network — Root switch → Distribution switches
+                    → Access switches → End devices. The backbone of every campus and enterprise
+                    network design. Includes live packet animations.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-topology">Topology</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 17. IP Address -->
+            <div class="topic-card" data-cat="addressing" onclick="navigateToTopic('ip-addressing.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🔢</span>
+                <h2 class="card-title">IP Address</h2>
+                <p class="card-description">
+                    Master IPv4 addressing — dotted decimal, binary conversion, Classes A/B/C,
+                    subnetting, private vs public IPs, static vs dynamic, MAC addresses, and DHCP.
+                    Includes an interactive binary/subnet calculator.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-addressing">Addressing</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 18. OSI Model -->
+            <div class="topic-card" data-cat="protocol" onclick="navigateToTopic('osi-model.html')">
+                <span class="card-icon">🏛️</span>
+                <h2 class="card-title">OSI Model</h2>
+                <p class="card-description">
+                    Master the 7-layer OSI model — from Physical bits to Application services.
+                    The universal framework that explains how every protocol and device fits together
+                    in a network stack.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-protocol">Protocol</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- 19. Protocols & Ports -->
+            <div class="topic-card" data-cat="protocol" onclick="navigateToTopic('protocols.html')">
+                <!--<div class="card-done">✅ Done</div>-->
+                <span class="card-icon">🔌</span>
+                <h2 class="card-title">Protocols &amp; Ports</h2>
+                <p class="card-description">
+                    Deep dive into network protocols — TCP vs UDP, NIC internals, OSI model,
+                    port number ranges, and 25+ well-known ports with real-world attack vectors
+                    and hardening defenses. Live protocol simulation included.
+                </p>
+                <div class="card-meta">
+                    <span class="card-tag tag-protocol">Protocol</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // ── Navigation ──
+        function navigateToTopic(page) {
+            window.location.href = page;
+        }
+
+        // ── Card data for progress calculation ──
+        const TOTAL_CARDS = document.querySelectorAll('.topic-card').length;
+        const DONE_CARDS = document.querySelectorAll('.card-done').length;
+
+        // ── Progress bar ──
+        window.addEventListener('load', function () {
+            const fill = document.getElementById('progressFill');
+            const count = document.getElementById('progressCount');
+            const pct = document.getElementById('progressPct');
+            const percent = Math.round((DONE_CARDS / TOTAL_CARDS) * 100);
+
+            setTimeout(() => {
+                fill.style.width = percent + '%';
+                count.textContent = DONE_CARDS + ' / ' + TOTAL_CARDS + ' Topics';
+                pct.textContent = percent + '%';
+            }, 500);
+        });
+
+        // ── Search ──
+        document.getElementById('searchBox').addEventListener('input', function (e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.topic-card').forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const desc = card.querySelector('.card-description').textContent.toLowerCase();
+                card.style.display = (title.includes(term) || desc.includes(term)) ? '' : 'none';
+            });
+        });
+
+        // ── Category Filter ──
+        function filterCards(cat, btn) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show/hide cards
+            document.querySelectorAll('.topic-card').forEach(card => {
+                if (cat === 'all' || card.dataset.cat === cat) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // ── Smooth scroll ──
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>

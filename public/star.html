@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30,30,30,0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102,126,234,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Sections */
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #667eea; }
+        .section p  { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        /* Animation Box */
+        .animation-box {
+            background: rgba(20,20,30,0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102,126,234,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== STAR TOPOLOGY CANVAS ===== */
+        .star-canvas {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SVG lines layer */
+        .star-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* Central hub/switch */
+        .star-hub {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            z-index: 20;
+            box-shadow: 0 0 40px rgba(102,126,234,0.8);
+            border: 3px solid rgba(102,126,234,0.6);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .star-hub::before {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            border: 2px solid rgba(102,126,234,0.25);
+            border-radius: 50%;
+            animation: hubRipple 2.5s infinite;
+        }
+        .star-hub::after {
+            content: '';
+            position: absolute;
+            width: 160%;
+            height: 160%;
+            border: 1px solid rgba(102,126,234,0.12);
+            border-radius: 50%;
+            animation: hubRipple 2.5s 0.7s infinite;
+        }
+        .hub-label {
+            position: absolute;
+            bottom: -28px;
+            font-size: 0.78rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            white-space: nowrap;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .star-hub.hub-active {
+            box-shadow: 0 0 70px rgba(102,126,234,1);
+            animation: hubPulse 0.5s ease infinite;
+        }
+        .star-hub.hub-broadcast {
+            box-shadow: 0 0 80px rgba(248,180,0,0.9);
+            border-color: #f8b400;
+            background: linear-gradient(135deg, #f8b400, #e07000);
+            animation: hubPulse 0.4s ease infinite;
+        }
+        .star-hub.hub-fail {
+            box-shadow: 0 0 60px rgba(239,68,68,0.9);
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+        }
+
+        /* Devices around the hub */
+        .star-device {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            z-index: 20;
+            box-shadow: 0 0 18px rgba(102,126,234,0.45);
+            border: 2px solid rgba(102,126,234,0.3);
+            transition: all 0.3s;
+            transform: translate(-50%, -50%);
+            cursor: default;
+        }
+        .star-device:hover {
+            box-shadow: 0 0 32px rgba(102,126,234,0.85);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .star-device.dev-send {
+            box-shadow: 0 0 45px rgba(102,126,234,1);
+            border-color: #00ff88;
+            animation: devSendPulse 0.6s ease infinite;
+        }
+        .star-device.dev-recv {
+            box-shadow: 0 0 40px rgba(118,75,162,1);
+            border-color: #764ba2;
+            animation: devRecvPulse 0.6s ease infinite;
+        }
+        .star-device.dev-broadcast {
+            border-color: #f8b400;
+            box-shadow: 0 0 40px rgba(248,180,0,0.9);
+            animation: devBcastPulse 0.5s ease infinite;
+        }
+        .star-device.dev-fail {
+            background: linear-gradient(135deg, #374151, #1f2937);
+            border-color: #6b7280;
+            box-shadow: none;
+            opacity: 0.4;
+        }
+        .dev-label {
+            position: absolute;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Cable lines between device and hub */
+        .star-cable {
+            stroke: rgba(102,126,234,0.35);
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .star-cable.cable-active {
+            stroke: #667eea;
+            stroke-width: 4;
+            filter: drop-shadow(0 0 6px rgba(102,126,234,0.8));
+        }
+        .star-cable.cable-broadcast {
+            stroke: #f8b400;
+            stroke-width: 4;
+            filter: drop-shadow(0 0 6px rgba(248,180,0,0.8));
+        }
+        .star-cable.cable-fail {
+            stroke: rgba(107,114,128,0.2);
+            stroke-dasharray: 6 4;
+        }
+
+        /* Traveling packet on cable (SVG circle) */
+        .pkt-dot {
+            r: 10;
+            fill: #00ff88;
+            filter: drop-shadow(0 0 8px #00ff88);
+            opacity: 0;
+        }
+        .pkt-dot.pkt-bcast {
+            fill: #f8b400;
+            filter: drop-shadow(0 0 8px #f8b400);
+        }
+        .pkt-dot.pkt-fail {
+            fill: #ef4444;
+            filter: drop-shadow(0 0 8px #ef4444);
+        }
+
+        /* Control Buttons */
+        .star-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .star-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .star-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .star-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .star-btn.yellow { background: linear-gradient(135deg, #f59e0b, #b45309); }
+        .star-btn.red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .star-btn.ghost  { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+        .star-status {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        /* Hub Type Toggle */
+        .hub-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .hub-toggle span { color: #888; font-size: 0.9rem; }
+        .toggle-btn {
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.4);
+            background: rgba(102,126,234,0.08);
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .toggle-btn.active {
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 10px rgba(102,126,234,0.4);
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4   { color: #667eea; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p    { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        /* Adv/Dis Grid */
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card { border-radius: 12px; padding: 25px; border: 1px solid; }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        /* Highlight & Example */
+        .highlight-box {
+            background: rgba(102,126,234,0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(102,126,234,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        /* Comparison Table */
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(102,126,234,0.2); color: #667eea; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(102,126,234,0.08); }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#667eea,#764ba2); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#667eea; border:2px solid #764ba2; box-shadow:0 0 10px rgba(102,126,234,0.6); }
+        .timeline-item h4 { color: #a5b4fc; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p  { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        /* Footer */
+        footer { background: rgba(30,30,30,0.95); text-align: center; padding: 30px 20px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        /* Progress bar */
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); z-index:9999; width:0%; transition:width 0.2s; }
+
+        /* Animations */
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes fadeInUp   { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes hubRipple  { 0%{transform:scale(1);opacity:0.6;} 100%{transform:scale(1.4);opacity:0;} }
+        @keyframes hubPulse   { 0%,100%{box-shadow:0 0 40px rgba(102,126,234,0.7);} 50%{box-shadow:0 0 80px rgba(102,126,234,1);} }
+        @keyframes devSendPulse { 0%,100%{box-shadow:0 0 25px rgba(0,255,136,0.6);} 50%{box-shadow:0 0 50px rgba(0,255,136,1);} }
+        @keyframes devRecvPulse { 0%,100%{box-shadow:0 0 25px rgba(118,75,162,0.7);} 50%{box-shadow:0 0 50px rgba(118,75,162,1);} }
+        @keyframes devBcastPulse{ 0%,100%{box-shadow:0 0 25px rgba(248,180,0,0.6);} 50%{box-shadow:0 0 50px rgba(248,180,0,1);} }
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .section{padding:25px;}
+            .star-canvas{height:340px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>⭐ Star Topology</h1>
+        <p class="hero-subtitle">All Devices Connect to a Central Hub or Switch — The Most Popular Modern Network!</p>
+        <span class="hero-badge">📡 OSI Layer 1 / Layer 2 — Physical & Data Link</span>
+    </section>
+
+    <!-- ============ LIVE ANIMATION ============ -->
+    <section class="section" id="animation">
+        <h2>⚡ Star Topology — Live Interactive Visualization</h2>
+        <p>
+            Watch how data flows through a <strong>Star Topology</strong> in real time. Every device connects to a 
+            central <strong>Hub</strong> or <strong>Switch</strong>. Toggle between Hub and Switch mode to see the 
+            difference — then simulate Unicast, Broadcast, or a Device Failure!
+        </p>
+
+        <!-- Hub / Switch Toggle -->
+        <div class="hub-toggle">
+            <span>Central Device:</span>
+            <button class="toggle-btn active" id="togHub" onclick="setHubMode('hub')">🔀 Hub (Layer 1)</button>
+            <button class="toggle-btn" id="togSwitch" onclick="setHubMode('switch')">🔌 Switch (Layer 2)</button>
+            <span id="hubModeLabel" style="color:#a5b4fc;font-size:0.85rem;margin-left:8px;">Hub mode: Broadcasts to ALL ports</span>
+        </div>
+
+        <div class="animation-box">
+            <div class="star-canvas" id="starCanvas">
+
+                <!-- SVG layer for cables and animated packets -->
+                <svg class="star-svg" id="starSvg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid meet">
+                    <!-- Cables will be drawn by JS -->
+                    <!-- Packet dots -->
+                    <circle class="pkt-dot" id="pkt0"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt1"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt2"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt3"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt4"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt5"  cx="0" cy="0"/>
+                    <circle class="pkt-dot" id="pkt6"  cx="0" cy="0"/>
+                </svg>
+
+                <!-- Central hub -->
+                <div class="star-hub" id="starHub">
+                    <span id="hubIcon">🔀</span>
+                    <div class="hub-label" id="hubLabel">HUB</div>
+                </div>
+
+                <!-- 6 devices — positioned via JS -->
+                <div class="star-device" id="sdev0">💻<div class="dev-label" id="dlabel0">PC-1</div></div>
+                <div class="star-device" id="sdev1">💻<div class="dev-label" id="dlabel1">PC-2</div></div>
+                <div class="star-device" id="sdev2">🖥️<div class="dev-label" id="dlabel2">PC-3</div></div>
+                <div class="star-device" id="sdev3">🖨️<div class="dev-label" id="dlabel3">Printer</div></div>
+                <div class="star-device" id="sdev4">💻<div class="dev-label" id="dlabel4">PC-4</div></div>
+                <div class="star-device" id="sdev5" style="background:linear-gradient(135deg,#764ba2,#667eea);">🖥️<div class="dev-label" id="dlabel5">Server</div></div>
+
+            </div><!-- end star-canvas -->
+        </div><!-- end animation-box -->
+
+        <div class="star-controls">
+            <button class="star-btn" id="btnUnicast"   onclick="starDemo('unicast')">▶ PC-1 → Server (Unicast)</button>
+            <button class="star-btn yellow" id="btnBcast" onclick="starDemo('broadcast')">📢 Broadcast (All Devices)</button>
+            <button class="star-btn red"    id="btnFail"  onclick="starDemo('fail')">🔌 Simulate Device Failure</button>
+            <button class="star-btn"        id="btnHubFail" onclick="starDemo('hubfail')">💀 Hub/Switch Fails</button>
+            <button class="star-btn ghost"  onclick="starReset()">↺ Reset</button>
+            <div class="star-status" id="starStatus">👆 Click a button above to start the simulation!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Central Hub/Switch:</strong> Every device has a dedicated cable connecting it to the central device — no shared backbone</li>
+                <li><strong>Hub mode:</strong> Data received on one port is flooded to ALL other ports (like Bus Topology — shared collision domain)</li>
+                <li><strong>Switch mode:</strong> Data sent only to the intended destination port (learned via MAC table — dedicated collision domain per port)</li>
+                <li><strong>Fault Isolation:</strong> If one device or its cable fails → ONLY that device is affected. Rest of the network works perfectly!</li>
+                <li><strong>Single Point of Failure:</strong> If the central Hub/Switch fails → ALL devices lose connectivity</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============ WHAT IS STAR TOPOLOGY ============ -->
+    <section class="section" id="what">
+        <h2>🔍 What is Star Topology?</h2>
+        <p>
+            <strong>Star Topology</strong> is a network configuration where all devices (computers, printers, servers) are connected 
+            individually to a central networking device — either a <strong>Hub</strong> or a <strong>Switch</strong>. 
+            Each device has its own dedicated cable running from the device to the central point, forming a star-like shape.
+        </p>
+        <p>
+            Think of Star Topology like a <strong>wheel and spokes</strong>: the hub/switch is the centre of the wheel, and each 
+            cable is a spoke connecting to a device. All communication must pass through the centre — it's the heart of the entire network.
+        </p>
+
+        <div class="example-box">
+            <strong>📡 Simple Analogy:</strong><br><br>
+            Think of a Star Topology like an <strong>airport control tower</strong>. 🛫<br>
+            Every plane (device) communicates through the control tower (hub/switch).<br>
+            Planes don't talk directly to each other — all messages go through the tower.<br>
+            If one plane has a radio failure, other planes are totally unaffected.<br>
+            But if the control tower goes down — the entire airport communication fails! 🔴<br><br>
+            That's exactly how Star Topology works in networking!
+        </div>
+
+        <h3>🔧 Hub vs Switch — The Critical Difference</h3>
+        <div class="adv-grid">
+            <div class="info-card" style="border-color:rgba(102,126,234,0.5);">
+                <span class="info-card-icon">🔀</span>
+                <h4>Hub (Layer 1 — Dumb Device)</h4>
+                <p>
+                    A Hub is a simple repeater with multiple ports. When data arrives on any port, it sends it out 
+                    to <strong>ALL other ports</strong> — regardless of destination. Every device receives every packet.<br><br>
+                    <strong>Collision Domain:</strong> All ports share ONE collision domain — just like Bus Topology!<br>
+                    <strong>Intelligence:</strong> None — it doesn't learn MAC addresses<br>
+                    <strong>Speed:</strong> Half-duplex — devices take turns<br>
+                    <strong>Status:</strong> 🔴 Obsolete — replaced by switches
+                </p>
+            </div>
+            <div class="info-card" style="border-color:rgba(118,75,162,0.5);">
+                <span class="info-card-icon">🔌</span>
+                <h4>Switch (Layer 2 — Smart Device)</h4>
+                <p>
+                    A Switch builds a <strong>MAC Address Table</strong> by learning which device is on which port. 
+                    It sends data ONLY to the specific destination port — other devices never see the packet.<br><br>
+                    <strong>Collision Domain:</strong> Each port = its own collision domain (no collisions!)<br>
+                    <strong>Intelligence:</strong> Full MAC address learning and filtering<br>
+                    <strong>Speed:</strong> Full-duplex — simultaneous send/receive<br>
+                    <strong>Status:</strong> 🟢 Standard — used in all modern networks
+                </p>
+            </div>
+        </div>
+
+        <h3>🔧 Core Components of Star Topology</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🔌</span>
+                <h4>Central Hub / Switch</h4>
+                <p>The heart of the star network. All devices connect here. A switch is always preferred over a hub — it provides dedicated bandwidth per port, eliminates unnecessary traffic, and improves security and performance dramatically.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔗</span>
+                <h4>UTP/STP Cables</h4>
+                <p>Each device connects to the hub/switch via its own individual <strong>Unshielded Twisted Pair (UTP)</strong> or STP cable with RJ-45 connectors. Cat5e supports 1 Gbps up to 100m. Cat6 supports 10 Gbps up to 55m. No shared medium!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">💻</span>
+                <h4>End Devices (Nodes)</h4>
+                <p>Any device with a NIC (Network Interface Card) — computers, laptops, printers, IP cameras, servers, VoIP phones. Each gets its own dedicated port on the switch, with its own collision domain and dedicated bandwidth.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🧠</span>
+                <h4>MAC Address Table (Switch)</h4>
+                <p>A switch builds and maintains a table mapping MAC addresses to port numbers. When PC-1 sends data to Server, the switch looks up Server's MAC address in the table and forwards ONLY to that port — everything else is silent.</p>
+            </div>
+        </div>
+
+        <h3>📶 How a Switch Forwards Data — Step by Step</h3>
+        <div class="example-box">
+            <strong>PC-1 wants to send data to Server — How Switch handles it:</strong><br><br>
+            <strong>Step 1 — Frame Arrives:</strong> PC-1 sends an Ethernet frame with Src MAC: AA:BB:CC:DD:EE:01, Dst MAC: AA:BB:CC:DD:EE:06<br>
+            <strong>Step 2 — MAC Learning:</strong> Switch adds PC-1's MAC → Port 1 to its MAC table (if not already there)<br>
+            <strong>Step 3 — Table Lookup:</strong> Switch checks: "Which port is AA:BB:CC:DD:EE:06 (Server) on?"<br>
+            <strong>Step 4a — Known destination:</strong> Server's MAC is in table → Port 6. Switch sends frame ONLY to Port 6. Done! ✅<br>
+            <strong>Step 4b — Unknown destination:</strong> If Server's MAC not yet learned → Switch floods to all ports except Port 1 (source)<br>
+            <strong>Step 5 — Server Replies:</strong> Server replies → Switch learns Server MAC → Port 6. Future frames go directly.<br><br>
+            Result: Only PC-1 and Server are involved. PC-2, PC-3, Printer, PC-4 see NO traffic! 🔐
+        </div>
+    </section>
+
+    <!-- ============ ADVANTAGES & DISADVANTAGES ============ -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Star Topology dominates modern networking for good reasons — but it does have some trade-offs worth knowing.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>Easy to install and configure</li>
+                    <li>One device failure doesn't affect others</li>
+                    <li>Easy fault detection and isolation</li>
+                    <li>Simple to add or remove devices</li>
+                    <li>Centralized management (at switch)</li>
+                    <li>No data collision with switches</li>
+                    <li>Full-duplex communication possible</li>
+                    <li>Higher performance than Bus/Ring</li>
+                    <li>Supports different cable types/speeds</li>
+                    <li>Most widely supported by hardware</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Central hub/switch = single point of failure</li>
+                    <li>Requires more cable than Bus Topology</li>
+                    <li>Cost of switch/hub adds to budget</li>
+                    <li>Performance limited by switch capacity</li>
+                    <li>Hub mode still causes collisions</li>
+                    <li>Cable length limited (100m UTP per leg)</li>
+                    <li>If switch overloads → all ports suffer</li>
+                    <li>Large networks need multiple switches</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 Why Star Topology Replaced Bus:</strong> In Bus Topology, one cable break = entire network down. In Star Topology, 
+            only the broken cable's device is affected. This single advantage — <strong>fault isolation</strong> — was enough to 
+            make Star Topology the standard for all modern Ethernet networks (10BASE-T onwards).
+        </div>
+    </section>
+
+    <!-- ============ REAL WORLD EXAMPLES ============ -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Star Topology is the most widely deployed network topology in the world today. You encounter it every single day 
+            without realizing it — from your home WiFi to corporate data centres.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏠</span>
+                <h4>Your Home Network</h4>
+                <p>Your WiFi router at home is a Star Topology! Laptop, phone, Smart TV, tablet — all connect to the central router/switch. If your laptop's WiFi card fails, your phone still works. That's Star Topology in action every day!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏢</span>
+                <h4>Office LAN Networks</h4>
+                <p>Every modern office uses Star Topology with managed switches. A 24-port or 48-port switch in a server room connects all employee computers via Cat6 cables. Network engineers can see exactly which port is causing problems — easy troubleshooting!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏫</span>
+                <h4>School & University Networks</h4>
+                <p>Computer labs, library systems, admin offices — all connected to switches in a Star Topology. A core switch connects to distribution switches, which connect to access switches. This "Hierarchical Star" (extended star) scales to thousands of devices.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏥</span>
+                <h4>Hospital Networks</h4>
+                <p>Critical hospital networks use redundant Star Topology — two switches connected so if one fails, the other takes over. Patient monitoring systems, pharmacy computers, X-ray machines, and administrative PCs all form a Star Topology network.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏭</span>
+                <h4>Data Centres</h4>
+                <p>Data centres use a "Spine-Leaf" architecture — which is essentially a Star Topology at massive scale. Hundreds of servers connect to "Leaf" switches, which connect to "Spine" switches. Google, AWS, Microsoft Azure — all use this approach.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Wireless (Wi-Fi) Networks</h4>
+                <p>Wi-Fi is a Star Topology! Every wireless device (phone, laptop) connects to a central <strong>Access Point (AP)</strong>. The AP is the hub — it manages all wireless communication. Even wireless networks follow the star model at the logical level.</p>
+            </div>
+        </div>
+
+        <h3>📅 Historical Journey of Star Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1960s — Mainframe Star Networks</h4>
+                <p>Early star topology appeared with mainframe computers. "Dumb terminals" connected via point-to-point cables to a central mainframe. The mainframe was the star centre — doing all processing for every terminal connected to it.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1987 — 10BASE-T Ethernet Invented</h4>
+                <p>The game-changer! 10BASE-T used UTP cables and hubs instead of coaxial cables. Each device got its own cable run back to a central hub. Star Topology Ethernet was born — finally solving the "one cable breaks everything" problem of Bus Topology.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990 — IEEE 802.3i Standardized (10BASE-T)</h4>
+                <p>Star Topology Ethernet officially standardized. 10 Mbps over Cat3 UTP, max 100m per segment. Hubs proliferated in offices worldwide. The great migration from coaxial Bus Topology to Star Topology begins.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1995–1998 — Switches Replace Hubs</h4>
+                <p>Affordable Ethernet switches arrive. Unlike hubs, switches eliminate collisions by giving each port its own collision domain. 100 Mbps Fast Ethernet (100BASE-TX) becomes mainstream. Performance jumps dramatically.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2000s — Gigabit & Managed Switches</h4>
+                <p>Gigabit Ethernet (1 Gbps, 1000BASE-T) becomes standard. Managed switches with VLANs, QoS, port mirroring, and SNMP monitoring. Enterprise networks adopt hierarchical star (Core → Distribution → Access layer) architecture.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — 10G/40G/100G & Beyond</h4>
+                <p>Modern data centres use 10/40/100 Gbps switches. Wi-Fi 6 access points act as wireless star centres. Power over Ethernet (PoE) switches power IP cameras and phones directly through Cat6 cables. Star Topology remains the foundation of all modern networking.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ STAR VS OTHER TOPOLOGIES ============ -->
+    <section class="section" id="comparison">
+        <h2>📊 Star Topology vs Other Topologies</h2>
+        <p>How Star Topology compares against Bus, Ring, and Mesh across key network parameters.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>⭐ Star</th>
+                <th>🚌 Bus</th>
+                <th>🔄 Ring</th>
+                <th>🕸️ Mesh</th>
+            </tr>
+            <tr>
+                <td><strong>Cable Required</strong></td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Least</td>
+                <td>🟡 Moderate</td>
+                <td>❌ Most</td>
+            </tr>
+            <tr>
+                <td><strong>Installation Cost</strong></td>
+                <td>🟡 Moderate (switch cost)</td>
+                <td>⭐ Cheapest</td>
+                <td>🟡 Moderate</td>
+                <td>❌ Most expensive</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance (Device)</strong></td>
+                <td>⭐ Excellent per device</td>
+                <td>❌ One break = all fail</td>
+                <td>❌ Ring break = all fail</td>
+                <td>⭐ Multiple paths</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance (Central)</strong></td>
+                <td>❌ Hub/switch failure = all fail</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>⭐ No single point</td>
+            </tr>
+            <tr>
+                <td><strong>Performance</strong></td>
+                <td>⭐ Excellent (with switch)</td>
+                <td>❌ Degrades with load</td>
+                <td>🟡 Token-dependent</td>
+                <td>⭐ Excellent</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>⭐ Very easy (add ports)</td>
+                <td>❌ Limited</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Troubleshooting</strong></td>
+                <td>⭐ Very easy (per port)</td>
+                <td>❌ Difficult</td>
+                <td>❌ Difficult</td>
+                <td>🟡 Complex</td>
+            </tr>
+            <tr>
+                <td><strong>Security</strong></td>
+                <td>⭐ Good (switch = per port)</td>
+                <td>❌ All see all data</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Collision Domain</strong></td>
+                <td>⭐ Per port (with switch)</td>
+                <td>❌ All share one</td>
+                <td>⭐ Token prevents collision</td>
+                <td>⭐ Per link</td>
+            </tr>
+            <tr>
+                <td><strong>Modern Usage</strong></td>
+                <td>🟢 MOST COMMON LAN</td>
+                <td>🔴 Mostly obsolete</td>
+                <td>🟡 Specialized (MANs)</td>
+                <td>🟢 Enterprise/WAN</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============ TECHNICAL SPECS ============ -->
+    <section class="section" id="specs">
+        <h2>🔬 Technical Specifications</h2>
+        <p>Key technical details of common Star Topology Ethernet standards:</p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">📶</span>
+                <h4>10BASE-T (10 Mbps Ethernet)</h4>
+                <p>
+                    <strong>Cable:</strong> Cat3 UTP, RJ-45<br>
+                    <strong>Max Distance:</strong> 100 metres per segment<br>
+                    <strong>Speed:</strong> 10 Mbps<br>
+                    <strong>Duplex:</strong> Half (hub) / Full (switch)<br>
+                    <strong>Standard:</strong> IEEE 802.3i (1990)<br>
+                    <strong>Status:</strong> 🔴 Obsolete
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>100BASE-TX (Fast Ethernet)</h4>
+                <p>
+                    <strong>Cable:</strong> Cat5/Cat5e UTP, RJ-45<br>
+                    <strong>Max Distance:</strong> 100 metres per segment<br>
+                    <strong>Speed:</strong> 100 Mbps<br>
+                    <strong>Duplex:</strong> Full-duplex with switch<br>
+                    <strong>Standard:</strong> IEEE 802.3u (1995)<br>
+                    <strong>Status:</strong> 🟡 Legacy use
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">⚡</span>
+                <h4>1000BASE-T (Gigabit Ethernet)</h4>
+                <p>
+                    <strong>Cable:</strong> Cat5e/Cat6 UTP, RJ-45<br>
+                    <strong>Max Distance:</strong> 100 metres per segment<br>
+                    <strong>Speed:</strong> 1000 Mbps (1 Gbps)<br>
+                    <strong>Duplex:</strong> Full-duplex standard<br>
+                    <strong>Standard:</strong> IEEE 802.3ab (1999)<br>
+                    <strong>Status:</strong> 🟢 Most common today
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🚀</span>
+                <h4>10GBASE-T (10 Gigabit Ethernet)</h4>
+                <p>
+                    <strong>Cable:</strong> Cat6a/Cat7 UTP, RJ-45<br>
+                    <strong>Max Distance:</strong> 100m (Cat6a) / 55m (Cat6)<br>
+                    <strong>Speed:</strong> 10,000 Mbps (10 Gbps)<br>
+                    <strong>Duplex:</strong> Full-duplex<br>
+                    <strong>Standard:</strong> IEEE 802.3an (2006)<br>
+                    <strong>Status:</strong> 🟢 Data centres & servers
+                </p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <strong>📏 Maximum Network Diameter (Switched Star):</strong><br><br>
+            Single Switch Star: Max 100m per cable leg. Device-to-device = 100m + 100m = 200m through the switch<br><br>
+            <strong>Extended (Hierarchical) Star — Cascaded Switches:</strong><br>
+            Access Switch → Distribution Switch → Core Switch<br>
+            Device → Access (100m) → Distribution (fibre, 2km+) → Core → Distribution → Access (100m) → Device<br>
+            Total end-to-end: Can span across entire campuses and buildings!<br><br>
+            <strong>PoE (Power over Ethernet):</strong> IEEE 802.3af (15.4W) | 802.3at (30W) | 802.3bt (90W)<br>
+            Switches can power IP phones, cameras, and APs through the Cat6 cable itself — no separate power supply needed!
+        </div>
+    </section>
+
+    <!-- ============ EXTENDED STAR / HIERARCHICAL ============ -->
+    <section class="section" id="extended">
+        <h2>🔮 Extended Star & Modern Variations</h2>
+        <p>
+            The basic Star Topology scales into <strong>Extended Star (Hierarchical Star)</strong> — the foundation of 
+            how enterprise, university, and data centre networks are actually built in the real world.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🌳</span>
+                <h4>Extended / Hierarchical Star</h4>
+                <p>Multiple switches connected in a tree structure. <strong>Core Switch</strong> → <strong>Distribution Switches</strong> → <strong>Access Switches</strong> → End Devices. Used in large campuses, offices, and universities. Cisco's 3-tier model follows this exactly.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Wireless Star (Wi-Fi)</h4>
+                <p>All Wi-Fi devices connect to a central <strong>Access Point (AP)</strong> — a wireless star hub. The AP controls all radio channel access. Enterprise Wi-Fi uses multiple APs all connected back to a central Wireless LAN Controller (WLC) — a star of stars!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔁</span>
+                <h4>Redundant Star (Active-Active)</h4>
+                <p>Critical networks use <strong>two switches</strong> with <strong>STP (Spanning Tree Protocol)</strong> or LACP. If the primary switch fails, traffic automatically fails over to the backup switch. No downtime. Used in hospitals, banks, and data centres.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">☁️</span>
+                <h4>Spine-Leaf (Data Centre)</h4>
+                <p>Modern data centres use a 2-tier Spine-Leaf architecture — essentially a Star Topology at huge scale. Every Leaf switch connects to EVERY Spine switch. AWS, Google Cloud, and Azure data centres all use this model for millions of servers.</p>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:20px;">
+            <strong>🔑 Bottom Line:</strong> Star Topology is the <em>dominant</em> topology of modern networking. 
+            From the Wi-Fi in your pocket to the data centre serving your Netflix stream — all of it runs on Star Topology principles. 
+            Understanding Star Topology means understanding the foundation of the entire modern internet infrastructure.
+        </div>
+    </section>
+
+    <!-- ============ KEY TAKEAWAYS ============ -->
+    <section class="section">
+        <h2>🎯 Key Takeaways</h2>
+        <div class="highlight-box">
+            <ul>
+                <li>Star Topology connects all devices to a <strong>central Hub or Switch</strong> via individual dedicated cables</li>
+                <li><strong>Hub</strong> = Layer 1 dumb device — floods data to ALL ports (shared collision domain) — now obsolete</li>
+                <li><strong>Switch</strong> = Layer 2 smart device — sends data ONLY to destination port (dedicated collision domain per port)</li>
+                <li>Key advantage: <strong>Fault isolation</strong> — one device or cable fails → only that device is affected</li>
+                <li>Key weakness: <strong>Single point of failure</strong> — if hub/switch fails → entire network goes down</li>
+                <li>Uses <strong>UTP/STP cables with RJ-45</strong> connectors — Cat5e for 1Gbps, Cat6 for 10Gbps</li>
+                <li>Maximum cable length: <strong>100 metres</strong> per segment (UTP Ethernet)</li>
+                <li><strong>Most widely used topology</strong> in modern LANs — homes, offices, schools, hospitals, data centres</li>
+                <li>Scales to <strong>Extended (Hierarchical) Star</strong> — Access → Distribution → Core layers for large networks</li>
+                <li>Wi-Fi is logically a Star Topology with the <strong>Access Point</strong> acting as the wireless hub/switch</li>
+            </ul>
+        </div>
+    </section>
+
+</div><!-- end container -->
+
+<!-- Footer -->
+<footer>
+    <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+    <p style="margin-top:10px; font-size:0.9rem;">Keep exploring, keep learning! 🚀</p>
+</footer>
+
+<script>
+// ─── PROGRESS BAR ───────────────────────────────────────
+window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ─── FADE IN ON SCROLL ──────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(20px)';
+    s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(s);
+});
+
+// ─── STAR TOPOLOGY ANIMATION ENGINE ──────────────────────
+let starAnimating = false;
+let hubMode = 'hub'; // 'hub' or 'switch'
+let failedDevices = new Set();
+
+// SVG coordinate system: viewBox="0 0 800 420"
+// Hub centre = (400, 210)
+const HUB_CX = 400, HUB_CY = 210, RADIUS = 155;
+
+// 6 devices equally spaced around the hub
+const NUM_DEVS = 6;
+const devAngles = [270, 330, 30, 90, 150, 210]; // degrees from top
+
+function angleToXY(angleDeg, r) {
+    const rad = (angleDeg - 90) * Math.PI / 180;
+    return {
+        x: HUB_CX + r * Math.cos(rad),
+        y: HUB_CY + r * Math.sin(rad)
+    };
+}
+
+// DOM positions of devices (as % of canvas size) — computed at init
+const devPosPct = []; // {cx, cy} in SVG coords
+
+function initStarLayout() {
+    const canvas = document.getElementById('starCanvas');
+    const svg    = document.getElementById('starSvg');
+
+    // Clear existing cables
+    svg.querySelectorAll('.star-cable').forEach(e => e.remove());
+
+    for (let i = 0; i < NUM_DEVS; i++) {
+        const pos = angleToXY(devAngles[i], RADIUS);
+        devPosPct[i] = pos;
+
+        // Position device div
+        const dev = document.getElementById('sdev' + i);
+        const pxX = (pos.x / 800) * canvas.offsetWidth;
+        const pxY = (pos.y / 420) * canvas.offsetHeight;
+        dev.style.left = pxX + 'px';
+        dev.style.top  = pxY + 'px';
+
+        // Label position
+        const lbl = document.getElementById('dlabel' + i);
+        const above = (devAngles[i] > 180 && devAngles[i] < 360) || devAngles[i] === 270;
+        lbl.style.bottom   = above ? '-22px' : '';
+        lbl.style.top      = above ? '' : '-22px';
+        lbl.style.left     = '50%';
+        lbl.style.transform = 'translateX(-50%)';
+
+        // Draw cable in SVG
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', HUB_CX);
+        line.setAttribute('y1', HUB_CY);
+        line.setAttribute('x2', pos.x);
+        line.setAttribute('y2', pos.y);
+        line.setAttribute('class','star-cable');
+        line.setAttribute('id','cable' + i);
+        svg.insertBefore(line, svg.firstChild);
+    }
+}
+
+// Re-layout on resize
+window.addEventListener('resize', initStarLayout);
+window.addEventListener('load', initStarLayout);
+setTimeout(initStarLayout, 100);
+
+// ─── HUB / SWITCH TOGGLE ─────────────────────────────────
+function setHubMode(mode) {
+    hubMode = mode;
+    document.getElementById('togHub').classList.toggle('active', mode === 'hub');
+    document.getElementById('togSwitch').classList.toggle('active', mode === 'switch');
+    const hub = document.getElementById('starHub');
+    document.getElementById('hubIcon').textContent  = mode === 'hub' ? '🔀' : '🔌';
+    document.getElementById('hubLabel').textContent  = mode === 'hub' ? 'HUB' : 'SWITCH';
+    document.getElementById('hubModeLabel').textContent = mode === 'hub'
+        ? 'Hub mode: Broadcasts to ALL ports'
+        : 'Switch mode: Sends ONLY to destination port';
+    starReset();
+}
+
+// ─── UTILITY ─────────────────────────────────────────────
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function setStatus(msg) { document.getElementById('starStatus').innerHTML = msg; }
+
+function lockBtns(lock) {
+    ['btnUnicast','btnBcast','btnFail','btnHubFail'].forEach(id => {
+        document.getElementById(id).disabled = lock;
+    });
+}
+
+function setCable(i, state) {
+    const cable = document.getElementById('cable' + i);
+    if (!cable) return;
+    cable.classList.remove('cable-active','cable-broadcast','cable-fail');
+    if (state) cable.classList.add(state);
+}
+
+function setDev(i, state) {
+    const dev = document.getElementById('sdev' + i);
+    if (!dev) return;
+    dev.classList.remove('dev-send','dev-recv','dev-broadcast','dev-fail');
+    if (state) dev.classList.add(state);
+}
+
+function setHub(state) {
+    const hub = document.getElementById('starHub');
+    hub.classList.remove('hub-active','hub-broadcast','hub-fail');
+    if (state) hub.classList.add(state);
+}
+
+function resetAllState() {
+    for (let i = 0; i < NUM_DEVS; i++) {
+        setDev(i, failedDevices.has(i) ? 'dev-fail' : null);
+        setCable(i, failedDevices.has(i) ? 'cable-fail' : null);
+    }
+    setHub(null);
+}
+
+// ─── ANIMATED PACKET ALONG CABLE ─────────────────────────
+// animates pkt SVG circle from (x1,y1) to (x2,y2) in durationMs
+function animPacket(pktId, x1, y1, x2, y2, durationMs, className) {
+    return new Promise(resolve => {
+        const pkt = document.getElementById(pktId);
+        // reset class
+        pkt.className.baseVal = 'pkt-dot' + (className ? ' ' + className : '');
+        pkt.setAttribute('cx', x1);
+        pkt.setAttribute('cy', y1);
+        pkt.style.opacity = '1';
+
+        const start = performance.now();
+        function frame(now) {
+            const t = Math.min((now - start) / durationMs, 1);
+            pkt.setAttribute('cx', x1 + (x2 - x1) * t);
+            pkt.setAttribute('cy', y1 + (y2 - y1) * t);
+            if (t < 1) requestAnimationFrame(frame);
+            else {
+                pkt.style.opacity = '0';
+                resolve();
+            }
+        }
+        requestAnimationFrame(frame);
+    });
+}
+
+// Send packet from device → hub, then hub → device(s)
+async function sendToHub(srcIdx, pktId, cls) {
+    const src = devPosPct[srcIdx];
+    return animPacket(pktId, src.x, src.y, HUB_CX, HUB_CY, 600, cls);
+}
+async function sendFromHub(dstIdx, pktId, cls) {
+    const dst = devPosPct[dstIdx];
+    return animPacket(pktId, HUB_CX, HUB_CY, dst.x, dst.y, 600, cls);
+}
+
+// ─── DEMOS ───────────────────────────────────────────────
+async function starDemo(mode) {
+    if (starAnimating) return;
+    starAnimating = true;
+    lockBtns(true);
+    resetAllState();
+    failedDevices.clear();
+
+    if (mode === 'unicast') {
+        const SRC = 0, DST = 5; // PC-1 → Server
+        setStatus(`📡 <strong>PC-1</strong> wants to send data to <strong>Server</strong>. Preparing frame...`);
+        setDev(SRC, 'dev-send');
+        await sleep(800);
+
+        setStatus(`📦 PC-1 sends frame to ${hubMode === 'hub' ? 'Hub' : 'Switch'} via cable...`);
+        setCable(SRC, 'cable-active');
+        await sendToHub(SRC, 'pkt0', '');
+        setHub('hub-active');
+        await sleep(400);
+
+        if (hubMode === 'hub') {
+            setStatus(`🔀 <strong>Hub received frame.</strong> Hub has NO intelligence — flooding to ALL ports except source!`);
+            await sleep(600);
+            // Flood to all except src
+            const floods = [];
+            for (let i = 0; i < NUM_DEVS; i++) {
+                if (i === SRC || failedDevices.has(i)) continue;
+                setCable(i, 'cable-active');
+                floods.push(sendFromHub(i, 'pkt' + (i < 5 ? i+1 : i), ''));
+            }
+            // Light up all receivers
+            for (let i = 0; i < NUM_DEVS; i++) {
+                if (i === SRC) continue;
+                setDev(i, i === DST ? 'dev-recv' : 'dev-broadcast');
+            }
+            await Promise.all(floods);
+            await sleep(500);
+            setStatus(`✅ <strong>All devices received the frame</strong> — but only <strong>Server</strong> accepts it (matching MAC). Others discard. This is why Hubs waste bandwidth!`);
+
+        } else {
+            setStatus(`🔌 <strong>Switch received frame.</strong> Looks up MAC Table → Server is on Port 6. Sending ONLY to Server!`);
+            await sleep(700);
+            setCable(DST, 'cable-active');
+            setDev(DST, 'dev-recv');
+            await sendFromHub(DST, 'pkt1', '');
+            await sleep(400);
+            setStatus(`✅ <strong>Server received the data!</strong> PC-2, PC-3, Printer, PC-4 saw <strong>ZERO traffic</strong> — Switch kept them silent. Full bandwidth dedicated!`);
+        }
+
+        await sleep(600);
+        resetAllState();
+
+    } else if (mode === 'broadcast') {
+        const SRC = 2; // PC-3 broadcasts
+        setStatus(`📢 <strong>PC-3</strong> sends a BROADCAST frame (Dst MAC: FF:FF:FF:FF:FF:FF). ALL devices must receive it!`);
+        setDev(SRC, 'dev-send');
+        await sleep(800);
+
+        setStatus(`📦 Broadcast frame travels to ${hubMode === 'hub' ? 'Hub' : 'Switch'}...`);
+        setCable(SRC, 'cable-broadcast');
+        await sendToHub(SRC, 'pkt0', 'pkt-bcast');
+        setHub('hub-broadcast');
+        await sleep(400);
+
+        setStatus(`${hubMode === 'hub' ? '🔀 Hub' : '🔌 Switch'} must flood broadcast to ALL ports — even a Switch always floods broadcasts!`);
+        await sleep(600);
+
+        const bcastAnim = [];
+        for (let i = 0; i < NUM_DEVS; i++) {
+            if (i === SRC) continue;
+            setCable(i, 'cable-broadcast');
+            setDev(i, 'dev-broadcast');
+            bcastAnim.push(sendFromHub(i, 'pkt' + (i < 3 ? i + 1 : i), 'pkt-bcast'));
+        }
+        await Promise.all(bcastAnim);
+        await sleep(600);
+        setStatus(`✅ BROADCAST complete! All 5 devices received and processed the frame. Note: Even a Switch floods broadcasts — this is called the <strong>Broadcast Domain</strong>. VLANs are used to control this!`);
+        await sleep(800);
+        resetAllState();
+
+    } else if (mode === 'fail') {
+        // PC-2 (index 1) cable/device fails
+        const FAIL = 1;
+        setStatus(`🔌 Simulating <strong>PC-2's cable unplugged</strong>... Watch what happens to the rest of the network.`);
+        await sleep(900);
+
+        failedDevices.add(FAIL);
+        setDev(FAIL, 'dev-fail');
+        setCable(FAIL, 'cable-fail');
+        setStatus(`❌ <strong>PC-2 is disconnected!</strong> Now watch PC-1 still communicating with Server normally...`);
+        await sleep(1000);
+
+        // Normal unicast PC-1 → Server while PC-2 is dead
+        const SRC = 0, DST = 5;
+        setDev(SRC, 'dev-send');
+        setCable(SRC, 'cable-active');
+        await sendToHub(SRC, 'pkt0', '');
+        setHub('hub-active');
+        await sleep(400);
+
+        if (hubMode === 'hub') {
+            for (let i = 0; i < NUM_DEVS; i++) {
+                if (i === SRC || i === FAIL) continue;
+                setCable(i, 'cable-active');
+                setDev(i, i === DST ? 'dev-recv' : 'dev-broadcast');
+            }
+            await Promise.all([...Array(NUM_DEVS).keys()].filter(i => i !== SRC && i !== FAIL).map(i =>
+                sendFromHub(i, 'pkt' + Math.min(i+1, 6), '')
+            ));
+        } else {
+            setCable(DST, 'cable-active');
+            setDev(DST, 'dev-recv');
+            await sendFromHub(DST, 'pkt1', '');
+        }
+
+        await sleep(400);
+        setStatus(`✅ <strong>Network continues working perfectly!</strong> PC-1 ↔ Server communication successful. PC-2's failure is completely isolated — this is Star Topology's biggest advantage over Bus Topology!`);
+        await sleep(1000);
+        failedDevices.clear();
+        resetAllState();
+
+    } else if (mode === 'hubfail') {
+        setStatus(`💀 Simulating <strong>${hubMode === 'hub' ? 'Hub' : 'Switch'} FAILURE</strong>... This is the single point of failure!`);
+        await sleep(900);
+
+        setHub('hub-fail');
+        document.getElementById('hubIcon').textContent = '💀';
+
+        for (let i = 0; i < NUM_DEVS; i++) {
+            setDev(i, 'dev-fail');
+            setCable(i, 'cable-fail');
+        }
+
+        setStatus(`❌ <strong>${hubMode === 'hub' ? 'Hub' : 'Switch'} is DOWN!</strong> ALL 6 devices lost network connectivity instantly. This is the critical weakness of Star Topology — the central device is a single point of failure. Solution: Redundant switches with STP/LACP!`);
+        await sleep(2500);
+
+        // Restore
+        document.getElementById('hubIcon').textContent = hubMode === 'hub' ? '🔀' : '🔌';
+        resetAllState();
+        setHub(null);
+        setStatus(`🔄 Network restored. In enterprise networks, <strong>redundant switches</strong> are always used to avoid this single point of failure!`);
+    }
+
+    starAnimating = false;
+    lockBtns(false);
+}
+
+function starReset() {
+    starAnimating = false;
+    lockBtns(false);
+    failedDevices.clear();
+    document.getElementById('hubIcon').textContent = hubMode === 'hub' ? '🔀' : '🔌';
+    resetAllState();
+    // hide all packets
+    for (let i = 0; i <= 6; i++) {
+        const p = document.getElementById('pkt' + i);
+        if (p) p.style.opacity = '0';
+    }
+    setStatus('👆 Click a button above to start the simulation!');
+}
+</script>
+</body>
+</html>

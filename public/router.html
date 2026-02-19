@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router - Network Device | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Router Illustration */
+        .router-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        /* Central Router */
+        .router-device {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            animation: routerPulse 3s infinite;
+            box-shadow: 0 0 60px rgba(240, 147, 251, 0.8);
+            z-index: 10;
+        }
+
+        .router-label {
+            position: absolute;
+            bottom: -35px;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: bold;
+            background: rgba(240, 147, 251, 0.3);
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        /* Router Ports */
+        .router-port {
+            position: absolute;
+            width: 40px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 3px;
+            animation: portBlink 2s infinite;
+        }
+
+        .router-port:nth-child(2) { top: 45%; left: 50%; transform: translate(-150px, -50%); }
+        .router-port:nth-child(3) { top: 45%; left: 50%; transform: translate(110px, -50%); }
+        .router-port:nth-child(4) { top: 50%; left: 50%; transform: translate(-50%, -80px); }
+        .router-port:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, 70px); }
+
+        /* Connected Devices */
+        .network-device {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            animation: deviceFloat 4s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .network-device:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.9);
+        }
+
+        .device-label {
+            position: absolute;
+            bottom: -30px;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 600;
+            background: rgba(102, 126, 234, 0.3);
+            padding: 4px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        /* Position devices around router */
+        .network-device:nth-child(6) { 
+            top: 8%; 
+            left: 15%; 
+            animation-delay: 0s; 
+        }
+        .network-device:nth-child(7) { 
+            top: 8%; 
+            right: 15%; 
+            animation-delay: 0.5s; 
+        }
+        .network-device:nth-child(8) { 
+            top: 45%; 
+            left: 5%; 
+            animation-delay: 1s; 
+        }
+        .network-device:nth-child(9) { 
+            top: 45%; 
+            right: 5%; 
+            animation-delay: 1.5s; 
+        }
+        .network-device:nth-child(10) { 
+            bottom: 12%; 
+            left: 20%; 
+            animation-delay: 2s; 
+        }
+        .network-device:nth-child(11) { 
+            bottom: 12%; 
+            right: 20%; 
+            animation-delay: 2.5s; 
+        }
+
+        /* Signal waves from router */
+        .signal-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid rgba(240, 147, 251, 0.4);
+            border-radius: 50%;
+            animation: waveExpand 3s infinite;
+        }
+
+        .signal-wave:nth-child(12) { 
+            width: 250px; 
+            height: 250px; 
+            animation-delay: 0s; 
+        }
+        .signal-wave:nth-child(13) { 
+            width: 350px; 
+            height: 350px; 
+            animation-delay: 0.7s; 
+        }
+        .signal-wave:nth-child(14) { 
+            width: 450px; 
+            height: 450px; 
+            animation-delay: 1.4s; 
+        }
+
+        /* Data packets - to each device */
+        .data-packet {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        }
+
+        /* Packet to Laptop (top left) */
+        .data-packet:nth-child(15) { 
+            animation: packetToLaptop 3s infinite;
+            animation-delay: 0s;
+        }
+
+        /* Packet to Desktop (top right) */
+        .data-packet:nth-child(16) { 
+            animation: packetToDesktop 3s infinite;
+            animation-delay: 0.5s;
+        }
+
+        /* Packet to Smartphone (middle right) */
+        .data-packet:nth-child(17) { 
+            animation: packetToPhone 3s infinite;
+            animation-delay: 1s;
+        }
+
+        /* Packet to Smart TV (bottom right) */
+        .data-packet:nth-child(18) { 
+            animation: packetToTV 3s infinite;
+            animation-delay: 1.5s;
+        }
+
+        /* Packet to Gaming Console (bottom left) */
+        .data-packet:nth-child(19) { 
+            animation: packetToConsole 3s infinite;
+            animation-delay: 2s;
+        }
+
+        /* Packet to Printer (middle left) */
+        .data-packet:nth-child(20) { 
+            animation: packetToPrinter 3s infinite;
+            animation-delay: 2.5s;
+        }
+
+        /* Wired connection line (for Desktop - Ethernet cable) */
+        .wired-connection {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #f5576c, #667eea);
+            animation: wiredPulse 2s infinite;
+            z-index: 5;
+        }
+
+        .wired-desktop {
+            top: 50%;
+            left: 50%;
+            width: 180px;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            transform-origin: left center;
+        }
+
+        /* Wireless indicator icons */
+        .wireless-icon {
+            position: absolute;
+            font-size: 1.2rem;
+            color: #667eea;
+            animation: wirelessBlink 2s infinite;
+            z-index: 11;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .info-card:hover::after {
+            opacity: 1;
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: left;
+            margin: 0;
+        }
+
+        /* Examples Grid */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .example-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .example-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .example-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .example-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .example-details strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Workflow Timeline */
+        .workflow-timeline {
+            position: relative;
+            padding: 40px 0;
+            margin: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            width: 45%;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            animation: slideIn 0.6s ease;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+            z-index: 10;
+        }
+
+        .timeline-content h4 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: #d0d0d0;
+            margin: 0;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Router Types Grid */
+        .router-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .router-type-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 35px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .router-type-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .router-type-card:hover::before {
+            opacity: 1;
+        }
+
+        .router-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        .router-type-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .router-type-card h3 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #d0d0d0;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: #667eea;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        @keyframes routerPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 60px rgba(240, 147, 251, 0.8);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 90px rgba(240, 147, 251, 1);
+            }
+        }
+
+        @keyframes deviceFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes portBlink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; box-shadow: 0 0 15px #667eea; }
+        }
+
+        @keyframes packetFlow {
+            0% { 
+                top: 50%; 
+                left: 50%; 
+                opacity: 0; 
+            }
+            20% { opacity: 1; }
+            50% {
+                top: 15%;
+                left: 20%;
+            }
+            80% { opacity: 1; }
+            100% { 
+                top: 10%; 
+                left: 18%; 
+                opacity: 0; 
+            }
+        }
+
+        /* Packet animations to each device */
+        @keyframes packetToLaptop {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 15%; left: 18%; }
+            90% { opacity: 1; }
+            100% { top: 8%; left: 15%; opacity: 0; }
+        }
+
+        @keyframes packetToDesktop {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 15%; left: 82%; }
+            90% { opacity: 1; }
+            100% { top: 8%; right: 15%; opacity: 0; }
+        }
+
+        @keyframes packetToPhone {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 48%; left: 85%; }
+            90% { opacity: 1; }
+            100% { top: 45%; right: 5%; opacity: 0; }
+        }
+
+        @keyframes packetToTV {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 75%; left: 80%; }
+            90% { opacity: 1; }
+            100% { bottom: 12%; right: 20%; opacity: 0; }
+        }
+
+        @keyframes packetToConsole {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 75%; left: 22%; }
+            90% { opacity: 1; }
+            100% { bottom: 12%; left: 20%; opacity: 0; }
+        }
+
+        @keyframes packetToPrinter {
+            0% { top: 50%; left: 50%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { top: 48%; left: 15%; }
+            90% { opacity: 1; }
+            100% { top: 45%; left: 5%; opacity: 0; }
+        }
+
+        @keyframes wiredPulse {
+            0%, 100% { 
+                opacity: 0.5;
+                box-shadow: 0 0 5px #667eea;
+            }
+            50% { 
+                opacity: 1;
+                box-shadow: 0 0 15px #667eea;
+            }
+        }
+
+        @keyframes wirelessBlink {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .section { padding: 25px; }
+            .section h2 { font-size: 1.8rem; }
+            .nav-container { flex-direction: column; }
+            .nav-buttons { justify-content: center; }
+            
+            .timeline-line { left: 30px; }
+            .timeline-item {
+                flex-direction: row !important;
+                padding-left: 60px;
+            }
+            .timeline-content {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .timeline-dot { left: 30px !important; }
+            
+            .router-illustration { min-height: 500px; }
+            .router-device { width: 140px; height: 100px; font-size: 3rem; }
+            .network-device { width: 70px; height: 70px; font-size: 2rem; }
+            .router-types-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Networking Hub</a>
+            <div class="nav-buttons">
+                <!--<a href="what-is-network.html" class="nav-btn">Network Basics</a>-->
+                <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>📡 Router - The Traffic Director</h1>
+                <p class="hero-subtitle">The Brain of Your Network - Directing Data to Its Destination</p>
+                <span class="hero-badge">Network Layer 3 Device</span>
+                <span class="hero-badge">IP Address Management</span>
+                <span class="hero-badge">Essential Device</span>
+            </div>
+        </section>
+
+        <!-- Introduction & Definition -->
+        <section class="section">
+            <h2>📖 What is a Router?</h2>
+            <p>
+                A <strong>Router</strong> is a networking device that forwards data packets between computer networks. 
+                It operates at Layer 3 (Network Layer) of the OSI model and makes intelligent decisions about the best 
+                path for data to travel from source to destination. Think of it as the traffic controller or GPS of 
+                your network - it determines which route data should take to reach its destination efficiently.
+            </p>
+
+            <div class="example-box">
+                <strong>🎯 Simple Definition:</strong>
+                A router is like a smart post office manager! When you send a letter (data packet), the router reads 
+                the address (IP address), determines the best route to send it, and forwards it to the next stop on 
+                its journey. Just as a post office connects your home to addresses worldwide, a router connects your 
+                local network to the Internet and other networks. It's the device that makes it possible for you to 
+                browse websites, stream videos, and communicate globally!
+            </div>
+
+            <p>
+                Routers are found everywhere - in your home (that Wi-Fi box from your ISP), in offices, in data centers, 
+                and throughout the Internet backbone. They perform critical functions: connecting your local network to 
+                the Internet, assigning IP addresses to devices (DHCP), providing security (firewall), enabling Wi-Fi, 
+                and managing network traffic. Without routers, the Internet as we know it couldn't exist!
+            </p>
+
+            <div class="highlight-box">
+                <h3>🌟 Why Routers Are Essential?</h3>
+                <ul>
+                    <li><strong>Internet Gateway:</strong> Your primary connection to the outside world and the Internet</li>
+                    <li><strong>Network Separation:</strong> Keeps your home/office network separate and secure from the Internet</li>
+                    <li><strong>Traffic Management:</strong> Directs data packets efficiently, preventing network congestion</li>
+                    <li><strong>IP Address Management:</strong> Automatically assigns IP addresses to all your devices (DHCP)</li>
+                    <li><strong>Security:</strong> Built-in firewall protects your network from external threats</li>
+                    <li><strong>Multi-Device Support:</strong> Allows dozens of devices to share one Internet connection</li>
+                </ul>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">Layer 3</div>
+                    <div class="stat-label">OSI Model Layer</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">IP</div>
+                    <div class="stat-label">Works with Addresses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Billions</div>
+                    <div class="stat-label">Routers Worldwide</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">< 1 ms</div>
+                    <div class="stat-label">Forwarding Delay</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">NAT/PAT</div>
+                    <div class="stat-label">Address Translation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">DHCP</div>
+                    <div class="stat-label">Auto IP Assignment</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Router Illustration -->
+        <section class="section">
+            <h2>🏗️ Visual Representation: How Router Connects Everything</h2>
+            <p style="text-align: center; margin-bottom: 30px;">
+                Here's how a router sits at the center, connecting multiple devices and managing traffic:
+            </p>
+
+            <div class="router-illustration">
+                <!-- Router Ports -->
+                <div class="router-port"></div>
+                <div class="router-port"></div>
+                <div class="router-port"></div>
+                <div class="router-port"></div>
+
+                <!-- Central Router -->
+                <div class="router-device">
+                    📡
+                    <div class="router-label">ROUTER</div>
+                </div>
+
+                <!-- Wired Connection to Desktop (Ethernet Cable) -->
+                <div class="wired-connection wired-desktop"></div>
+
+                <!-- Connected Devices -->
+                <div class="network-device">
+                    💻
+                    <div class="device-label">Laptop (Wi-Fi)</div>
+                    <div class="wireless-icon" style="top: -15px; right: -15px;">📶</div>
+                </div>
+                <div class="network-device">
+                    🖥️
+                    <div class="device-label">Desktop (Wired)</div>
+                    <div style="position: absolute; top: -15px; right: -15px; font-size: 1.2rem;">🔌</div>
+                </div>
+                <div class="network-device">
+                    📱
+                    <div class="device-label">Phone (Wi-Fi)</div>
+                    <div class="wireless-icon" style="top: -15px; right: -15px;">📶</div>
+                </div>
+                <div class="network-device">
+                    📺
+                    <div class="device-label">Smart TV (Wi-Fi)</div>
+                    <div class="wireless-icon" style="top: -15px; right: -15px;">📶</div>
+                </div>
+                <div class="network-device">
+                    🎮
+                    <div class="device-label">Console (Wired)</div>
+                    <div style="position: absolute; top: -15px; right: -15px; font-size: 1.2rem;">🔌</div>
+                </div>
+                <div class="network-device">
+                    🖨️
+                    <div class="device-label">Printer (Wi-Fi)</div>
+                    <div class="wireless-icon" style="top: -15px; right: -15px;">📶</div>
+                </div>
+
+                <!-- Signal Waves -->
+                <div class="signal-wave"></div>
+                <div class="signal-wave"></div>
+                <div class="signal-wave"></div>
+
+                <!-- Data Packets - Now going to ALL devices! -->
+                <div class="data-packet"></div> <!-- To Laptop -->
+                <div class="data-packet"></div> <!-- To Desktop -->
+                <div class="data-packet"></div> <!-- To Phone -->
+                <div class="data-packet"></div> <!-- To TV -->
+                <div class="data-packet"></div> <!-- To Console -->
+                <div class="data-packet"></div> <!-- To Printer -->
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Key Observations:</h3>
+                <ul>
+                    <li><strong>Central Hub:</strong> Router sits at the heart, connecting all devices to each other and the Internet</li>
+                    <li><strong>Wired Connections (🔌):</strong> Desktop and Gaming Console use Ethernet cables - shown with blue pulsing line</li>
+                    <li><strong>Wireless Connections (📶):</strong> Laptop, Phone, TV, and Printer use Wi-Fi - shown with signal icon</li>
+                    <li><strong>Multiple Ports:</strong> Router has both physical Ethernet ports and wireless radios</li>
+                    <li><strong>Signal Waves:</strong> Expanding circles show Wi-Fi broadcast coverage</li>
+                    <li><strong>Data Packets:</strong> Watch 6 white dots - each going to different device simultaneously!</li>
+                    <li><strong>Two Networks:</strong> Router separates your private home network from the public Internet</li>
+                    <li><strong>All Traffic Passes Through:</strong> Every data packet going in or out goes through the router</li>
+                    <li><strong>Wired = Faster & Stable:</strong> Desktop and Console get best performance with cables</li>
+                    <li><strong>Wireless = Convenience:</strong> Mobile devices and printers use Wi-Fi for flexibility</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- How Router Works -->
+        <section class="section">
+            <h2>⚙️ How Does a Router Work? - Step-by-Step Process</h2>
+            <p>
+                Let's understand exactly how a router processes and forwards data using a practical example: 
+                You browsing YouTube on your laptop at home.
+            </p>
+
+            <div class="workflow-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <h4>💻 Device Sends Request</h4>
+                        <p>
+                            You type "youtube.com" in your browser and press Enter. Your laptop creates a data packet 
+                            containing: (1) Source IP address (your laptop's local IP like 192.168.1.5), (2) Destination 
+                            IP address (YouTube's server IP), (3) The actual request (HTTP GET request). Your laptop 
+                            knows it needs to send this to the router (default gateway: 192.168.1.1).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <h4>📨 Packet Arrives at Router</h4>
+                        <p>
+                            The packet reaches the router either via Wi-Fi or Ethernet cable. Router receives it on its 
+                            LAN interface (the interface connected to your home network). Router examines the packet's 
+                            headers to understand: Where did it come from? Where does it need to go? What type of traffic 
+                            is it?
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <h4>🔍 Routing Table Lookup</h4>
+                        <p>
+                            Router checks its routing table - a list of known networks and how to reach them. For 
+                            YouTube's IP, router finds entry: "To reach external IPs, send via WAN interface to ISP." 
+                            Routing table is like a GPS map showing all possible routes. Router picks the best path 
+                            based on metrics (speed, reliability, cost).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <h4>🔄 NAT Translation (Critical Step!)</h4>
+                        <p>
+                            Your laptop's private IP (192.168.1.5) won't work on the Internet! Router performs Network 
+                            Address Translation (NAT): Replaces your private IP with router's public IP (e.g., 
+                            203.0.113.45), Creates a mapping in NAT table (remembers this connection), Assigns a unique 
+                            port number. Now packet appears to come from router, not your laptop!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">5</div>
+                    <div class="timeline-content">
+                        <h4>🚀 Packet Forwarded to Internet</h4>
+                        <p>
+                            Router sends the modified packet out its WAN interface (the connection to your ISP). Packet 
+                            now has: Source IP: Router's public IP (203.0.113.45:54321), Destination IP: YouTube's server. 
+                            Packet travels through ISP's network, then Internet backbone, finally reaching YouTube's 
+                            data center. This journey might cross multiple routers!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">6</div>
+                    <div class="timeline-content">
+                        <h4>📥 Response Comes Back</h4>
+                        <p>
+                            YouTube's server processes request and sends back website data (HTML, CSS, images). Response 
+                            packet has: Source IP: YouTube's server, Destination IP: Router's public IP (203.0.113.45:54321). 
+                            Packet travels back through Internet to your router. Can take different path than outgoing 
+                            packet - routing is dynamic!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">7</div>
+                    <div class="timeline-content">
+                        <h4>🔄 Reverse NAT Translation</h4>
+                        <p>
+                            Router receives response on WAN interface. Checks NAT table: "Port 54321 belongs to 
+                            192.168.1.5 (your laptop)". Router performs reverse NAT: Replaces destination IP from 
+                            router's public IP to your laptop's private IP (192.168.1.5), Removes port number mapping. 
+                            Packet now properly addressed to your laptop!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">8</div>
+                    <div class="timeline-content">
+                        <h4>📬 Delivery to Your Device</h4>
+                        <p>
+                            Router forwards packet to your laptop via LAN interface (Wi-Fi or Ethernet). Uses your 
+                            laptop's MAC address for final delivery on local network. Your laptop receives the packet, 
+                            extracts YouTube's website data, and your browser displays the page! All this happens in 
+                            100-200 milliseconds!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">9</div>
+                    <div class="timeline-content">
+                        <h4>🔥 Firewall Protection (Continuous)</h4>
+                        <p>
+                            Throughout this entire process, router's firewall is actively protecting you. Blocks 
+                            unsolicited incoming connections (prevents hackers), Allows only responses to YOUR requests, 
+                            Filters malicious traffic based on rules, Prevents internal devices from being directly 
+                            accessible from Internet. This is why home routers are also called "firewalls"!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">10</div>
+                    <div class="timeline-content">
+                        <h4>📊 Traffic Management & QoS</h4>
+                        <p>
+                            Router continuously manages all devices' traffic simultaneously. Prioritizes certain traffic 
+                            (video calls over file downloads), Prevents any one device from hogging bandwidth, Manages 
+                            queues when network is busy, Tracks statistics for all connections. Your router might be 
+                            handling hundreds of connections from multiple devices at the same time!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔬 Technical Magic - What Makes Routers Smart?</h3>
+                <ul>
+                    <li><strong>Routing Protocols:</strong> RIP, OSPF, BGP help routers automatically learn best paths 
+                    and adapt to network changes in real-time.</li>
+                    <li><strong>Packet Inspection:</strong> Router examines every packet header (not contents) to make 
+                    forwarding decisions - happens in microseconds!</li>
+                    <li><strong>Caching:</strong> Recently used routes are cached in fast memory for even quicker lookups. 
+                    Hot paths are prioritized.</li>
+                    <li><strong>Load Balancing:</strong> If multiple paths exist to destination, router can split traffic 
+                    across them for better performance.</li>
+                    <li><strong>DHCP Server:</strong> Router automatically assigns IP addresses to new devices, manages 
+                    IP leases, and prevents conflicts.</li>
+                    <li><strong>DNS Relay:</strong> Router forwards DNS queries to ISP's DNS servers, often caches 
+                    results for faster repeated lookups.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Router Types -->
+        <section class="section">
+            <h2>🔧 Types of Routers</h2>
+            <p>
+                Routers come in different forms for different purposes and scales:
+            </p>
+
+            <div class="router-types-grid">
+                <div class="router-type-card">
+                    <span class="router-type-icon">🏠</span>
+                    <h3>Home/SOHO Router</h3>
+                    <p style="margin-bottom: 20px;">
+                        The most common type - the device you have at home from your ISP. Combines router, switch, 
+                        Wi-Fi access point, and firewall in one box. Connects your home devices to the Internet.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Ports:</strong> 4-8 Ethernet ports + Wi-Fi</li>
+                            <li><strong>Speed:</strong> 100 Mbps - 1 Gbps WAN</li>
+                            <li><strong>Devices:</strong> Supports 20-50 simultaneous connections</li>
+                            <li><strong>Functions:</strong> Router + Switch + WAP + Firewall + DHCP</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            TP-Link Archer, Netgear Nighthawk, Asus RT-series, Linksys WRT, Google Nest WiFi, 
+                            ISP-provided routers (Xfinity, AT&T Gateway)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="router-type-card">
+                    <span class="router-type-icon">🏢</span>
+                    <h3>Enterprise/Business Router</h3>
+                    <p style="margin-bottom: 20px;">
+                        Professional-grade routers for offices and businesses. More powerful hardware, advanced 
+                        features, higher reliability. Can handle hundreds of users and complex network configurations.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Capacity:</strong> 100-1000+ users</li>
+                            <li><strong>Speed:</strong> 1-10 Gbps throughput</li>
+                            <li><strong>Advanced:</strong> VPN, QoS, VLANs, multiple WANs</li>
+                            <li><strong>Reliability:</strong> 24/7 operation, redundancy options</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Cisco ISR series, Juniper MX series, Ubiquiti EdgeRouter, MikroTik RouterBOARD, 
+                            Fortinet FortiGate (with firewall)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="router-type-card">
+                    <span class="router-type-icon">🌐</span>
+                    <h3>Core/Backbone Router</h3>
+                    <p style="margin-bottom: 20px;">
+                        Massive routers in ISP and carrier networks that handle Internet backbone traffic. Process 
+                        millions of packets per second. These routers interconnect entire networks and make the 
+                        Internet work globally.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Throughput:</strong> 100 Gbps - 400 Tbps!</li>
+                            <li><strong>Scale:</strong> Millions of routes in routing table</li>
+                            <li><strong>Reliability:</strong> 99.999% uptime required</li>
+                            <li><strong>Protocols:</strong> BGP, MPLS, sophisticated routing</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Cisco CRS series, Juniper PTX series, Nokia/Alcatel-Lucent routers used by AT&T, 
+                            Verizon, Level 3, Cogent, and other Tier 1 ISPs
+                        </p>
+                    </div>
+                </div>
+
+                <div class="router-type-card">
+                    <span class="router-type-icon">🛰️</span>
+                    <h3>Wireless Router (Wi-Fi 6/6E/7)</h3>
+                    <p style="margin-bottom: 20px;">
+                        Modern routers with latest Wi-Fi standards. Support faster speeds, more devices, better range. 
+                        Include features like beamforming, MU-MIMO, mesh networking capabilities.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Wi-Fi 6:</strong> Up to 9.6 Gbps theoretical speed</li>
+                            <li><strong>Wi-Fi 6E:</strong> 6 GHz band support</li>
+                            <li><strong>MU-MIMO:</strong> Simultaneous device communication</li>
+                            <li><strong>Mesh:</strong> Can be part of whole-home mesh system</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Asus RT-AXE7800 (Wi-Fi 6E), Netgear Nighthawk RAXE500, TP-Link Archer AXE75, 
+                            Eero Pro 6E mesh system
+                        </p>
+                    </div>
+                </div>
+
+                <div class="router-type-card">
+                    <span class="router-type-icon">📱</span>
+                    <h3>Mobile/Cellular Router</h3>
+                    <p style="margin-bottom: 20px;">
+                        Uses cellular networks (4G/5G) instead of wired Internet connection. Great for temporary 
+                        setups, remote locations, backup connectivity, or where cable/DSL isn't available.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Connection:</strong> 4G LTE or 5G cellular</li>
+                            <li><strong>Portable:</strong> Battery-powered or plug-in</li>
+                            <li><strong>Backup:</strong> Can failover if main Internet dies</li>
+                            <li><strong>Flexible:</strong> Works anywhere with cell signal</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Netgear Nighthawk M6 Pro, TP-Link MR600, Huawei 5G CPE Pro, Verizon MiFi hotspots, 
+                            T-Mobile 5G Home Internet Gateway
+                        </p>
+                    </div>
+                </div>
+
+                <div class="router-type-card">
+                    <span class="router-type-icon">🔀</span>
+                    <h3>Virtual Router (Software-Defined)</h3>
+                    <p style="margin-bottom: 20px;">
+                        Router functionality implemented in software running on general-purpose servers or virtual 
+                        machines. Used in cloud environments and modern software-defined networks (SDN).
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Features:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Flexible:</strong> Easy to deploy, configure, scale</li>
+                            <li><strong>Cost:</strong> Lower than dedicated hardware</li>
+                            <li><strong>Cloud-Ready:</strong> Perfect for AWS, Azure, GCP</li>
+                            <li><strong>Programmable:</strong> Full API control</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Examples:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            pfSense, VyOS, Cisco CSR 1000V, Juniper vMX, VPN server software, 
+                            AWS Virtual Private Gateway
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-World Examples -->
+        <section class="section">
+            <h2>🌍 Real-World Router Usage</h2>
+            <p>
+                Let's explore how routers are used in everyday life across different scenarios:
+            </p>
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <span class="example-icon">🏠</span>
+                    <h4>Home Internet Connection</h4>
+                    <p>
+                        The most common use - your ISP provides a router (or modem-router combo) that connects all 
+                        your home devices to the Internet. Family members use laptops, phones, tablets, smart TV, 
+                        gaming consoles - all sharing one Internet connection through the router.
+                    </p>
+                    <div class="example-details">
+                        <strong>Setup:</strong> ISP modem/router → All home devices
+                        <br><strong>Devices:</strong> 10-30 simultaneously (phones, laptops, IoT)
+                        <br><strong>Functions:</strong> Internet access, Wi-Fi, device communication
+                        <br><strong>Speed:</strong> 50-1000 Mbps depending on plan
+                        <br><strong>Why Router Matters:</strong> Without it, only ONE device could connect!
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏢</span>
+                    <h4>Office Network</h4>
+                    <p>
+                        Businesses use routers to connect employee workstations to Internet and company servers. 
+                        Router provides security (firewall), manages bandwidth, enables VPN for remote workers, 
+                        and interconnects different office departments.
+                    </p>
+                    <div class="example-details">
+                        <strong>Setup:</strong> ISP → Enterprise Router → Switches → Employee devices
+                        <br><strong>Users:</strong> 50-500+ employees
+                        <br><strong>Features:</strong> VLANs, QoS, VPN, multi-WAN, redundancy
+                        <br><strong>Importance:</strong> Business operations depend on router uptime
+                        <br><strong>Example:</strong> Cisco router managing entire office connectivity
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">☕</span>
+                    <h4>Coffee Shop Public Wi-Fi</h4>
+                    <p>
+                        Cafes and restaurants provide free Wi-Fi to customers. Router broadcasts guest network, 
+                        isolates customer traffic from business network, limits bandwidth per user, and displays 
+                        login/terms page (captive portal).
+                    </p>
+                    <div class="example-details">
+                        <strong>Setup:</strong> Business router with guest network isolation
+                        <br><strong>Users:</strong> 20-100 customers daily
+                        <br><strong>Security:</strong> Separate VLAN for guests, bandwidth limiting
+                        <br><strong>Features:</strong> Captive portal, usage time limits
+                        <br><strong>Goal:</strong> Provide Internet while protecting business network
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏫</span>
+                    <h4>School/University Network</h4>
+                    <p>
+                        Educational institutions use routers to provide Internet access across campus, enable online 
+                        learning, connect computer labs, and implement content filtering. Must handle thousands of 
+                        students simultaneously.
+                    </p>
+                    <div class="example-details">
+                        <strong>Scale:</strong> 1000-50,000+ users across campus
+                        <br><strong>Setup:</strong> Core routers → Building routers → Classroom APs
+                        <br><strong>Requirements:</strong> Content filtering, authentication, high bandwidth
+                        <br><strong>Challenges:</strong> Student download traffic, video streaming load
+                        <br><strong>Solution:</strong> Multiple enterprise routers with load balancing
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏥</span>
+                    <h4>Hospital Network</h4>
+                    <p>
+                        Hospitals need ultra-reliable routers for life-critical systems. Connect medical equipment, 
+                        patient records (EHR), imaging systems, VoIP phones. Network downtime could endanger lives, 
+                        so redundancy is crucial.
+                    </p>
+                    <div class="example-details">
+                        <strong>Requirements:</strong> 99.999% uptime, redundancy, security
+                        <br><strong>Devices:</strong> Medical equipment, patient monitors, workstations
+                        <br><strong>Regulations:</strong> HIPAA compliance for patient data
+                        <br><strong>Setup:</strong> Dual routers with automatic failover
+                        <br><strong>Priority:</strong> Medical devices get QoS priority over guest Wi-Fi
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏪</span>
+                    <h4>Retail Store Network</h4>
+                    <p>
+                        Stores use routers to connect POS (Point of Sale) terminals, inventory systems, security 
+                        cameras, and guest Wi-Fi. Must securely process credit card transactions and sync with 
+                        corporate headquarters.
+                    </p>
+                    <div class="example-details">
+                        <strong>Connections:</strong> POS systems, inventory scanners, cameras
+                        <br><strong>Security:</strong> PCI-DSS compliance for payment data
+                        <br><strong>Reliability:</strong> Can't process sales if network is down!
+                        <br><strong>VPN:</strong> Secure tunnel to corporate HQ for transactions
+                        <br><strong>Example:</strong> Walmart stores each have enterprise routers
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🚗</span>
+                    <h4>Vehicle Wi-Fi Hotspot</h4>
+                    <p>
+                        Modern cars have built-in cellular routers providing Wi-Fi hotspot for passengers. Uses 
+                        4G/5G connection to Internet. Family can stream videos on long road trips, navigation stays 
+                        updated, and car systems can receive OTA updates.
+                    </p>
+                    <div class="example-details">
+                        <strong>Technology:</strong> 4G LTE or 5G cellular router
+                        <br><strong>Use Case:</strong> Passenger entertainment, navigation, car updates
+                        <br><strong>Devices:</strong> Phones, tablets, laptops connect via Wi-Fi
+                        <br><strong>Examples:</strong> GM OnStar, BMW ConnectedDrive, Tesla connectivity
+                        <br><strong>Speed:</strong> 10-100 Mbps depending on cellular coverage
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏗️</span>
+                    <h4>Construction Site Connectivity</h4>
+                    <p>
+                        Temporary job sites need Internet for project management, equipment tracking, security cameras. 
+                        Cellular routers provide quick setup without waiting for ISP installation. Can be moved as 
+                        project progresses.
+                    </p>
+                    <div class="example-details">
+                        <strong>Solution:</strong> Mobile 4G/5G router with outdoor antenna
+                        <br><strong>Duration:</strong> Months to years (project length)
+                        <br><strong>Benefits:</strong> No installation wait, relocatable
+                        <br><strong>Users:</strong> Project managers, contractors, equipment
+                        <br><strong>Example:</strong> Netgear M6 with outdoor antenna at construction site
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏕️</span>
+                    <h4>Remote Work / Digital Nomad</h4>
+                    <p>
+                        People working from anywhere use portable routers. Connects laptop via cellular or shares 
+                        phone's connection. Essential for remote workers, freelancers, and travelers who need reliable 
+                        Internet wherever they go.
+                    </p>
+                    <div class="example-details">
+                        <strong>Devices:</strong> Portable 4G/5G hotspot routers
+                        <br><strong>Scenarios:</strong> Coffee shops, co-working spaces, travel
+                        <br><strong>Features:</strong> Battery-powered, pocket-sized, VPN support
+                        <br><strong>Examples:</strong> GlocalMe, Skyroam, carrier hotspots (Verizon MiFi)
+                        <br><strong>Users:</strong> Digital nomads, freelancers, traveling professionals
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🎮</span>
+                    <h4>Gaming Setup</h4>
+                    <p>
+                        Serious gamers use gaming routers with QoS that prioritizes gaming traffic over other activities. 
+                        Reduces lag, enables port forwarding for game servers, provides wired Ethernet for lowest latency, 
+                        and manages bandwidth when others are streaming.
+                    </p>
+                    <div class="example-details">
+                        <strong>Router Type:</strong> Gaming router with QoS (Asus ROG, Netgear XR)
+                        <br><strong>Priority:</strong> Gaming packets sent first before downloads
+                        <br><strong>Connection:</strong> Wired Ethernet to PC/console preferred
+                        <br><strong>Features:</strong> Port forwarding, DDoS protection, WTFast VPN
+                        <br><strong>Goal:</strong> Minimum ping, zero lag, stable connection
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏠</span>
+                    <h4>Smart Home Hub</h4>
+                    <p>
+                        Modern homes have dozens of IoT devices: smart lights, thermostats, security cameras, voice 
+                        assistants, smart locks. Router connects all these to Internet and each other. Many smart home 
+                        systems integrate directly with certain routers.
+                    </p>
+                    <div class="example-details">
+                        <strong>Devices:</strong> 30-100+ IoT devices in smart homes
+                        <br><strong>Protocols:</strong> Wi-Fi, Zigbee, Z-Wave (some routers support these)
+                        <br><strong>Security:</strong> IoT devices on separate guest network
+                        <br><strong>Examples:</strong> Eero routers with smart home integration
+                        <br><strong>Importance:</strong> Router reliability affects entire smart home
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">📹</span>
+                    <h4>Video Surveillance System</h4>
+                    <p>
+                        Security cameras connect to router (wired or Wi-Fi) and stream video to NVR or cloud. Router 
+                        provides port forwarding for remote viewing, manages upload bandwidth for cloud storage, and 
+                        keeps cameras accessible 24/7.
+                    </p>
+                    <div class="example-details">
+                        <strong>Setup:</strong> IP Cameras → Router → NVR/Cloud storage
+                        <br><strong>Bandwidth:</strong> Each HD camera uses 2-8 Mbps upload
+                        <br><strong>PoE:</strong> Some routers power cameras via Ethernet
+                        <br><strong>Remote Access:</strong> Port forwarding or VPN for viewing
+                        <br><strong>Reliability:</strong> UPS backup keeps recording during power outage
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Router Functions -->
+        <section class="section">
+            <h2>🛠️ Key Functions of a Router</h2>
+            <p>
+                Routers perform multiple critical functions simultaneously:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">📍</span>
+                    <h4>Packet Forwarding</h4>
+                    <p>
+                        Core function - examining destination IP address in each packet and forwarding it toward 
+                        destination. Uses routing table to determine best path. Happens for every single packet at 
+                        wire speed (millions per second in backbone routers).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>NAT/PAT (Network Address Translation)</h4>
+                    <p>
+                        Allows multiple devices with private IPs (192.168.x.x) to share one public IP address. 
+                        Maintains translation table mapping internal IPs to external IP+port. Essential because 
+                        IPv4 addresses are scarce. Without NAT, you'd need unique public IP for each device!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>DHCP Server</h4>
+                    <p>
+                        Automatically assigns IP addresses to devices joining network. Manages IP address pool, 
+                        leases, and renewals. Provides subnet mask, default gateway, DNS servers. Without DHCP, 
+                        you'd have to manually configure IP on every device - tedious and error-prone!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔥</span>
+                    <h4>Firewall Protection</h4>
+                    <p>
+                        Blocks unauthorized access from Internet to your network. Stateful inspection tracks 
+                        connections. Allows outgoing connections but blocks unsolicited incoming ones. Protects 
+                        against port scans, hacking attempts, malware. First line of defense for home/office networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Quality of Service (QoS)</h4>
+                    <p>
+                        Prioritizes certain types of traffic over others. Video calls get priority over file downloads. 
+                        Gaming packets sent before email. Prevents buffering during streaming when others are downloading. 
+                        Essential for good user experience on busy networks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔀</span>
+                    <h4>Port Forwarding/DMZ</h4>
+                    <p>
+                        Allows external access to specific internal devices. Gamers use port forwarding for game 
+                        servers. Web servers in DMZ accessible from Internet. Security cameras accessible remotely. 
+                        Opens firewall for specific ports/devices while keeping rest protected.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔐</span>
+                    <h4>VPN Support</h4>
+                    <p>
+                        Many routers can act as VPN server or client. Remote workers VPN into office network securely. 
+                        Encrypts all traffic for privacy. Some routers connect to commercial VPN services (NordVPN, 
+                        ExpressVPN) to route all home traffic through VPN automatically.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Wi-Fi Access Point</h4>
+                    <p>
+                        Home routers include built-in wireless access point. Broadcasts SSID (network name), manages 
+                        wireless security (WPA3), handles channel selection, beam forming to focus signal toward 
+                        devices. Separate 2.4 GHz and 5 GHz bands for different device types.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌍</span>
+                    <h4>DNS Relay/Forwarder</h4>
+                    <p>
+                        Router receives DNS requests from devices (translate website names to IP addresses). Forwards 
+                        to ISP's DNS servers or custom DNS (Google 8.8.8.8, Cloudflare 1.1.1.1). Often caches results 
+                        for faster repeat lookups. Some routers block malicious domains.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h4>Traffic Monitoring & Logging</h4>
+                    <p>
+                        Routers track bandwidth usage per device, connection logs, failed login attempts. Helps 
+                        identify bandwidth hogs, troubleshoot issues, detect suspicious activity. Enterprise routers 
+                        send logs to central SIEM systems for security monitoring.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔢</span>
+                    <h4>VLAN Support</h4>
+                    <p>
+                        Virtual LANs separate network into logical segments. Guest Wi-Fi on separate VLAN from main 
+                        network. IoT devices isolated from computers. Departments in office on different VLANs. 
+                        Improves security and traffic management.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚖️</span>
+                    <h4>Load Balancing</h4>
+                    <p>
+                        Routers with multiple WAN ports can load-balance across connections. Combine two ISPs for 
+                        higher total bandwidth. Automatic failover if one connection dies. Distribute traffic 
+                        intelligently across links. Business continuity and performance.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Router vs Switch -->
+        <section class="section">
+            <h2>🔄 Router vs Switch - Key Differences</h2>
+            <p>
+                People often confuse routers and switches. Here's the clear difference:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Router</th>
+                        <th>Switch</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OSI Layer</strong></td>
+                        <td>Layer 3 (Network)</td>
+                        <td>Layer 2 (Data Link)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Works With</strong></td>
+                        <td>IP Addresses (192.168.1.5)</td>
+                        <td>MAC Addresses (AA:BB:CC:DD:EE:FF)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Function</strong></td>
+                        <td>Routes packets between different networks</td>
+                        <td>Forwards frames within same network</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Connects</strong></td>
+                        <td>Different networks (LAN to Internet)</td>
+                        <td>Devices on same network (LAN)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Intelligence</strong></td>
+                        <td>Routing table, path selection</td>
+                        <td>MAC address table</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NAT</strong></td>
+                        <td>Yes - translates private to public IPs</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firewall</strong></td>
+                        <td>Usually built-in</td>
+                        <td>No (unless Layer 3+ switch)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DHCP Server</strong></td>
+                        <td>Yes - assigns IPs</td>
+                        <td>No (just forwards DHCP)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Ports</strong></td>
+                        <td>4-8 LAN ports + 1 WAN port</td>
+                        <td>8-48 ports (all same network)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>Slower (more processing per packet)</td>
+                        <td>Faster (simple forwarding)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Broadcast Domain</strong></td>
+                        <td>Separates broadcast domains</td>
+                        <td>Single broadcast domain</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost</strong></td>
+                        <td>More expensive (more features)</td>
+                        <td>Cheaper (simpler device)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example</strong></td>
+                        <td>Your ISP-provided home router</td>
+                        <td>Ethernet switch connecting office computers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Analogy</strong></td>
+                        <td>Post office routing letters to different cities</td>
+                        <td>Sorting facility within one city</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>💡 Simple Rule of Thumb:</h3>
+                <p>
+                    <strong>Router:</strong> Connects DIFFERENT networks together (your home network to the Internet) 
+                    - works with IP addresses<br><br>
+                    <strong>Switch:</strong> Connects devices WITHIN SAME network (all computers in an office) 
+                    - works with MAC addresses<br><br>
+                    Most home "routers" are actually combo devices: Router + Switch + Wi-Fi AP + Firewall all in one box!
+                </p>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of Routers</h2>
+            <p>
+                Routers provide numerous benefits that make modern networking possible:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Internet Connectivity</h4>
+                    <p>
+                        Primary gateway to the Internet for homes and offices. Without routers, we couldn't access 
+                        the global network. Manages complex routing to deliver data across the world. Fundamental 
+                        building block of Internet infrastructure.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🤝</span>
+                    <h4>Resource Sharing</h4>
+                    <p>
+                        Multiple devices share single Internet connection. 10-30 devices using one ISP subscription. 
+                        Huge cost savings compared to separate connections per device. Enables family/office Internet 
+                        sharing economically.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Network Security</h4>
+                    <p>
+                        Built-in firewall protects internal network from external threats. NAT hides internal structure 
+                        from Internet. Blocks port scans and unauthorized access attempts. First line of defense - 
+                        prevents most attacks before they reach devices.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔢</span>
+                    <h4>IP Address Management</h4>
+                    <p>
+                        DHCP automatically assigns and manages IPs. No manual configuration needed - plug and play. 
+                        Prevents IP conflicts. Reclaims unused IPs. Makes networking accessible to non-technical users. 
+                        Just connect and it works!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Traffic Management</h4>
+                    <p>
+                        QoS prioritizes important traffic. Video calls don't buffer when others download. Gaming 
+                        gets low latency. Bandwidth allocation per device. Prevents network congestion. Optimizes 
+                        limited bandwidth for best user experience.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Wireless Connectivity</h4>
+                    <p>
+                        Home routers provide Wi-Fi for all devices. No cables needed for laptops, phones, tablets. 
+                        Multiple SSIDs (main + guest networks). Supports latest Wi-Fi standards. Enables mobile 
+                        device connectivity throughout home/office.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔗</span>
+                    <h4>Network Segmentation</h4>
+                    <p>
+                        VLANs separate different types of traffic. Guest network isolated from main. IoT devices on 
+                        separate subnet. Departments separated in offices. Improves security and performance. Contains 
+                        problems to specific segments.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌍</span>
+                    <h4>Remote Access</h4>
+                    <p>
+                        VPN enables secure access from anywhere. Work from home accessing office network. Remote 
+                        desktop to home computer. Access security cameras while traveling. Port forwarding for 
+                        game servers. Extends network globally.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h4>Scalability</h4>
+                    <p>
+                        Easy to add more devices to network. Modern routers support 50-200+ simultaneous connections. 
+                        Mesh systems expand coverage. Multiple routers can create larger networks. Grows with your 
+                        needs without major infrastructure changes.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Performance Optimization</h4>
+                    <p>
+                        Caching reduces latency for repeated requests. Chooses optimal paths through routing protocols. 
+                        Load balancing across multiple connections. Traffic shaping prevents congestion. Hardware 
+                        offload accelerates packet processing. Maximizes network throughput.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Redundancy & Reliability</h4>
+                    <p>
+                        Enterprise routers support failover between ISPs. Automatic rerouting if link fails. Dual 
+                        power supplies. Hot-swappable components. Designed for 24/7 operation. Critical for business 
+                        continuity and uptime.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💻</span>
+                    <h4>Easy Management</h4>
+                    <p>
+                        Web-based admin interface - no technical expertise required. Mobile apps for remote management. 
+                        Automatic firmware updates. Pre-configured for most ISPs. Setup wizards guide installation. 
+                        Modern routers are user-friendly.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages -->
+        <section class="section">
+            <h2>⚠️ Disadvantages of Routers</h2>
+            <p>
+                While essential, routers also have limitations and potential issues:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">💵</span>
+                    <h4>Cost</h4>
+                    <p>
+                        Quality routers are expensive ($50-$500+ for home, $1000-$100,000+ for enterprise). Gaming 
+                        routers with advanced features cost more. Business routers very expensive. Need to upgrade 
+                        every 3-5 years as standards evolve. Ongoing cost of ownership.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">😰</span>
+                    <h4>Complexity</h4>
+                    <p>
+                        Advanced features require technical knowledge. Port forwarding, VLANs, QoS hard to configure. 
+                        Enterprise routers have steep learning curve. Misconfiguration can break network or create 
+                        security holes. Many users never use advanced features.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🐌</span>
+                    <h4>Processing Overhead</h4>
+                    <p>
+                        Routers add latency compared to direct connections. NAT translation takes time. Firewall 
+                        inspection slows packets. QoS processing uses CPU. Can become bottleneck on high-speed 
+                        networks. Hardware limitations affect performance.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚠️</span>
+                    <h4>Single Point of Failure</h4>
+                    <p>
+                        If router dies, entire network loses Internet. Home/office connectivity depends on one device. 
+                        Power outage kills router. Hardware failure means downtime. Requires backup/redundancy for 
+                        critical applications. Most homes have no backup.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔧</span>
+                    <h4>Maintenance Required</h4>
+                    <p>
+                        Need periodic reboots to clear memory. Firmware updates necessary for security and features. 
+                        Configuration backups important. Troubleshooting when issues arise. Enterprise routers need 
+                        professional management. Neglected routers have problems.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Security Vulnerabilities</h4>
+                    <p>
+                        Routers are attack targets. Default passwords often unchanged. Outdated firmware has 
+                        exploits. UPnP can be exploited. Remote admin access risky. Compromised router affects 
+                        entire network. Many home routers never updated.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📶</span>
+                    <h4>Wi-Fi Limitations</h4>
+                    <p>
+                        Range limited by walls, interference. 2.4 GHz crowded in apartments. Single router may not 
+                        cover whole house. Dead zones common. Interference from neighbors' Wi-Fi. Need mesh systems 
+                        or extenders for large areas - additional cost and complexity.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔢</span>
+                    <h4>NAT Complications</h4>
+                    <p>
+                        NAT can break some applications. Peer-to-peer apps struggle. Gaming may need port forwarding. 
+                        VoIP/video conferencing issues. Some protocols not NAT-friendly. Double NAT situations (ISP 
+                        + your router) cause problems. IPv6 fixes this but not yet universal.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Power Consumption</h4>
+                    <p>
+                        Routers run 24/7, consuming electricity constantly. Wi-Fi radios use significant power. 
+                        Large routers with multiple radios draw 15-50W. Over a year, adds up. Heat generation 
+                        requires cooling. Environmental impact of always-on devices.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📉</span>
+                    <h4>Bandwidth Limitations</h4>
+                    <p>
+                        Router's WAN port limits maximum speed. Many still have 100 Mbps WAN (not gigabit). Older 
+                        routers can't handle multi-gigabit Internet. CPU becomes bottleneck at high speeds. Need to 
+                        upgrade router when upgrading Internet plan. Hardware obsolescence.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>ISP Limitations</h4>
+                    <p>
+                        ISP-provided routers often locked down. Can't change DNS servers. Port forwarding disabled. 
+                        Can't install custom firmware. Limited features compared to aftermarket. ISP controls firmware 
+                        updates. May need to use ISP's router for fiber/cable compatibility.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Compatibility Issues</h4>
+                    <p>
+                        Not all routers work with all ISPs. Some require specific authentication. Modem-router 
+                        compatibility matters. Older devices may not support newest Wi-Fi standards. Firmware bugs 
+                        with certain device combinations. Trial and error sometimes needed.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>Router = Network Gateway:</strong> Connects your network to Internet and routes packets between networks</li>
+                    <li><strong>Layer 3 Device:</strong> Works with IP addresses, makes intelligent routing decisions</li>
+                    <li><strong>Multi-Function Device:</strong> Router + Switch + Wi-Fi + Firewall + DHCP server all in one (home routers)</li>
+                    <li><strong>NAT is Essential:</strong> Allows multiple private IPs to share one public IP - makes Internet affordable</li>
+                    <li><strong>Everywhere:</strong> In homes, offices, ISPs, Internet backbone - routers make networks work</li>
+                    <li><strong>Security First Line:</strong> Built-in firewall protects your network from external attacks</li>
+                    <li><strong>Automatic IP Management:</strong> DHCP makes networking plug-and-play for users</li>
+                    <li><strong>Traffic Controller:</strong> QoS and routing ensure efficient use of bandwidth</li>
+                    <li><strong>Single Point of Failure:</strong> When router dies, network dies - reliability crucial</li>
+                    <li><strong>Keep Updated:</strong> Firmware updates essential for security and performance</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <!--<section class="section">
+            <h2>🚀 Continue Learning About Network Devices</h2>
+            <p>
+                Great job understanding routers! Explore other network devices to complete your knowledge:
+            </p>
+            
+            <div style="text-align: center; margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                <a href="dashboard.html" class="nav-btn" style="display: inline-block; padding: 15px 35px; font-size: 1.05rem;">
+                    📚 Back to Dashboard
+                </a>
+                <a href="what-is-network.html" class="nav-btn" style="display: inline-block; padding: 15px 35px; font-size: 1.05rem;">
+                    🌐 Network Basics
+                </a>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>💡 Next Recommended Topics:</strong>
+                <br>• <strong>Switch</strong> - Layer 2 device connecting devices within LAN
+                <br>• <strong>Hub</strong> - Simple multi-port repeater (mostly obsolete)
+                <br>• <strong>Modem</strong> - Converts digital signals for transmission
+                <br>• <strong>Firewall</strong> - Dedicated security device
+                <br>• <strong>Access Point (WAP)</strong> - Extends wireless coverage
+                <br>• <strong>Network Interface Card (NIC)</strong> - Connects device to network
+                <br>• <strong>Gateway</strong> - Protocol translator between networks
+                <br>• <strong>Bridge</strong> - Connects two LAN segments
+            </div>
+        </section>-->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Progress bar on scroll
+        window.addEventListener('scroll', function() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Interactive hover effects
+        document.querySelectorAll('.network-device, .router-device').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform += ' scale(1.15)';
+            });
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' scale(1.15)', '');
+            });
+        });
+    </script>
+</body>
+</html>

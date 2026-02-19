@@ -1,0 +1,24 @@
+{
+  "name": "networking-learning-hub",
+  "version": "1.0.0",
+  "description": "A comprehensive learning platform for computer networking concepts",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "networking",
+    "learning",
+    "education",
+    "computer-networks"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

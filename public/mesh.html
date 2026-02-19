@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesh Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .navbar {
+            background: rgba(30,30,30,0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102,126,234,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #667eea; }
+        .section p  { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        .animation-box {
+            background: rgba(12,12,22,0.97);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102,126,234,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== MESH CANVAS ===== */
+        .mesh-canvas {
+            position: relative;
+            width: 100%;
+            height: 440px;
+        }
+        .mesh-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* Mesh links */
+        .mesh-link {
+            fill: none;
+            stroke: rgba(102,126,234,0.18);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            transition: stroke 0.35s, stroke-width 0.35s, opacity 0.35s;
+        }
+        .mesh-link.link-active   { stroke: #00ff88; stroke-width: 4.5; filter: drop-shadow(0 0 7px #00ff88); }
+        .mesh-link.link-alt      { stroke: #f8b400; stroke-width: 4;   filter: drop-shadow(0 0 6px #f8b400); }
+        .mesh-link.link-fail     { stroke: #ef4444; stroke-width: 3;   stroke-dasharray: 7 4; filter: drop-shadow(0 0 4px #ef4444); opacity: 0.55; }
+        .mesh-link.link-idle     { stroke: rgba(102,126,234,0.12); }
+        .mesh-link.link-partial  { stroke: rgba(102,126,234,0.3); stroke-width: 2.5; }
+
+        /* Packet dots */
+        .mpkt { opacity: 0; }
+
+        /* Mesh device nodes */
+        .mesh-device {
+            position: absolute;
+            width: 68px;
+            height: 68px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            z-index: 20;
+            box-shadow: 0 0 18px rgba(102,126,234,0.45);
+            border: 2px solid rgba(102,126,234,0.35);
+            transition: all 0.3s;
+            transform: translate(-50%,-50%);
+            cursor: default;
+        }
+        .mesh-device:hover { transform: translate(-50%,-50%) scale(1.1); box-shadow: 0 0 35px rgba(102,126,234,0.85); }
+        .mesh-device.dev-src  { border-color:#00ff88; box-shadow:0 0 48px rgba(0,255,136,0.9); animation: devSrc  0.55s infinite; }
+        .mesh-device.dev-dst  { border-color:#764ba2; box-shadow:0 0 45px rgba(118,75,162,1);  animation: devDst  0.55s infinite; }
+        .mesh-device.dev-fwd  { border-color:#f8b400; box-shadow:0 0 35px rgba(248,180,0,0.8); animation: devFwd  0.55s infinite; }
+        .mesh-device.dev-fail { background:linear-gradient(135deg,#2d1b1b,#1a0f0f); border-color:#ef4444; box-shadow:0 0 25px rgba(239,68,68,0.6); opacity:0.55; }
+        .mesh-device.dev-alt  { border-color:#f8b400; box-shadow:0 0 38px rgba(248,180,0,0.8); animation: devFwd  0.55s infinite; }
+
+        .mdev-label {
+            position: absolute;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Info pill floating on canvas */
+        .route-pill {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(102,126,234,0.18);
+            border: 1px solid rgba(102,126,234,0.4);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.8rem;
+            color: #a5b4fc;
+            z-index: 30;
+            white-space: nowrap;
+            transition: all 0.4s;
+        }
+
+        /* Link count badge */
+        .link-count-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 14px;
+            background: rgba(102,126,234,0.15);
+            border: 1px solid rgba(102,126,234,0.35);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            color: #a5b4fc;
+        }
+
+        /* Mode toggle */
+        .mesh-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .mesh-toggle span { color: #888; font-size: 0.9rem; }
+        .mtoggle-btn {
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(102,126,234,0.4);
+            background: rgba(102,126,234,0.08);
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mtoggle-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 10px rgba(102,126,234,0.4);
+        }
+
+        /* Controls */
+        .mesh-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .mesh-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .mesh-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .mesh-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .mesh-btn.yellow { background: linear-gradient(135deg, #f59e0b, #b45309); }
+        .mesh-btn.red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .mesh-btn.green  { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .mesh-btn.ghost  { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+
+        .mesh-status {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4   { color: #667eea; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p    { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card { border-radius: 12px; padding: 25px; border: 1px solid; }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        .highlight-box {
+            background: rgba(102,126,234,0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(102,126,234,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(102,126,234,0.2); color: #667eea; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(102,126,234,0.08); }
+
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#667eea,#764ba2); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#667eea; border:2px solid #764ba2; box-shadow:0 0 10px rgba(102,126,234,0.6); }
+        .timeline-item h4 { color: #a5b4fc; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p  { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        footer { background: rgba(30,30,30,0.95); text-align: center; padding: 30px 20px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); z-index:9999; width:0%; transition:width 0.2s; }
+
+        /* Keyframes */
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes fadeInUp   { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes devSrc  { 0%,100%{box-shadow:0 0 28px rgba(0,255,136,0.6);}  50%{box-shadow:0 0 60px rgba(0,255,136,1);} }
+        @keyframes devDst  { 0%,100%{box-shadow:0 0 28px rgba(118,75,162,0.7);} 50%{box-shadow:0 0 60px rgba(118,75,162,1);} }
+        @keyframes devFwd  { 0%,100%{box-shadow:0 0 22px rgba(248,180,0,0.6);}  50%{box-shadow:0 0 48px rgba(248,180,0,1);} }
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .section{padding:25px;}
+            .mesh-canvas{height:360px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>🕸️ Mesh Topology</h1>
+        <p class="hero-subtitle">Every Device Connected to Every Other — Maximum Redundancy, Zero Single Point of Failure!</p>
+        <span class="hero-badge">📡 OSI Layer 1–3 | Full Mesh & Partial Mesh | Internet Backbone</span>
+    </section>
+
+    <!-- ============ LIVE ANIMATION ============ -->
+    <section class="section" id="animation">
+        <h2>⚡ Mesh Topology — Live Interactive Visualization</h2>
+        <p>
+            Watch how data finds the <strong>best path</strong> through a mesh network, how traffic reroutes 
+            automatically when a link fails, and the difference between <strong>Full Mesh</strong> and 
+            <strong>Partial Mesh</strong>. Every device has multiple paths to every other device!
+        </p>
+
+        <div class="mesh-toggle">
+            <span>Mesh Type:</span>
+            <button class="mtoggle-btn active" id="togFull"    onclick="setMeshMode('full')">🕸️ Full Mesh</button>
+            <button class="mtoggle-btn"        id="togPartial" onclick="setMeshMode('partial')">🔗 Partial Mesh</button>
+            <span id="meshModeLabel" style="color:#a5b4fc;font-size:0.85rem;margin-left:8px;">
+                Full Mesh: Every device connected to EVERY other device
+            </span>
+        </div>
+
+        <div class="animation-box">
+            <div class="route-pill"      id="routePill">🕸️ Mesh Network — All links active</div>
+            <div class="link-count-badge" id="linkBadge">🔗 Links: 15 | Paths: Multiple</div>
+
+            <div class="mesh-canvas" id="meshCanvas">
+                <svg class="mesh-svg" id="meshSvg"
+                     viewBox="0 0 800 440"
+                     preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <filter id="glow-green">
+                            <feGaussianBlur stdDeviation="3.5" result="b"/>
+                            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="glow-gold">
+                            <feGaussianBlur stdDeviation="3.5" result="b"/>
+                            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Links drawn by JS -->
+                    <!-- Packet dots -->
+                    <circle class="mpkt" id="mpkt0" r="10" fill="#00ff88" filter="url(#glow-green)"/>
+                    <circle class="mpkt" id="mpkt1" r="10" fill="#00ff88" filter="url(#glow-green)"/>
+                    <circle class="mpkt" id="mpkt2" r="10" fill="#f8b400" filter="url(#glow-gold)"/>
+                    <circle class="mpkt" id="mpkt3" r="10" fill="#f8b400" filter="url(#glow-gold)"/>
+                </svg>
+
+                <!-- 6 mesh devices — placed by JS -->
+                <div class="mesh-device" id="mdev0">🌐<div class="mdev-label" id="mlabel0">Router A</div></div>
+                <div class="mesh-device" id="mdev1">🌐<div class="mdev-label" id="mlabel1">Router B</div></div>
+                <div class="mesh-device" id="mdev2">🌐<div class="mdev-label" id="mlabel2">Router C</div></div>
+                <div class="mesh-device" id="mdev3">🖥️<div class="mdev-label" id="mlabel3">Server</div></div>
+                <div class="mesh-device" id="mdev4">💻<div class="mdev-label" id="mlabel4">PC - 1</div></div>
+                <div class="mesh-device" id="mdev5" style="background:linear-gradient(135deg,#764ba2,#667eea);">🏢<div class="mdev-label" id="mlabel5">DC Node</div></div>
+            </div>
+        </div>
+
+        <div class="mesh-controls">
+            <button class="mesh-btn"        id="btnShortest" onclick="meshDemo('shortest')">▶ Shortest Path</button>
+            <button class="mesh-btn yellow" id="btnMulti"    onclick="meshDemo('multi')">⚡ Multi-Path Load Balance</button>
+            <button class="mesh-btn red"    id="btnFail"     onclick="meshDemo('fail')">🔥 Link Failure + Reroute</button>
+            <button class="mesh-btn green"  id="btnFlood"    onclick="meshDemo('flood')">🌊 Broadcast Flood</button>
+            <button class="mesh-btn ghost"  onclick="meshReset()">↺ Reset</button>
+            <div class="mesh-status" id="meshStatus">👆 Click a button above to start the simulation!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Full Mesh:</strong> Every device has a direct link to every other device — n devices need n(n-1)/2 links (6 devices = 15 links!)</li>
+                <li><strong>Multiple Paths:</strong> Data can reach any destination via several different routes — routing protocols pick the best one</li>
+                <li><strong>No Single Point of Failure:</strong> Any device or link can fail — traffic automatically reroutes through surviving paths</li>
+                <li><strong>Load Balancing:</strong> Traffic can be split across multiple paths simultaneously for maximum throughput</li>
+                <li><strong>Partial Mesh:</strong> Only critical nodes get full connectivity — balances redundancy with cost</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============ WHAT IS MESH ============ -->
+    <section class="section" id="what">
+        <h2>🔍 What is Mesh Topology?</h2>
+        <p>
+            <strong>Mesh Topology</strong> is a network configuration where every device is connected to 
+            <em>multiple</em> other devices — forming a web-like structure with numerous redundant paths between 
+            any two nodes. Unlike Star (one central hub) or Ring (one loop), Mesh has no single point of failure 
+            because data can always find an alternate route if any link goes down.
+        </p>
+        <p>
+            Mesh topology exists in two forms: <strong>Full Mesh</strong> — where every device connects directly 
+            to every other device — and <strong>Partial Mesh</strong> — where only the most critical nodes get 
+            full redundancy while others have fewer connections. The internet itself is the world's largest 
+            partial mesh network!
+        </p>
+
+        <div class="example-box">
+            <strong>📡 Simple Analogy — Highways Between Cities! 🛣️</strong><br><br>
+            Think of a Mesh Topology like the highway system between major cities.<br>
+            Mumbai → Delhi can go via: Direct highway, OR via Ahmedabad, OR via Jaipur, OR via Nagpur route.<br>
+            If one highway is blocked (link failure) → GPS reroutes you through another city.<br>
+            The more highways between cities (links), the more redundant and reliable the network.<br><br>
+            Full Mesh = Every city has a DIRECT highway to every other city (extremely expensive!)<br>
+            Partial Mesh = Major cities get direct routes; smaller towns use connecting cities (practical!)
+        </div>
+
+        <h3>📐 The Mesh Formula — How Many Links?</h3>
+        <div class="example-box">
+            <strong>Full Mesh Link Count Formula:</strong><br><br>
+            Number of Links = n × (n - 1) / 2    where n = number of devices<br><br>
+            📊 Examples:<br>
+            n = 4 devices  → 4 × 3 / 2 =  <strong>6 links</strong><br>
+            n = 6 devices  → 6 × 5 / 2 =  <strong>15 links</strong><br>
+            n = 10 devices → 10 × 9 / 2 = <strong>45 links</strong><br>
+            n = 20 devices → 20 × 19 / 2 = <strong>190 links</strong> 😱<br>
+            n = 100 devices → 100 × 99 / 2 = <strong>4,950 links</strong> 🤯<br><br>
+            This exponential growth is why Full Mesh is ONLY used for small critical networks.<br>
+            For large networks, Partial Mesh or hierarchical designs are always preferred!
+        </div>
+
+        <h3>🔧 Full Mesh vs Partial Mesh</h3>
+        <div class="adv-grid">
+            <div class="info-card" style="border-color:rgba(102,126,234,0.5);">
+                <span class="info-card-icon">🕸️</span>
+                <h4>Full Mesh</h4>
+                <p>
+                    Every single device is directly connected to every other device.<br><br>
+                    <strong>Links Required:</strong> n(n-1)/2 — grows exponentially<br>
+                    <strong>Fault Tolerance:</strong> Maximum — survives multiple simultaneous failures<br>
+                    <strong>Latency:</strong> Minimum — always one-hop to any destination<br>
+                    <strong>Cost:</strong> Extremely expensive — too many cables/ports<br>
+                    <strong>Use Cases:</strong> Core internet exchange points, backbone routers, small critical WANs<br>
+                    <strong>Example:</strong> Internet Exchange Points (IXPs) connecting ISPs
+                </p>
+            </div>
+            <div class="info-card" style="border-color:rgba(118,75,162,0.5);">
+                <span class="info-card-icon">🔗</span>
+                <h4>Partial Mesh</h4>
+                <p>
+                    Only the most important nodes get multiple connections. Edge devices may have just 1–2 links.<br><br>
+                    <strong>Links Required:</strong> Selective — much fewer than full mesh<br>
+                    <strong>Fault Tolerance:</strong> Good — critical paths are redundant<br>
+                    <strong>Latency:</strong> Slightly higher — may need 2–3 hops<br>
+                    <strong>Cost:</strong> Balanced — redundancy where it matters most<br>
+                    <strong>Use Cases:</strong> Enterprise WANs, ISP backbone networks, cloud regions<br>
+                    <strong>Example:</strong> AWS connecting its regions worldwide
+                </p>
+            </div>
+        </div>
+
+        <h3>🧭 How Routing Works in Mesh — Protocols</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🗺️</span>
+                <h4>OSPF (Open Shortest Path First)</h4>
+                <p>Link-state routing protocol. Every router builds a complete map of the network. Uses Dijkstra's algorithm to calculate the shortest path to every destination. When a link fails, all routers recalculate routes instantly. Used in enterprise networks and ISP cores.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌐</span>
+                <h4>BGP (Border Gateway Protocol)</h4>
+                <p>The routing protocol of the internet! BGP is what allows the internet's massive partial mesh to function. ISPs use BGP to exchange routing information and select the best path between autonomous systems. It's why packets can travel from Chennai to New York via multiple paths.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">⚡</span>
+                <h4>ECMP (Equal-Cost Multi-Path)</h4>
+                <p>When multiple paths have equal cost to a destination, ECMP distributes traffic across ALL of them simultaneously. This is load balancing in mesh networks! A router can send different packets across different links — maximizing total throughput and utilizing all available bandwidth.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔄</span>
+                <h4>STP / RSTP (Spanning Tree)</h4>
+                <p>In Layer 2 (Ethernet) mesh networks, STP prevents broadcast storms by blocking redundant links logically — only one active path exists at a time. RSTP recovers in ~1 second when a link fails. Modern networks use MSTP or replace STP entirely with Layer 3 routing (no loops at L3).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ADVANTAGES & DISADVANTAGES ============ -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Mesh Topology offers unparalleled reliability — but at a significant cost in cables, ports, and complexity.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>No single point of failure — maximum fault tolerance</li>
+                    <li>Multiple paths for load balancing</li>
+                    <li>Data takes shortest/fastest path dynamically</li>
+                    <li>Highly reliable — used in mission-critical networks</li>
+                    <li>Failure of one link doesn't disrupt communication</li>
+                    <li>Scalable — add nodes without redesigning the mesh</li>
+                    <li>Traffic can be rerouted in milliseconds automatically</li>
+                    <li>Excellent performance under heavy network load</li>
+                    <li>Security — dedicated links between nodes</li>
+                    <li>Powers the entire global internet infrastructure</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Very expensive — requires n(n-1)/2 cables</li>
+                    <li>Complex installation and configuration</li>
+                    <li>Each node needs many ports/interfaces</li>
+                    <li>Difficult to troubleshoot with many links</li>
+                    <li>High maintenance overhead</li>
+                    <li>Full Mesh impractical beyond ~10 devices</li>
+                    <li>Routing protocol complexity (OSPF, BGP)</li>
+                    <li>Requires skilled network engineers to manage</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 The Cost vs Reliability Trade-off:</strong> Full Mesh for 10 devices needs <strong>45 links</strong>.
+            For 20 devices: <strong>190 links</strong>. This is why no one builds full mesh LANs — instead, 
+            <strong>Partial Mesh</strong> is used where you add redundancy only on critical paths 
+            (like between core routers), while access-layer devices use single links.
+            The internet uses partial mesh globally — your home router has one link to your ISP, 
+            but ISPs are interconnected in a rich partial mesh for global resilience.
+        </div>
+    </section>
+
+    <!-- ============ REAL WORLD EXAMPLES ============ -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Mesh Topology is the backbone of the most critical networks on Earth. From the internet 
+            itself to military communications to smart city infrastructure — wherever reliability 
+            is non-negotiable, mesh topology is the answer.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🌐</span>
+                <h4>The Internet — World's Largest Partial Mesh</h4>
+                <p>The internet IS a partial mesh network! Thousands of ISPs (Autonomous Systems) are interconnected via BGP in a web of peering agreements. When a submarine cable is cut in the Pacific, your Netflix stream reroutes automatically through a different path — mesh redundancy in action!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏦</span>
+                <h4>Banking & Financial Networks</h4>
+                <p>Banks use full mesh between their core data centres. When you do a UPI transfer, the data must reach the NPCI server with guaranteed reliability. ICICI, HDFC, SBI — all core banking switches are connected in full mesh. Even 1 second of downtime costs crores — so NO single point of failure!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">☁️</span>
+                <h4>Cloud Provider Backbone (AWS / Azure)</h4>
+                <p>Amazon Web Services connects its 30+ global regions via a private fiber mesh network — the AWS Global Network. Every region has multiple redundant fiber paths to every other region. When you use S3 or EC2, your data travels on this massive private mesh backbone — not the public internet!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🛡️</span>
+                <h4>Military & Defense Networks</h4>
+                <p>ARPANET (1969) — the precursor to the internet — was designed as a mesh network specifically so it could survive nuclear strikes. Even if multiple nodes were destroyed, communication could continue through surviving paths. This military requirement literally invented the internet's mesh design.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Satellite Mesh Networks (Starlink)</h4>
+                <p>SpaceX's Starlink creates a mesh network of thousands of Low Earth Orbit satellites. Satellites are connected to each other via laser inter-satellite links, forming a mesh in space! Data can route through multiple satellites to reach its destination. SpaceX, OneWeb, and Amazon Kuiper all use mesh satellite topology.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏙️</span>
+                <h4>Smart City & IoT Mesh</h4>
+                <p>Smart city infrastructure — traffic lights, pollution sensors, street lights, surveillance cameras — uses wireless mesh networks (Zigbee, Thread, Wi-Fi Mesh). Each sensor communicates with nearby sensors, and data hops through the mesh to the control centre. No single device failure disrupts the whole system.</p>
+            </div>
+        </div>
+
+        <h3>📅 Historical Journey of Mesh Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1957 — Cold War Motivation</h4>
+                <p>After Sputnik, the US DoD needed a communication network that could survive a nuclear attack. RAND Corporation's Paul Baran proposed a distributed "mesh" packet-switching network where messages could find alternate paths even if major nodes were destroyed. This idea directly led to the internet.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1969 — ARPANET: First Mesh Network</h4>
+                <p>ARPANET went live with 4 nodes (UCLA, Stanford, UCSB, Utah) connected in a partial mesh. It was the world's first packet-switched mesh network. By design, if any node was destroyed, packets would reroute through surviving nodes. The internet was born as a mesh from day one.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1983 — TCP/IP and BGP Emerge</h4>
+                <p>TCP/IP became the standard internet protocol. BGP (Border Gateway Protocol) was developed to let the growing internet mesh of ISPs exchange routing information. BGP is what allowed the internet to scale from 4 nodes to billions of connected devices while maintaining mesh redundancy.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990s — Enterprise WANs Go Mesh</h4>
+                <p>Large enterprises began connecting their branch offices in partial mesh WANs using Frame Relay and later MPLS. OSPF and EIGRP routing protocols managed automatic rerouting. Banks, telecoms, and multinationals adopted mesh WANs for their critical business communications.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2000s — Wireless Mesh Emerges</h4>
+                <p>IEEE 802.11s standardized wireless mesh networking. Routers and access points could form self-configuring mesh networks without cables. Municipal WiFi projects, battlefield communications (MANET), and industrial IoT began using wireless mesh extensively.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — SD-WAN and Cloud Mesh</h4>
+                <p>Software-Defined WAN (SD-WAN) creates intelligent mesh overlays over multiple internet connections. Cloud providers maintain private global mesh backbones. Starlink creates an orbital mesh. Home WiFi Mesh systems (Google Nest, Eero, Orbi) bring mesh technology to every household. The mesh era is now!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ COMPARISON ============ -->
+    <section class="section" id="comparison">
+        <h2>📊 Mesh Topology vs Other Topologies</h2>
+        <p>How Mesh stands against Bus, Star, and Ring across every important network design parameter.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>🕸️ Mesh</th>
+                <th>⭐ Star</th>
+                <th>🔄 Ring</th>
+                <th>🚌 Bus</th>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance</strong></td>
+                <td>⭐ Best — multiple paths survive failures</td>
+                <td>🟡 Per device (hub = single point)</td>
+                <td>🟡 Dual ring only</td>
+                <td>❌ One break = all fail</td>
+            </tr>
+            <tr>
+                <td><strong>Redundancy</strong></td>
+                <td>⭐ Maximum — n(n-1)/2 links</td>
+                <td>❌ No redundant paths</td>
+                <td>🟡 Dual ring only</td>
+                <td>❌ Zero redundancy</td>
+            </tr>
+            <tr>
+                <td><strong>Cable / Cost</strong></td>
+                <td>❌ Most expensive</td>
+                <td>🟡 Moderate</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Cheapest</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>🟡 Complex — links grow exponentially</td>
+                <td>⭐ Very easy</td>
+                <td>🟡 Moderate</td>
+                <td>❌ Very limited</td>
+            </tr>
+            <tr>
+                <td><strong>Performance</strong></td>
+                <td>⭐ Excellent + load balancing</td>
+                <td>⭐ Excellent (switch)</td>
+                <td>⭐ Consistent</td>
+                <td>❌ Degrades fast</td>
+            </tr>
+            <tr>
+                <td><strong>Complexity</strong></td>
+                <td>❌ High — routing protocols required</td>
+                <td>⭐ Low</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Lowest</td>
+            </tr>
+            <tr>
+                <td><strong>Single Point of Failure</strong></td>
+                <td>⭐ None — fully distributed</td>
+                <td>❌ Hub/Switch failure kills all</td>
+                <td>❌ Single ring break kills all</td>
+                <td>❌ Cable break kills all</td>
+            </tr>
+            <tr>
+                <td><strong>Load Balancing</strong></td>
+                <td>⭐ Native — ECMP across multiple paths</td>
+                <td>🟡 Per-port on switch only</td>
+                <td>❌ Sequential token only</td>
+                <td>❌ Shared collision domain</td>
+            </tr>
+            <tr>
+                <td><strong>Setup Difficulty</strong></td>
+                <td>❌ Complex routing config</td>
+                <td>⭐ Plug and play</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Very simple</td>
+            </tr>
+            <tr>
+                <td><strong>Best Use Case</strong></td>
+                <td>🟢 Internet, WANs, critical infra</td>
+                <td>🟢 LAN (offices, homes, schools)</td>
+                <td>🟡 Industrial, MAN, legacy</td>
+                <td>🔴 Obsolete (embedded systems)</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============ TECHNICAL SPECS ============ -->
+    <section class="section" id="specs">
+        <h2>🔬 Technical Specifications & Design Considerations</h2>
+        <p>Key technical parameters when designing or evaluating a Mesh Topology network:</p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">📐</span>
+                <h4>Full Mesh Formulas</h4>
+                <p>
+                    <strong>Links:</strong> n(n-1) / 2<br>
+                    <strong>Ports per node:</strong> n - 1<br>
+                    <strong>Max path length:</strong> 1 hop (direct)<br>
+                    <strong>Paths between any 2 nodes:</strong> (n-1)! / 2<br><br>
+                    For n=6: 15 links, 5 ports each<br>
+                    For n=10: 45 links, 9 ports each<br>
+                    For n=50: 1,225 links! Impractical 🤯
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">⚡</span>
+                <h4>Convergence Time</h4>
+                <p>
+                    <strong>OSPF:</strong> Sub-second with fast-hello (100ms intervals)<br>
+                    <strong>BGP:</strong> Seconds to minutes (internet scale)<br>
+                    <strong>RSTP:</strong> ~1 second for Layer 2 mesh<br>
+                    <strong>MPLS FRR:</strong> &lt;50ms (Fast Reroute)<br><br>
+                    MPLS Fast Reroute pre-computes backup paths — traffic switches in under 50ms when primary link fails!
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌐</span>
+                <h4>Internet Scale Numbers</h4>
+                <p>
+                    <strong>Autonomous Systems (ISPs):</strong> ~100,000+ worldwide<br>
+                    <strong>BGP Routes:</strong> ~900,000 IPv4 prefixes<br>
+                    <strong>IXP Links:</strong> DE-CIX Frankfurt: 12+ Tbps peak<br>
+                    <strong>Submarine Cables:</strong> 400+ active cables, 1.3M km total<br>
+                    <strong>Avg Path Hops:</strong> ~15 hops src to dst on internet
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔒</span>
+                <h4>MPLS — Mesh with Traffic Engineering</h4>
+                <p>
+                    <strong>MPLS (Multiprotocol Label Switching)</strong> adds labels to packets to pre-define paths through mesh. Traffic Engineering (TE) lets engineers manually steer traffic along specific paths — bypassing congested links. Used by all major ISPs and enterprise WANs for guaranteed QoS.
+                </p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <strong>🌍 Real Mesh Redundancy — Submarine Cable Example:</strong><br><br>
+            India ↔ USA internet traffic uses multiple submarine cables simultaneously:<br><br>
+            Path 1: Mumbai → SEA-ME-WE 4 cable → Egypt → TAT-14 → New York ✅<br>
+            Path 2: Mumbai → FLAG cable → UK → transatlantic cable → New York ✅<br>
+            Path 3: Mumbai → i2i cable → Singapore → Trans-Pacific cable → Los Angeles ✅<br><br>
+            If SEA-ME-WE 4 cable is cut (happens ~200 times/year globally!) →<br>
+            BGP automatically reroutes traffic via Path 2 and Path 3 within seconds.<br>
+            You don't even notice! That's the power of Mesh Topology at internet scale. 🌏
+        </div>
+    </section>
+
+    <!-- ============ KEY TAKEAWAYS ============ -->
+    <section class="section">
+        <h2>🎯 Key Takeaways</h2>
+        <div class="highlight-box">
+            <ul>
+                <li>Mesh Topology connects devices with <strong>multiple redundant links</strong> — every device has more than one path to every other</li>
+                <li><strong>Full Mesh:</strong> Every device connects to every other — n(n-1)/2 links — used only for small critical networks</li>
+                <li><strong>Partial Mesh:</strong> Only critical nodes get full redundancy — balances cost vs reliability — used for internet and enterprise WANs</li>
+                <li><strong>No single point of failure</strong> — any device or link can fail and traffic reroutes automatically through surviving paths</li>
+                <li>Routing protocols like <strong>OSPF</strong> (enterprise) and <strong>BGP</strong> (internet) manage path selection and automatic failover</li>
+                <li><strong>ECMP</strong> allows simultaneous load balancing across multiple equal-cost paths — maximises bandwidth utilisation</li>
+                <li>Main drawback: <strong>cost and complexity</strong> — cables grow exponentially with device count — impractical at large scale as full mesh</li>
+                <li>The <strong>internet is the world's largest partial mesh</strong> — packets from Chennai to New York traverse multiple ISP mesh links</li>
+                <li><strong>MPLS Fast Reroute</strong> achieves sub-50ms failover in service provider mesh networks — critical for voice and video</li>
+                <li>Modern extensions: <strong>SD-WAN</strong> (software-defined mesh overlay), <strong>Starlink satellite mesh</strong>, <strong>Wi-Fi 6 mesh</strong> for homes and enterprises</li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+    <p style="margin-top:10px; font-size:0.9rem;">Keep exploring, keep learning! 🚀</p>
+</footer>
+
+<script>
+// ── PROGRESS BAR ──────────────────────────────────────────
+window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ── FADE IN ────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity = '0'; s.style.transform = 'translateY(20px)';
+    s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(s);
+});
+
+// ── MESH CONFIG ────────────────────────────────────────────
+const NUM  = 6;
+// SVG viewBox 800×440, device positions
+const POSITIONS = [
+    { x: 400, y:  65 },   // 0 Router A   — top centre
+    { x: 670, y: 175 },   // 1 Router B   — top right
+    { x: 670, y: 340 },   // 2 Router C   — bottom right
+    { x: 400, y: 400 },   // 3 Server     — bottom centre
+    { x: 130, y: 340 },   // 4 PC-1       — bottom left
+    { x: 130, y: 175 },   // 5 DC Node    — top left
+];
+
+// All possible links (full mesh = 15 links)
+const ALL_LINKS = [];
+for (let i = 0; i < NUM; i++)
+    for (let j = i+1; j < NUM; j++)
+        ALL_LINKS.push([i, j]);
+
+// Partial mesh — keep only strategically chosen links (9 links)
+const PARTIAL_LINKS = [
+    [0,1],[0,5],[0,3],
+    [1,2],[1,3],
+    [2,3],[2,4],
+    [4,5],[4,3],
+];
+
+let meshMode    = 'full';
+let meshAnimating = false;
+let failedLinks   = new Set(); // "i-j" string keys
+
+// ── INIT LAYOUT ────────────────────────────────────────────
+function getCanvas() { return document.getElementById('meshCanvas'); }
+function getSvg()    { return document.getElementById('meshSvg');    }
+
+function scalePos(p) {
+    const c = getCanvas();
+    return { x: p.x * c.offsetWidth / 800, y: p.y * c.offsetHeight / 440 };
+}
+
+function linkKey(i, j) { return i < j ? `${i}-${j}` : `${j}-${i}`; }
+
+function drawLinks() {
+    const svg  = getSvg();
+    svg.querySelectorAll('.mesh-link').forEach(e => e.remove());
+
+    const links = meshMode === 'full' ? ALL_LINKS : PARTIAL_LINKS;
+    links.forEach(([i, j]) => {
+        const a = scalePos(POSITIONS[i]);
+        const b = scalePos(POSITIONS[j]);
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+        line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+        line.setAttribute('class','mesh-link');
+        line.setAttribute('id', 'link-' + linkKey(i,j));
+        getSvg().insertBefore(line, getSvg().firstChild);
+    });
+
+    // Place devices
+    const c = getCanvas();
+    for (let i = 0; i < NUM; i++) {
+        const p = scalePos(POSITIONS[i]);
+        const d = document.getElementById('mdev' + i);
+        d.style.left = p.x + 'px';
+        d.style.top  = p.y + 'px';
+
+        // Label direction
+        const lbl = document.getElementById('mlabel' + i);
+        lbl.style.top = lbl.style.bottom = lbl.style.left = lbl.style.right = '';
+        lbl.style.transform = '';
+        const px = POSITIONS[i].x / 800, py = POSITIONS[i].y / 440;
+        if (py < 0.25) { lbl.style.top = '-22px'; lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+        else if (py > 0.75) { lbl.style.bottom = '-22px'; lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+        else if (px < 0.35) { lbl.style.right = '-58px'; lbl.style.top='50%'; lbl.style.transform='translateY(-50%)'; }
+        else                { lbl.style.left  = '-58px'; lbl.style.top='50%'; lbl.style.transform='translateY(-50%)'; }
+    }
+
+    const cnt = links.length;
+    document.getElementById('linkBadge').textContent = `🔗 Links: ${cnt} | Paths: Multiple`;
+}
+
+window.addEventListener('resize', drawLinks);
+window.addEventListener('load',   drawLinks);
+setTimeout(drawLinks, 120);
+
+// ── MODE TOGGLE ────────────────────────────────────────────
+function setMeshMode(mode) {
+    meshMode = mode;
+    document.getElementById('togFull').classList.toggle('active', mode === 'full');
+    document.getElementById('togPartial').classList.toggle('active', mode === 'partial');
+    document.getElementById('meshModeLabel').textContent = mode === 'full'
+        ? 'Full Mesh: Every device connected to EVERY other device'
+        : 'Partial Mesh: Critical links only — balanced cost vs redundancy';
+    meshReset(true);
+    drawLinks();
+}
+
+// ── UTILITIES ──────────────────────────────────────────────
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function setStatus(msg) { document.getElementById('meshStatus').innerHTML = msg; }
+function setPill(msg)   { document.getElementById('routePill').textContent = msg; }
+
+function lockBtns(lock) {
+    ['btnShortest','btnMulti','btnFail','btnFlood'].forEach(id => {
+        document.getElementById(id).disabled = lock;
+    });
+}
+
+function setDev(i, state) {
+    const d = document.getElementById('mdev' + i);
+    d.classList.remove('dev-src','dev-dst','dev-fwd','dev-fail','dev-alt');
+    if (state) d.classList.add(state);
+}
+
+function setLink(i, j, cls) {
+    const el = document.getElementById('link-' + linkKey(i,j));
+    if (!el) return;
+    el.className.baseVal = 'mesh-link ' + (cls || '');
+}
+
+function linkExists(i, j) {
+    return document.getElementById('link-' + linkKey(i,j)) !== null;
+}
+
+function resetLinks(skipFailed) {
+    const links = meshMode === 'full' ? ALL_LINKS : PARTIAL_LINKS;
+    links.forEach(([i,j]) => {
+        const k = linkKey(i,j);
+        if (skipFailed && failedLinks.has(k)) setLink(i,j,'link-fail');
+        else setLink(i,j,'');
+    });
+}
+
+// ── SVG PACKET ANIMATION ───────────────────────────────────
+function animPkt(pktId, fromIdx, toIdx, durationMs, color) {
+    return new Promise(resolve => {
+        const pkt = document.getElementById(pktId);
+        const svg = getSvg();
+        const c   = getCanvas();
+        const scaleX = c.offsetWidth / 800, scaleY = c.offsetHeight / 440;
+
+        pkt.setAttribute('fill', color || '#00ff88');
+        const start_pos = scalePos(POSITIONS[fromIdx]);
+        const end_pos   = scalePos(POSITIONS[toIdx]);
+        pkt.setAttribute('cx', start_pos.x);
+        pkt.setAttribute('cy', start_pos.y);
+        pkt.style.opacity = '1';
+
+        const t0 = performance.now();
+        function frame(now) {
+            const t  = Math.min((now - t0) / durationMs, 1);
+            const et = 1 - Math.pow(1 - t, 2);
+            pkt.setAttribute('cx', start_pos.x + (end_pos.x - start_pos.x) * et);
+            pkt.setAttribute('cy', start_pos.y + (end_pos.y - start_pos.y) * et);
+            if (t < 1) requestAnimationFrame(frame);
+            else { pkt.style.opacity = '0'; resolve(); }
+        }
+        requestAnimationFrame(frame);
+    });
+}
+
+// Animate packet along a path [0,2,3] for example
+async function animPath(pktId, path, color, delay) {
+    if (delay) await sleep(delay);
+    for (let h = 0; h < path.length - 1; h++) {
+        setLink(path[h], path[h+1], color === '#f8b400' ? 'link-alt' : 'link-active');
+        setDev(path[h+1], h === path.length - 2 ? 'dev-dst' : 'dev-fwd');
+        await animPkt(pktId, path[h], path[h+1], 520, color);
+        await sleep(80);
+    }
+}
+
+// ── DEMOS ──────────────────────────────────────────────────
+async function meshDemo(mode) {
+    if (meshAnimating) return;
+    meshAnimating = true;
+    lockBtns(true);
+    meshReset(true);
+    failedLinks.clear();
+    drawLinks();
+
+    if (mode === 'shortest') {
+        // Router A (0) → Server (3) — shortest direct path
+        setPill('🗺️ Finding shortest path: Router A → Server');
+        setStatus('🗺️ <strong>Router A</strong> wants to send data to <strong>Server</strong>. OSPF calculates the shortest path...');
+        setDev(0, 'dev-src');
+        await sleep(800);
+
+        if (meshMode === 'full' || PARTIAL_LINKS.some(([a,b])=>(a===0&&b===3)||(a===3&&b===0))) {
+            // Direct path exists
+            setStatus('⚡ <strong>Direct path found!</strong> Router A → Server (1 hop). Full mesh advantage — direct link always available!');
+            setPill('✅ Path: Router A → Server (1 hop, direct)');
+            setLink(0, 3, 'link-active');
+            await animPkt('mpkt0', 0, 3, 700, '#00ff88');
+            setDev(3, 'dev-dst');
+            await sleep(500);
+        } else {
+            // Partial: go via 0→1→3
+            setStatus('🗺️ No direct link. Best path via OSPF: Router A → Router B → Server (2 hops)');
+            setPill('✅ Path: Router A → Router B → Server (2 hops)');
+            setDev(1, 'dev-fwd');
+            setLink(0,1,'link-active');
+            await animPkt('mpkt0', 0, 1, 520, '#00ff88');
+            setLink(1,3,'link-active');
+            await animPkt('mpkt0', 1, 3, 520, '#00ff88');
+            setDev(3, 'dev-dst');
+        }
+        await sleep(600);
+        setStatus('✅ <strong>Data delivered successfully!</strong> Mesh networks always find the optimal path using routing protocols like OSPF.');
+
+    } else if (mode === 'multi') {
+        // Multi-path load balancing — 2 paths simultaneously
+        setPill('⚡ ECMP: Load balancing across 2 paths simultaneously');
+        setStatus('⚡ <strong>ECMP Load Balancing!</strong> Two equal-cost paths exist — traffic is split 50/50 across both simultaneously!');
+        setDev(0, 'dev-src');
+        setDev(3, 'dev-dst');
+        await sleep(700);
+
+        if (meshMode === 'full') {
+            setStatus('⚡ <strong>Path 1:</strong> Router A → Router B → Server &nbsp;|&nbsp; <strong>Path 2:</strong> Router A → DC Node → PC-1 → Server — both active simultaneously!');
+            // Path 1: 0→1→3
+            setLink(0,1,'link-active'); setDev(1,'dev-fwd');
+            // Path 2: 0→5→4→3
+            setLink(0,5,'link-alt');    setDev(5,'dev-alt');
+
+            await Promise.all([
+                animPath('mpkt0', [0,1,3], '#00ff88', 0),
+                animPath('mpkt1', [0,5,4,3], '#f8b400', 0),
+            ]);
+        } else {
+            setStatus('⚡ Partial Mesh: <strong>Path 1:</strong> Router A → Router B → Server &nbsp;|&nbsp; <strong>Path 2:</strong> Router A → Server direct. Both active!');
+            setLink(0,1,'link-active'); setDev(1,'dev-fwd');
+            setLink(0,3,'link-alt');
+
+            await Promise.all([
+                animPath('mpkt0', [0,1,3], '#00ff88', 0),
+                animPath('mpkt1', [0,3],   '#f8b400', 0),
+            ]);
+        }
+        await sleep(500);
+        setStatus('✅ <strong>Load balancing complete!</strong> Total throughput doubled by using both paths. This is ECMP — Equal-Cost Multi-Path routing!');
+
+    } else if (mode === 'fail') {
+        // Link failure + automatic reroute
+        const FAIL_I = 0, FAIL_J = 1;
+        setPill('🔥 Simulating link failure & auto-reroute');
+        setStatus('📦 Normal traffic: Router A → Router B → Server via primary path...');
+        setDev(0,'dev-src'); setDev(3,'dev-dst'); setDev(1,'dev-fwd');
+
+        if (!linkExists(FAIL_I, FAIL_J)) {
+            // partial mesh — use another link to fail
+        }
+        setLink(FAIL_I, FAIL_J, 'link-active');
+        await animPkt('mpkt0', FAIL_I, FAIL_J, 500, '#00ff88');
+        if (linkExists(FAIL_J, 3)) {
+            setLink(FAIL_J, 3, 'link-active');
+            await animPkt('mpkt0', FAIL_J, 3, 500, '#00ff88');
+        }
+        setDev(1,null);
+        await sleep(400);
+
+        // Link fails!
+        setStatus('💥 <strong>Link FAILURE detected!</strong> Router A ↔ Router B link is DOWN! OSPF detects this within milliseconds...');
+        failedLinks.add(linkKey(FAIL_I, FAIL_J));
+        setLink(FAIL_I, FAIL_J, 'link-fail');
+        setDev(FAIL_I, 'dev-fail');
+        await sleep(1000);
+
+        setDev(FAIL_I, 'dev-src');
+        setStatus('🔄 <strong>OSPF reconverging...</strong> All routers recalculate. New best path found via alternate route!');
+        await sleep(800);
+
+        // Reroute
+        let altPath;
+        if (meshMode === 'full') {
+            altPath = [0, 5, 3];
+            setStatus('✅ <strong>Auto-rerouted!</strong> New path: Router A → DC Node → Server. Zero manual intervention needed!');
+            setPill('🔄 Rerouted: Router A → DC Node → Server');
+        } else {
+            altPath = [0, 3];
+            setStatus('✅ <strong>Auto-rerouted!</strong> New path: Router A → Server (direct link). Partial mesh redundancy saved the day!');
+            setPill('🔄 Rerouted: Router A → Server (direct)');
+        }
+        altPath.forEach((n,i) => { if(i < altPath.length-1) setLink(n, altPath[i+1], 'link-active'); });
+        setDev(altPath[1], altPath.length > 2 ? 'dev-fwd' : 'dev-dst');
+        if (altPath.length > 2) setDev(altPath[altPath.length-1], 'dev-dst');
+
+        for (let h = 0; h < altPath.length - 1; h++) {
+            await animPkt('mpkt2', altPath[h], altPath[h+1], 520, '#f8b400');
+            await sleep(80);
+        }
+        await sleep(600);
+        setStatus('✅ <strong>Traffic restored!</strong> Convergence took &lt;1 second. Users experienced zero downtime. This is why mesh topology powers mission-critical networks!');
+
+    } else if (mode === 'flood') {
+        // Broadcast flood from Router A
+        setPill('🌊 Broadcast flood from Router A to all devices');
+        setStatus('📢 <strong>Router A</strong> sends a broadcast (e.g., ARP request). All connected neighbours receive it and forward it!');
+        setDev(0, 'dev-src');
+        await sleep(700);
+
+        const links = meshMode === 'full' ? ALL_LINKS : PARTIAL_LINKS;
+        const neighbours = links
+            .filter(([a,b]) => a===0 || b===0)
+            .map(([a,b]) => a===0 ? b : a);
+
+        setStatus(`🌊 Flood propagating to ${neighbours.length} direct neighbours of Router A simultaneously...`);
+        const animPromises = neighbours.map((nb, idx) => {
+            setLink(0, nb, 'link-active');
+            setDev(nb, 'dev-fwd');
+            return animPkt(`mpkt${idx % 4}`, 0, nb, 550, '#00ff88');
+        });
+        await Promise.all(animPromises);
+        await sleep(500);
+
+        // Second hop from each neighbour (simplified — just one more wave)
+        setStatus('🌊 <strong>Second wave:</strong> Each neighbour forwards to THEIR neighbours (controlled flooding with TTL)...');
+        const wave2 = [];
+        for (const nb of neighbours) {
+            const nbNeighbours = links
+                .filter(([a,b]) => (a===nb || b===nb) && (a!==0 && b!==0))
+                .map(([a,b]) => a===nb ? b : a)
+                .filter(x => x !== 0 && !neighbours.includes(x));
+            for (const dest of nbNeighbours.slice(0,1)) {
+                if (linkExists(nb, dest)) {
+                    setLink(nb, dest, 'link-alt');
+                    setDev(dest, 'dev-recv');
+                    wave2.push(animPkt('mpkt2', nb, dest, 480, '#f8b400'));
+                }
+            }
+        }
+        await Promise.all(wave2);
+        await sleep(600);
+        setStatus('✅ <strong>Broadcast complete!</strong> All reachable devices received the message. In real networks, broadcast domains are controlled with VLANs and Layer 3 boundaries to prevent flooding the entire mesh!');
+    }
+
+    meshAnimating = false;
+    lockBtns(false);
+}
+
+// ── RESET ─────────────────────────────────────────────────
+function meshReset(silent) {
+    meshAnimating = false;
+    lockBtns(false);
+    failedLinks.clear();
+    for (let i = 0; i < NUM; i++) setDev(i, null);
+    ['mpkt0','mpkt1','mpkt2','mpkt3'].forEach(id => {
+        const p = document.getElementById(id);
+        if (p) p.style.opacity = '0';
+    });
+    resetLinks(false);
+    setPill('🕸️ Mesh Network — All links active');
+    if (!silent) setStatus('👆 Click a button above to start the simulation!');
+}
+</script>
+</body>
+</html>

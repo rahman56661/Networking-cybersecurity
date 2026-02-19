@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102,126,234,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* Sections */
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #667eea; }
+        .section p { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        /* Animation Box */
+        .animation-box {
+            background: rgba(30,30,30,0.8);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102,126,234,0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+        }
+
+        /* ========== BUS TOPOLOGY VISUALIZATION ========== */
+        .bus-canvas {
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+
+        /* Backbone cable (horizontal line) */
+        .backbone {
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            right: 30px;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            border-radius: 3px;
+            transform: translateY(-50%);
+            box-shadow: 0 0 18px rgba(102,126,234,0.6);
+        }
+
+        /* Terminators at both ends */
+        .terminator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            border: 3px solid #ff4444;
+            box-shadow: 0 0 14px rgba(255,107,107,0.8);
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .terminator-left { left: 6px; }
+        .terminator-right { right: 6px; }
+        .terminator-label {
+            position: absolute;
+            bottom: -22px;
+            font-size: 0.65rem;
+            color: #ff6b6b;
+            white-space: nowrap;
+            font-weight: bold;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Stub cables (vertical lines from backbone to device) */
+        .stub {
+            position: absolute;
+            width: 3px;
+            background: rgba(102,126,234,0.5);
+            top: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        .stub.stub-up { height: 60px; transform: translate(-50%, -100%); }
+        .stub.stub-down { height: 60px; top: 50%; }
+
+        /* Bus devices */
+        .bus-device {
+            position: absolute;
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(102,126,234,0.5);
+            border: 2px solid rgba(102,126,234,0.4);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .bus-device:hover {
+            box-shadow: 0 0 35px rgba(102,126,234,0.9);
+            transform: scale(1.08);
+        }
+        .bus-device.active-send {
+            box-shadow: 0 0 40px rgba(102,126,234,1);
+            border-color: #667eea;
+            animation: senderPulse 0.6s ease infinite;
+        }
+        .bus-device.active-recv {
+            box-shadow: 0 0 40px rgba(118,75,162,1);
+            border-color: #764ba2;
+            animation: recvPulse 0.6s ease infinite;
+        }
+        .bus-device.collision-flash {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            animation: collisionFlash 0.3s ease infinite;
+        }
+
+        .bus-device-label {
+            position: absolute;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Devices ABOVE the bus */
+        .dev-above { transform: translateX(-50%) translateY(-100%); margin-top: -8px; }
+        .dev-above .bus-device-label { bottom: -20px; left: 50%; transform: translateX(-50%); }
+
+        /* Devices BELOW the bus */
+        .dev-below { transform: translateX(-50%); margin-top: 8px; }
+        .dev-below .bus-device-label { top: -20px; left: 50%; transform: translateX(-50%); }
+
+        /* Signal packet traveling on bus */
+        .bus-packet {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            box-shadow: 0 0 20px rgba(0,255,136,0.9);
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: left 0.05s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Collision packet */
+        .bus-packet.collision-pkt {
+            background: linear-gradient(135deg, #ff4444, #ff8800);
+            box-shadow: 0 0 20px rgba(255,80,0,0.9);
+        }
+
+        /* Control Panel */
+        .bus-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .bus-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .bus-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .bus-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .bus-btn.red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .bus-btn.yellow { background: linear-gradient(135deg, #f59e0b, #b45309); }
+
+        .bus-status {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4 { color: #667eea; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        /* Advantages / Disadvantages grid */
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card {
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid;
+        }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        /* Highlight & Example Box */
+        .highlight-box {
+            background: rgba(102,126,234,0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(102,126,234,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        /* Comparison Table */
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(102,126,234,0.2); color: #667eea; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(102,126,234,0.08); }
+
+        /* Real World Timeline */
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#667eea,#764ba2); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#667eea; border:2px solid #764ba2; box-shadow:0 0 10px rgba(102,126,234,0.6); }
+        .timeline-item h4 { color: #a5b4fc; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        /* Footer */
+        footer {
+            background: rgba(30,30,30,0.95);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        /* Animations */
+        @keyframes fadeInDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeInUp   { from { opacity:0; transform:translateY(30px);  } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn     { from { opacity:0; } to { opacity:1; } }
+        @keyframes senderPulse { 0%,100%{ box-shadow:0 0 25px rgba(102,126,234,0.7); } 50%{ box-shadow:0 0 50px rgba(102,126,234,1); } }
+        @keyframes recvPulse   { 0%,100%{ box-shadow:0 0 25px rgba(118,75,162,0.7); } 50%{ box-shadow:0 0 50px rgba(118,75,162,1); } }
+        @keyframes collisionFlash { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+
+        /* Progress bar */
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); z-index:9999; width:0%; transition:width 0.2s; }
+
+        /* Responsive */
+        @media(max-width:768px){
+            .hero h1 { font-size:2.5rem; }
+            .section { padding:25px; }
+            .animation-box { padding:30px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>🚌 Bus Topology</h1>
+        <p class="hero-subtitle">Single Backbone Cable Connects All Devices — The Classic Linear Network!</p>
+        <span class="hero-badge">📡 OSI Layer 1 — Physical Topology</span>
+    </section>
+
+    <!-- ============== LIVE ANIMATION SECTION ============== -->
+    <section class="section" id="animation">
+        <h2>⚡ Bus Topology — Live Interactive Visualization</h2>
+        <p>
+            Watch how data travels through a <strong>Bus Topology</strong> network in real time. All devices share a single 
+            backbone cable. Click the buttons to simulate normal data transfer, broadcast, or a collision!
+        </p>
+
+        <div class="animation-box">
+            <div class="bus-canvas" id="busCanvas">
+
+                <!-- Backbone cable -->
+                <div class="backbone" id="backbone"></div>
+
+                <!-- Terminators -->
+                <div class="terminator terminator-left"><span class="terminator-label">Terminator</span></div>
+                <div class="terminator terminator-right"><span class="terminator-label">Terminator</span></div>
+
+                <!-- Devices will be placed via CSS absolute positioning -->
+                <!-- ABOVE backbone: PC1, PC3, Server -->
+                <!-- BELOW backbone: PC2, PC4, Printer -->
+
+                <!-- PC1 ABOVE -->
+                <div class="dev-above" id="dev1-wrap" style="position:absolute; left:12%; top:50%;">
+                    <div class="stub stub-up" style="position:absolute;left:50%;top:0;height:55px;"></div>
+                    <div class="bus-device" id="dev1">💻<span class="bus-device-label" style="top:-22px;left:50%;transform:translateX(-50%);">PC - 1</span></div>
+                </div>
+
+                <!-- PC2 BELOW -->
+                <div style="position:absolute; left:24%; top:50%;">
+                    <div class="stub stub-down" style="position:absolute;left:50%;width:3px;height:55px;background:rgba(102,126,234,0.5);transform:translateX(-50%);"></div>
+                    <div class="bus-device dev-below" id="dev2" style="position:absolute;left:50%;top:8px;transform:translateX(-50%) translateY(55px);">💻<span class="bus-device-label" style="top:-20px;left:50%;transform:translateX(-50%);">PC - 2</span></div>
+                </div>
+
+                <!-- PC3 ABOVE -->
+                <div style="position:absolute; left:42%; top:50%;">
+                    <div class="stub" style="position:absolute;left:50%;width:3px;height:55px;background:rgba(102,126,234,0.5);transform:translate(-50%,-100%);top:0;"></div>
+                    <div class="bus-device" id="dev3" style="position:absolute;left:50%;top:0;transform:translate(-50%,-100%) translateY(-8px);">🖥️<span class="bus-device-label" style="bottom:-20px;left:50%;transform:translateX(-50%);">PC - 3</span></div>
+                </div>
+
+                <!-- Server BELOW -->
+                <div style="position:absolute; left:58%; top:50%;">
+                    <div class="stub" style="position:absolute;left:50%;width:3px;height:55px;background:rgba(118,75,162,0.5);transform:translateX(-50%);top:0;"></div>
+                    <div class="bus-device" id="dev4" style="position:absolute;left:50%;top:63px;transform:translateX(-50%);background:linear-gradient(135deg,#764ba2,#667eea);">🖥️<span class="bus-device-label" style="top:-20px;left:50%;transform:translateX(-50%);">PC - 4</span></div>
+                </div>
+
+                <!-- PC4 ABOVE -->
+                <div style="position:absolute; left:74%; top:50%;">
+                    <div class="stub" style="position:absolute;left:50%;width:3px;height:55px;background:rgba(102,126,234,0.5);transform:translate(-50%,-100%);top:0;"></div>
+                    <div class="bus-device" id="dev5" style="position:absolute;left:50%;top:0;transform:translate(-50%,-100%) translateY(-8px);">💻<span class="bus-device-label" style="bottom:-20px;left:50%;transform:translateX(-50%);">PC - 5</span></div>
+                </div>
+
+                <!-- Printer BELOW -->
+                <div style="position:absolute; left:88%; top:50%;">
+                    <div class="stub" style="position:absolute;left:50%;width:3px;height:55px;background:rgba(102,126,234,0.5);transform:translateX(-50%);top:0;"></div>
+                    <div class="bus-device" id="dev6" style="position:absolute;left:50%;top:63px;transform:translateX(-50%);">🖨️<span class="bus-device-label" style="top:-20px;left:50%;transform:translateX(-50%);">Printer</span></div>
+                </div>
+
+                <!-- Animated Packet -->
+                <div class="bus-packet" id="busPacket1"></div>
+                <div class="bus-packet" id="busPacket2" style="background:linear-gradient(135deg,#ff9a00,#ff4444);box-shadow:0 0 20px rgba(255,100,0,0.9);"></div>
+
+            </div><!-- end bus-canvas -->
+        </div><!-- end animation-box -->
+
+        <div class="bus-controls">
+            <button class="bus-btn" id="btnNormal" onclick="busDemo('normal')">▶ PC1 → PC5 (Unicast)</button>
+            <button class="bus-btn yellow" id="btnBroadcast" onclick="busDemo('broadcast')">📢 Broadcast (All Devices)</button>
+            <button class="bus-btn red" id="btnCollision" onclick="busDemo('collision')">💥 Simulate Collision</button>
+            <button class="bus-btn" style="background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.2);" onclick="busReset()">↺ Reset</button>
+            <div class="bus-status" id="busStatus">👆 Click a button above to start the simulation!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Shared Medium:</strong> All devices connect to ONE single backbone cable — data travels on a shared bus</li>
+                <li><strong>Broadcast Nature:</strong> When one device sends data, ALL devices on the bus receive it (only the intended device reads it)</li>
+                <li><strong>Collision Risk:</strong> If 2 devices send data simultaneously → Collision occurs! CSMA/CD handles this</li>
+                <li><strong>Terminators:</strong> Both ends have terminators (50 Ohm resistors) to absorb signals and prevent reflections</li>
+                <li><strong>One Failure = All Fail:</strong> If the backbone cable breaks, the entire network goes down</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============== WHAT IS BUS TOPOLOGY ============== -->
+    <section class="section" id="what">
+        <h2>🔍 What is Bus Topology?</h2>
+        <p>
+            <strong>Bus Topology</strong> is a network configuration where all devices (computers, printers, servers) are connected to 
+            a single central cable called the <strong>"backbone"</strong> or <strong>"trunk"</strong>. Data travels in both directions 
+            along this shared cable, and every device on the network receives the transmitted data — but only the intended recipient 
+            actually processes it.
+        </p>
+        <p>
+            Think of a Bus Topology like a <strong>city bus route</strong>: there is one main road (the bus cable), and multiple bus 
+            stops (devices) along that road. When a passenger (data packet) travels, they pass through every stop — but only get 
+            off at their destination!
+        </p>
+
+        <div class="example-box">
+            <strong>📡 Simple Analogy:</strong><br><br>
+            Imagine a single hallway in a school (backbone cable).<br>
+            All classrooms open directly into this hallway (devices connected via stubs).<br>
+            When a teacher makes an announcement from the PA system (broadcasts), EVERY classroom hears it.<br>
+            But only the classroom it's addressed to actually responds.<br><br>
+            The doors at both ends of the hallway are locked (terminators) — to stop sound echoing back! 🔒
+        </div>
+
+        <h3>🔧 Core Components of Bus Topology</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Backbone Cable (Trunk)</h4>
+                <p>The single central cable that connects all devices. Typically coaxial cable (RG-58 for thin Ethernet, RG-8 for thick Ethernet). This is the "bus" — the shared communication highway for all data.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔌</span>
+                <h4>Drop Cables / Stubs</h4>
+                <p>Short cables that branch from the backbone to each individual device. In Thinnet Ethernet, BNC T-connectors are used. In Thicknet, vampire taps pierce the backbone to connect drop cables.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔴</span>
+                <h4>Terminators (50Ω)</h4>
+                <p>Resistors placed at BOTH ends of the backbone cable. They absorb the electrical signal when it reaches the end, preventing "signal reflection" back into the cable which would corrupt data.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">💻</span>
+                <h4>Nodes / Devices</h4>
+                <p>Any device connected to the bus — computers, workstations, printers, servers. Each device has a NIC (Network Interface Card) that connects it to the backbone via stub cables.</p>
+            </div>
+        </div>
+
+        <h3>📶 How CSMA/CD Works on Bus Topology</h3>
+        <p>
+            Since all devices share the same medium, a traffic control mechanism called <strong>CSMA/CD (Carrier Sense Multiple Access / Collision Detection)</strong> is used:
+        </p>
+        <div class="example-box">
+            <strong>CSMA/CD — Step by Step:</strong><br><br>
+            <strong>1. Carrier Sense (CS):</strong> Before sending, a device "listens" to the bus. Is anyone else transmitting?<br>
+            <strong>2. Multiple Access (MA):</strong> All devices have equal right to access the shared bus medium.<br>
+            <strong>3. If bus is FREE:</strong> Device starts transmitting its data packet onto the backbone.<br>
+            <strong>4. Collision Detection (CD):</strong> While transmitting, device monitors the bus. If another device also started transmitting simultaneously — COLLISION detected!<br>
+            <strong>5. Jam Signal:</strong> Both devices send a "jam signal" to alert all devices that a collision occurred.<br>
+            <strong>6. Backoff:</strong> Both devices wait for a RANDOM time period before retrying transmission.<br>
+            <strong>7. Retry:</strong> After random wait, devices try step 1 again — listen before sending.<br><br>
+            This is why Bus Topology works — but becomes slow with many devices (more collisions)!
+        </div>
+    </section>
+
+    <!-- ============== ADVANTAGES & DISADVANTAGES ============== -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Bus Topology has clear strengths and limitations — understanding both helps you decide when it's the right choice.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>Simple and easy to install</li>
+                    <li>Requires less cable than other topologies</li>
+                    <li>Very cost-effective & economical</li>
+                    <li>Easy to add new devices to the bus</li>
+                    <li>Works well for small networks</li>
+                    <li>No central hub or switch needed</li>
+                    <li>Easy to understand and troubleshoot</li>
+                    <li>Passive topology — no active components</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Single point of failure — cable breaks = total failure</li>
+                    <li>Performance degrades as more devices added</li>
+                    <li>Collisions increase with network load</li>
+                    <li>Limited cable length (Thinnet: 185m)</li>
+                    <li>Difficult to isolate faults in the cable</li>
+                    <li>Not suitable for large networks</li>
+                    <li>Terminators required at both ends</li>
+                    <li>Data security low — all devices see all traffic</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 Rule of Thumb:</strong> Bus Topology works best for <strong>small, temporary, or low-budget networks</strong> with 
+            fewer than 10–15 devices. As network size grows, collisions become frequent and performance drops significantly.
+            For larger modern networks, Star or Mesh topologies are preferred.
+        </div>
+    </section>
+
+    <!-- ============== REAL WORLD EXAMPLES ============== -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Bus topology was extremely common in the early days of networking. Even today, the concept appears in several 
+            modern technologies. Here's where you'll find Bus Topology in the real world:
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏢</span>
+                <h4>Early Office Networks (1980s–90s)</h4>
+                <p>The original Ethernet (10BASE2 "Thinnet" and 10BASE5 "Thicknet") used Bus Topology. Office computers were connected via coaxial cables with BNC connectors in a straight line. This was the standard before switches were affordable.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🚗</span>
+                <h4>CAN Bus in Vehicles</h4>
+                <p>Modern cars use <strong>Controller Area Network (CAN) Bus</strong> — a bus topology connecting ECU (Engine Control Unit), ABS, airbags, dashboard sensors. Your car's engine management system is literally a bus network inside! BMW, Toyota, all major brands use this.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏭</span>
+                <h4>Industrial & Factory Networks</h4>
+                <p>Industrial automation systems use bus topologies like <strong>PROFIBUS</strong> and <strong>Modbus</strong>. Machines on a factory floor — robotic arms, sensors, PLCs (Programmable Logic Controllers) — all share a common industrial bus to communicate.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🖥️</span>
+                <h4>Computer Motherboard Buses</h4>
+                <p>Inside your computer, the <strong>PCI bus, USB bus, memory bus</strong> are all bus topologies! The CPU connects to RAM, GPU, and peripherals via a shared bus. The concept of "bus topology" lives on inside every computer you use today.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏫</span>
+                <h4>School & Small Office Labs</h4>
+                <p>Computer labs in schools used Bus Topology extensively in the 1990s and 2000s because it was cheap — just run one long coaxial cable and tap each computer into it. No need for expensive switches or hubs. Simple and effective for teaching.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🛩️</span>
+                <h4>Aerospace & Military Systems</h4>
+                <p><strong>MIL-STD-1553</strong> is a military bus standard used in fighter jets, helicopters, and spacecraft. The F-16, Apache helicopter, and Space Shuttle all used bus topology for avionics systems communication between sensors, computers, and instruments.</p>
+            </div>
+        </div>
+
+        <h3>📅 Historical Journey of Bus Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1970s — Ethernet Invented at Xerox PARC</h4>
+                <p>Robert Metcalfe invented Ethernet using Bus Topology with CSMA/CD. The first Ethernet was 10BASE5 (Thicknet) — a thick coaxial cable running through ceilings and walls connecting mainframe computers.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1983 — 10BASE5 (ThickNet) Standardized</h4>
+                <p>IEEE 802.3 standard published. "Vampire taps" physically pierce the thick coaxial backbone cable to connect each workstation. Universities and large companies adopt this. Max 500m backbone, 100 devices.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1985 — 10BASE2 (ThinNet) Popularized</h4>
+                <p>Cheaper, thinner RG-58 coaxial cable with BNC T-connectors. Max 185m, 30 devices per segment. This became the most popular office networking solution through the late 1980s and early 1990s.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990s — Star Topology Takes Over</h4>
+                <p>10BASE-T with twisted-pair cables and hubs/switches became affordable. Star topology replaced bus in most offices due to better reliability — one cable failure doesn't bring down the whole network.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — Lives On in Modern Tech</h4>
+                <p>Physical bus topology for LANs is largely obsolete. However, the concept lives on: CAN bus in vehicles, USB bus in computers, industrial Modbus/PROFIBUS networks, and many embedded system applications still use bus topology principles.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============== BUS VS OTHER TOPOLOGIES ============== -->
+    <section class="section" id="comparison">
+        <h2>📊 Bus Topology vs Other Topologies</h2>
+        <p>How does Bus Topology compare against Star, Ring, and Mesh topologies in key parameters?</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>🚌 Bus</th>
+                <th>⭐ Star</th>
+                <th>🔄 Ring</th>
+                <th>🕸️ Mesh</th>
+            </tr>
+            <tr>
+                <td><strong>Cable Required</strong></td>
+                <td>⭐ Least cable</td>
+                <td>Moderate</td>
+                <td>Moderate</td>
+                <td>❌ Most cable</td>
+            </tr>
+            <tr>
+                <td><strong>Installation Cost</strong></td>
+                <td>⭐ Very cheap</td>
+                <td>Moderate</td>
+                <td>Moderate</td>
+                <td>❌ Expensive</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance</strong></td>
+                <td>❌ Very poor</td>
+                <td>🟡 Moderate</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Excellent</td>
+            </tr>
+            <tr>
+                <td><strong>Performance (Large Network)</strong></td>
+                <td>❌ Degrades fast</td>
+                <td>⭐ Good</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Excellent</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>❌ Limited</td>
+                <td>⭐ Easy</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Central Device Needed</strong></td>
+                <td>⭐ No (no hub/switch)</td>
+                <td>❌ Yes (hub/switch)</td>
+                <td>⭐ No</td>
+                <td>⭐ No</td>
+            </tr>
+            <tr>
+                <td><strong>Failure Impact</strong></td>
+                <td>❌ Entire network</td>
+                <td>🟡 Only that device</td>
+                <td>❌ Entire network</td>
+                <td>⭐ Only that path</td>
+            </tr>
+            <tr>
+                <td><strong>Security</strong></td>
+                <td>❌ Poor (all see data)</td>
+                <td>⭐ Better (switchport)</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Good</td>
+            </tr>
+            <tr>
+                <td><strong>Collision Domain</strong></td>
+                <td>❌ All share one</td>
+                <td>⭐ Per port (with switch)</td>
+                <td>🟡 Token prevents</td>
+                <td>⭐ Per link</td>
+            </tr>
+            <tr>
+                <td><strong>Modern Usage</strong></td>
+                <td>🔴 Mostly obsolete</td>
+                <td>🟢 Most common LAN</td>
+                <td>🟡 Specialized</td>
+                <td>🟢 Enterprise/WAN</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============== TECHNICAL SPECS ============== -->
+    <section class="section" id="specs">
+        <h2>🔬 Technical Specifications</h2>
+        <p>Key technical details of the two main Bus Topology Ethernet standards:</p>
+
+        <div class="adv-grid">
+            <div class="info-card">
+                <span class="info-card-icon">📶</span>
+                <h4>10BASE5 — "ThickNet"</h4>
+                <p>
+                    <strong>Cable:</strong> RG-8 Thick Coaxial (10mm diameter)<br>
+                    <strong>Max Segment Length:</strong> 500 meters<br>
+                    <strong>Max Devices per Segment:</strong> 100 nodes<br>
+                    <strong>Device Spacing:</strong> Minimum 2.5m between taps<br>
+                    <strong>Connector:</strong> AUI (Attachment Unit Interface) + Vampire Tap<br>
+                    <strong>Speed:</strong> 10 Mbps<br>
+                    <strong>Max Segments (5-4-3 rule):</strong> 5 segments, 4 repeaters<br>
+                    <strong>Nickname:</strong> "Frozen Yellow Garden Hose" 🌿
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>10BASE2 — "ThinNet"</h4>
+                <p>
+                    <strong>Cable:</strong> RG-58 Thin Coaxial (5mm diameter)<br>
+                    <strong>Max Segment Length:</strong> 185 meters<br>
+                    <strong>Max Devices per Segment:</strong> 30 nodes<br>
+                    <strong>Device Spacing:</strong> Minimum 0.5m between connectors<br>
+                    <strong>Connector:</strong> BNC T-Connector<br>
+                    <strong>Speed:</strong> 10 Mbps<br>
+                    <strong>Terminator:</strong> 50 Ohm at both ends (required!)<br>
+                    <strong>Nickname:</strong> "Cheapernet" 💰
+                </p>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <strong>📏 The 5-4-3 Rule (Ethernet Bus):</strong><br><br>
+            Maximum: <strong>5 cable segments</strong> connected by <strong>4 repeaters</strong>, with only <strong>3 segments populated</strong> (having devices).<br><br>
+            Segment 1: Devices ✅ → Repeater → Segment 2: Devices ✅ → Repeater → Segment 3 (link only) → Repeater → Segment 4: Devices ✅ → Repeater → Segment 5 (link only)<br><br>
+            Total max length with repeaters: <strong>5 × 185m = 925m</strong> for ThinNet | <strong>5 × 500m = 2500m</strong> for ThickNet<br>
+            Violating this rule causes signal timing issues and excessive collisions!
+        </div>
+    </section>
+
+    <!-- ============== MODERN RELEVANCE ============== -->
+    <section class="section" id="modern">
+        <h2>🔮 Modern Relevance & Where Bus Lives Today</h2>
+        <p>
+            Physical Bus Topology for LAN is largely obsolete — but the <strong>concept of a shared bus</strong> is everywhere in modern technology!
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🚗</span>
+                <h4>Automotive CAN Bus</h4>
+                <p>Every modern car has a CAN (Controller Area Network) bus. 70+ ECUs (Electronic Control Units) share a two-wire differential bus at speeds up to 1 Mbps. Controls everything from engine timing to power windows!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔌</span>
+                <h4>USB (Universal Serial Bus)</h4>
+                <p>USB is a bus topology! Your USB hub connects multiple peripherals to a single data path. All USB devices share the host controller's bandwidth. "USB" literally has "Bus" in its name — classic example of the concept surviving!</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏭</span>
+                <h4>Modbus & PROFIBUS</h4>
+                <p>Industrial automation protocols used globally in factories. Sensors, PLCs, drives, and HMIs on assembly lines all share a single industrial bus. These are still widely deployed in manufacturing today.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏠</span>
+                <h4>Home Automation (KNX)</h4>
+                <p>Smart home systems like KNX (used in European smart buildings) use bus topology — light switches, thermostats, blinds, and sensors all share a common KNX bus twisted-pair cable through the walls.</p>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 20px;">
+            <strong>🔑 Bottom Line:</strong> While you won't find a coaxial Bus Topology LAN in any modern office, 
+            the <em>principles</em> of shared medium access, collision detection (CSMA/CD), and bus-based communication 
+            are fundamental to networking theory and still power billions of devices in embedded systems, vehicles, and industrial automation every day.
+        </div>
+    </section>
+
+    <!-- ============== KEY TAKEAWAYS ============== -->
+    <section class="section">
+        <h2>🎯 Key Takeaways</h2>
+        <div class="highlight-box">
+            <ul>
+                <li>Bus Topology connects all devices to a <strong>single shared backbone cable</strong> — the "bus"</li>
+                <li>Data travels in <strong>both directions</strong> on the cable; all devices receive every transmission</li>
+                <li><strong>Terminators (50Ω)</strong> at both ends are MANDATORY to prevent signal reflection</li>
+                <li><strong>CSMA/CD</strong> protocol manages shared access and handles collisions on the bus</li>
+                <li>Main advantage: <strong>cheap, simple, less cable</strong> — great for small temporary networks</li>
+                <li>Main disadvantage: <strong>single point of failure</strong> — one cable break = total network failure</li>
+                <li>Performance degrades as devices increase — more traffic = more collisions</li>
+                <li>10BASE5 (ThickNet): 500m max | 10BASE2 (ThinNet): 185m max — both at 10 Mbps</li>
+                <li>The <strong>5-4-3 Rule</strong> limits Bus Topology to 5 segments, 4 repeaters, 3 populated</li>
+                <li>Largely replaced by <strong>Star Topology</strong> in modern LANs — but concept lives in CAN bus, USB, industrial protocols</li>
+            </ul>
+        </div>
+    </section>
+
+</div><!-- end container -->
+
+<!-- Footer -->
+<footer>
+    <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+    <p style="margin-top: 10px; font-size: 0.9rem;">Keep exploring, keep learning! 🚀</p>
+</footer>
+
+<script>
+// ─── PROGRESS BAR ───────────────────────────────────────
+window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+});
+
+// ─── FADE IN ON SCROLL ──────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(20px)';
+    s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(s);
+});
+
+// ─── BUS TOPOLOGY ANIMATION ──────────────────────────────
+let busAnimating = false;
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function setStatus(msg) {
+    document.getElementById('busStatus').innerHTML = msg;
+}
+
+function setDeviceState(id, state) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('active-send', 'active-recv', 'collision-flash');
+    if (state) el.classList.add(state);
+}
+
+function resetAllDevices() {
+    ['dev1','dev2','dev3','dev4','dev5','dev6'].forEach(id => setDeviceState(id, null));
+}
+
+// Get left% of each device on the backbone
+const devPositions = {
+    dev1: 12,
+    dev2: 24,
+    dev3: 42,
+    dev4: 58,
+    dev5: 74,
+    dev6: 88,
+};
+
+function movePacket(pktId, fromPct, toPct, durationMs, label, color) {
+    return new Promise(resolve => {
+        const pkt = document.getElementById(pktId);
+        pkt.textContent = label;
+        if (color) { pkt.style.background = color; pkt.style.boxShadow = `0 0 20px ${color}88`; }
+        else { pkt.style.background = 'linear-gradient(135deg,#00ff88,#00ccff)'; pkt.style.boxShadow = '0 0 20px rgba(0,255,136,0.9)'; }
+        pkt.style.left = fromPct + '%';
+        pkt.style.opacity = '1';
+        pkt.style.transition = `left ${durationMs}ms linear`;
+        void pkt.offsetWidth; // force reflow
+        pkt.style.left = toPct + '%';
+        setTimeout(() => {
+            pkt.style.opacity = '0';
+            pkt.style.transition = '';
+            resolve();
+        }, durationMs);
+    });
+}
+
+function hidePacket(pktId) {
+    const pkt = document.getElementById(pktId);
+    pkt.style.opacity = '0';
+    pkt.style.transition = '';
+}
+
+function lockBtns(lock) {
+    ['btnNormal','btnBroadcast','btnCollision'].forEach(id => {
+        document.getElementById(id).disabled = lock;
+    });
+}
+
+async function busDemo(mode) {
+    if (busAnimating) return;
+    busAnimating = true;
+    lockBtns(true);
+    resetAllDevices();
+    hidePacket('busPacket1');
+    hidePacket('busPacket2');
+
+    if (mode === 'normal') {
+        // PC1 sends to PC5 (unicast)
+        setStatus('📡 <strong>PC-1</strong> wants to send data to <strong>PC-5</strong>. Listening for carrier signal...');
+        setDeviceState('dev1', 'active-send');
+        await sleep(900);
+
+        setStatus('✅ Bus is FREE! PC-1 starts transmitting the data packet onto the backbone...');
+        await sleep(600);
+
+        setStatus('📦 Data packet traveling RIGHT along the backbone → All devices receive it but only PC-5 accepts it');
+        // Packet travels from dev1 (12%) → dev6 (88%)
+        const pkt = movePacket('busPacket1', 12, 88, 1600, 'DATA', null);
+
+        // Highlight each device as packet passes
+        await sleep(300);
+        setDeviceState('dev2', 'active-recv');
+        await sleep(350);
+        setDeviceState('dev2', null);
+        setDeviceState('dev3', 'active-recv');
+        await sleep(350);
+        setDeviceState('dev3', null);
+        setDeviceState('dev4', 'active-recv');
+        await sleep(350);
+        setDeviceState('dev4', null);
+        setDeviceState('dev5', 'active-recv');
+
+        await pkt;
+        await sleep(400);
+        setStatus('✅ <strong>PC-5</strong> received the data! PC-2, PC-3, PC-4, Printer also received it but <strong>ignored</strong> it (wrong destination MAC address).');
+        setDeviceState('dev1', null);
+        setDeviceState('dev5', null);
+
+    } else if (mode === 'broadcast') {
+        setStatus('📢 <strong>PC-3</strong> sends a BROADCAST message — ALL devices must receive and process it!');
+        setDeviceState('dev3', 'active-send');
+        await sleep(900);
+
+        setStatus('📦 Broadcast packet travels in BOTH directions simultaneously on the backbone...');
+        // Packet goes left first
+        const p1 = movePacket('busPacket1', 42, 5, 1000, 'BCAST', 'linear-gradient(135deg,#f59e0b,#b45309)');
+        const p2 = movePacket('busPacket2', 42, 95, 1000, 'BCAST', 'linear-gradient(135deg,#f59e0b,#b45309)');
+
+        await sleep(200);
+        setDeviceState('dev2', 'active-recv');
+        setDeviceState('dev4', 'active-recv');
+        await sleep(350);
+        setDeviceState('dev1', 'active-recv');
+        setDeviceState('dev5', 'active-recv');
+        await sleep(350);
+        setDeviceState('dev6', 'active-recv');
+
+        await Promise.all([p1, p2]);
+        await sleep(500);
+        setStatus('✅ BROADCAST complete! ALL 5 devices (PC-1, PC-2, PC-4, PC-5, Printer) received and <strong>processed</strong> the message. Terminators absorbed the signal at both ends!');
+        resetAllDevices();
+        setDeviceState('dev3', null);
+
+    } else if (mode === 'collision') {
+        setStatus('⚠️ <strong>PC-1</strong> AND <strong>PC-6 (Printer)</strong> both sense the bus is free and start transmitting simultaneously!');
+        setDeviceState('dev1', 'active-send');
+        setDeviceState('dev6', 'active-send');
+        await sleep(900);
+
+        setStatus('💥 COLLISION DETECTED! Both packets collide in the middle of the backbone!');
+        // PC1 sends right, PC6 sends left, they collide near center
+        const ca = movePacket('busPacket1', 12, 50, 700, 'DATA', 'linear-gradient(135deg,#667eea,#764ba2)');
+        const cb = movePacket('busPacket2', 88, 50, 700, 'DATA', 'linear-gradient(135deg,#ff9a00,#ff4444)');
+        await Promise.all([ca, cb]);
+
+        // Flash collision
+        ['dev1','dev2','dev3','dev4','dev5','dev6'].forEach(id => setDeviceState(id, 'collision-flash'));
+        setStatus('💥💥 <strong>COLLISION!</strong> JAM SIGNAL broadcast to all devices! Both PC-1 and Printer must STOP immediately!');
+        await sleep(1200);
+
+        resetAllDevices();
+        setStatus('⏱️ CSMA/CD Backoff: PC-1 waits <strong>~47ms</strong>, Printer waits <strong>~23ms</strong> (random backoff). Then both listen before retrying...');
+        await sleep(1400);
+        setStatus('🔄 After backoff, devices listen again. Bus is now FREE — PC-1 retransmits successfully. This is how <strong>CSMA/CD</strong> handles collisions!');
+    }
+
+    busAnimating = false;
+    lockBtns(false);
+}
+
+function busReset() {
+    busAnimating = false;
+    lockBtns(false);
+    resetAllDevices();
+    hidePacket('busPacket1');
+    hidePacket('busPacket2');
+    setStatus('👆 Click a button above to start the simulation!');
+}
+</script>
+</body>
+</html>

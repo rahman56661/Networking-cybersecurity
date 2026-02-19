@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch - Network Device | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #06d6a0 0%, #118ab2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(6, 214, 160, 0.2);
+            border: 1px solid #06d6a0;
+            border-radius: 20px;
+            color: #06d6a0;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #06d6a0;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #06d6a0;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Switch Illustration */
+        .switch-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(6, 214, 160, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        /* Central Switch */
+        .switch-device {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 80px;
+            background: linear-gradient(135deg, #06d6a0 0%, #118ab2 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: switchPulse 3s infinite;
+            box-shadow: 0 0 60px rgba(6, 214, 160, 0.8);
+            z-index: 10;
+        }
+
+        .switch-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+        .switch-icon {
+            font-size: 3rem;
+        }
+
+        /* Port Indicators on Switch */
+        .switch-ports {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 80px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-evenly;
+            padding-bottom: 8px;
+            z-index: 11;
+        }
+
+        .port-led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: ledBlink 2s infinite;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        .port-led:nth-child(2) { animation-delay: 0.3s; }
+        .port-led:nth-child(3) { animation-delay: 0.6s; }
+        .port-led:nth-child(4) { animation-delay: 0.9s; }
+        .port-led:nth-child(5) { animation-delay: 1.2s; }
+
+        /* Connected Devices */
+        .network-device {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(6, 214, 160, 0.5);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .network-device:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(6, 214, 160, 0.6);
+            border-color: #06d6a0;
+        }
+
+        .device-icon {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .device-label {
+            font-size: 0.75rem;
+            color: #06d6a0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Device Positions */
+        .device-laptop1 { top: 10%; left: 15%; }
+        .device-laptop2 { top: 10%; right: 15%; }
+        .device-pc1 { bottom: 15%; left: 12%; }
+        .device-pc2 { bottom: 15%; right: 12%; }
+        .device-server { top: 50%; right: 5%; }
+
+        /* Wired Connections (Lines) */
+        .wire {
+            position: absolute;
+            background: linear-gradient(90deg, rgba(6, 214, 160, 0.3) 0%, rgba(6, 214, 160, 0.6) 50%, rgba(6, 214, 160, 0.3) 100%);
+            transform-origin: 0 50%;
+            height: 3px;
+            z-index: 1;
+            animation: wireGlow 2s infinite;
+        }
+
+        .wire::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(4px);
+            transform: translateY(-50%);
+        }
+
+        /* Data Packets */
+        .packet {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ff88;
+            z-index: 5;
+        }
+
+        /* Position wires connecting switch to devices */
+        .wire-laptop1 {
+            top: calc(10% + 50px);
+            left: calc(15% + 50px);
+            width: calc(50% - 15% - 150px);
+            transform: rotate(-25deg);
+        }
+
+        .wire-laptop2 {
+            top: calc(10% + 50px);
+            right: calc(15% + 50px);
+            width: calc(50% - 15% - 150px);
+            transform: rotate(25deg);
+            transform-origin: 100% 50%;
+        }
+
+        .wire-pc1 {
+            bottom: calc(15% + 50px);
+            left: calc(12% + 50px);
+            width: calc(50% - 12% - 150px);
+            transform: rotate(25deg);
+        }
+
+        .wire-pc2 {
+            bottom: calc(15% + 50px);
+            right: calc(12% + 50px);
+            width: calc(50% - 12% - 150px);
+            transform: rotate(-25deg);
+            transform-origin: 100% 50%;
+        }
+
+        .wire-server {
+            top: calc(50%);
+            right: calc(5% + 50px);
+            width: calc(50% - 5% - 150px);
+        }
+
+        /* MAC Address Labels */
+        .mac-label {
+            position: absolute;
+            font-size: 0.7rem;
+            color: #06d6a0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            z-index: 12;
+            white-space: nowrap;
+        }
+
+        .mac-laptop1 { top: calc(10% + 105px); left: 15%; }
+        .mac-laptop2 { top: calc(10% + 105px); right: 15%; }
+        .mac-pc1 { bottom: calc(15% - 20px); left: 12%; }
+        .mac-pc2 { bottom: calc(15% - 20px); right: 12%; }
+        .mac-server { top: calc(50% - 30px); right: 5%; }
+
+        /* Info Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #06d6a0;
+            box-shadow: 0 10px 30px rgba(6, 214, 160, 0.3);
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .info-card h4 {
+            color: #06d6a0;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #c0c0c0;
+            text-align: left;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(6, 214, 160, 0.1);
+            border-left: 4px solid #06d6a0;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h3 {
+            color: #06d6a0;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box ul {
+            list-style-position: inside;
+            color: #d0d0d0;
+        }
+
+        .highlight-box li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(30, 30, 30, 0.6);
+            border: 2px dashed rgba(6, 214, 160, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: rgba(6, 214, 160, 0.2);
+            color: #06d6a0;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(6, 214, 160, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(30, 30, 30, 0.95);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes heroGlow {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes switchPulse {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(6, 214, 160, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(6, 214, 160, 1);
+            }
+        }
+
+        @keyframes ledBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes wireGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes packetFlow {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(var(--packet-distance)) translateY(0);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .switch-illustration {
+                min-height: 500px;
+            }
+
+            .network-device {
+                width: 70px;
+                height: 70px;
+            }
+
+            .device-icon {
+                font-size: 1.8rem;
+            }
+
+            .device-label {
+                font-size: 0.65rem;
+            }
+
+            .mac-label {
+                font-size: 0.6rem;
+                padding: 2px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">🌐 Network Learning Hub</a>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="nav-btn">📚 Dashboard</a>
+                <!--<a href="#" class="nav-btn">🔙 Back</a>-->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🔀 Network Switch</h1>
+                <p class="hero-subtitle">Intelligent Layer 2 Device - MAC Address Based Forwarding</p>
+                <div>
+                    <span class="hero-badge">Layer 2 Device</span>
+                    <span class="hero-badge">MAC Address Table</span>
+                    <span class="hero-badge">Full-Duplex</span>
+                    <span class="hero-badge">Collision-Free</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Switch Illustration -->
+        <section class="section">
+            <h2>⚡ How Switch Works - Live Visualization</h2>
+            <p>
+                Watch how a network switch intelligently forwards data packets based on MAC addresses. 
+                Unlike a hub, a switch learns which device is connected to which port and sends data only to the intended recipient.
+            </p>
+
+            <div class="switch-illustration">
+                <!-- Central Switch -->
+                <div class="switch-device">
+                    <div class="switch-icon">🔀</div>
+                    <div class="switch-label">SWITCH</div>
+                </div>
+
+                <!-- Port LED Indicators -->
+                <div class="switch-ports">
+                    <div class="port-led"></div>
+                    <div class="port-led"></div>
+                    <div class="port-led"></div>
+                    <div class="port-led"></div>
+                    <div class="port-led"></div>
+                </div>
+
+                <!-- Wired Connections -->
+                <div class="wire wire-laptop1"></div>
+                <div class="wire wire-laptop2"></div>
+                <div class="wire wire-pc1"></div>
+                <div class="wire wire-pc2"></div>
+                <div class="wire wire-server"></div>
+
+                <!-- Connected Devices -->
+                <div class="network-device device-laptop1">
+                    <div class="device-icon">💻</div>
+                    <div class="device-label">Laptop A</div>
+                </div>
+
+                <div class="network-device device-laptop2">
+                    <div class="device-icon">💻</div>
+                    <div class="device-label">Laptop B</div>
+                </div>
+
+                <div class="network-device device-pc1">
+                    <div class="device-icon">🖥️</div>
+                    <div class="device-label">PC 1</div>
+                </div>
+
+                <div class="network-device device-pc2">
+                    <div class="device-icon">🖥️</div>
+                    <div class="device-label">PC 2</div>
+                </div>
+
+                <div class="network-device device-server">
+                    <div class="device-icon">🖥️</div>
+                    <div class="device-label">Server</div>
+                </div>
+
+                <!-- MAC Address Labels -->
+                <div class="mac-label mac-laptop1">AA:BB:CC:01</div>
+                <div class="mac-label mac-laptop2">AA:BB:CC:02</div>
+                <div class="mac-label mac-pc1">AA:BB:CC:03</div>
+                <div class="mac-label mac-pc2">AA:BB:CC:04</div>
+                <div class="mac-label mac-server">AA:BB:CC:05</div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>🎯 Key Observations:</h3>
+                <ul>
+                    <li><strong>Smart Forwarding:</strong> Data packets travel only along the specific wire to the destination device</li>
+                    <li><strong>MAC Address Learning:</strong> Switch maintains a table mapping MAC addresses to ports</li>
+                    <li><strong>Full-Duplex Communication:</strong> Devices can send and receive simultaneously</li>
+                    <li><strong>No Collisions:</strong> Each port is a separate collision domain</li>
+                    <li><strong>Port LEDs:</strong> Green blinking lights indicate active data transmission</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- What is a Switch -->
+        <section class="section">
+            <h2>🔍 What is a Network Switch?</h2>
+            <p>
+                A <strong>network switch</strong> is an intelligent Layer 2 networking device that connects multiple devices within a Local Area Network (LAN) 
+                and forwards data packets based on MAC addresses. Unlike a hub which broadcasts to all ports, a switch learns which devices are connected 
+                to which ports and sends data only to the intended recipient, making it far more efficient.
+            </p>
+
+            <div class="highlight-box">
+                <h3>🎯 Core Functions:</h3>
+                <ul>
+                    <li><strong>MAC Address Learning:</strong> Builds a table of MAC addresses and their associated ports</li>
+                    <li><strong>Intelligent Forwarding:</strong> Sends frames only to the destination port</li>
+                    <li><strong>Filtering:</strong> Blocks unnecessary traffic from reaching other ports</li>
+                    <li><strong>Loop Prevention:</strong> Uses Spanning Tree Protocol (STP) to prevent network loops</li>
+                    <li><strong>VLAN Support:</strong> Can segment network into virtual LANs</li>
+                </ul>
+            </div>
+
+            <h3>🔧 How Switch Operates</h3>
+            <p>
+                When a switch receives a frame, it examines the source MAC address and records which port it came from in its MAC address table. 
+                Then it looks at the destination MAC address:
+            </p>
+            <ul style="margin-left: 40px; color: #d0d0d0;">
+                <li><strong>Known Destination:</strong> If the MAC address is in its table, forwards frame only to that specific port</li>
+                <li><strong>Unknown Destination:</strong> If MAC address not in table, floods frame to all ports except source (learning mode)</li>
+                <li><strong>Broadcast:</strong> Sends broadcast frames (FF:FF:FF:FF:FF:FF) to all ports</li>
+            </ul>
+
+            <div class="example-box">
+                <strong>📦 Example Packet Flow:</strong><br>
+                1. Laptop A (AA:BB:CC:01) sends frame to Server (AA:BB:CC:05)<br>
+                2. Switch receives frame on Port 1, learns "AA:BB:CC:01 → Port 1"<br>
+                3. Switch checks MAC table, finds "AA:BB:CC:05 → Port 5"<br>
+                4. Switch forwards frame ONLY to Port 5 (Server)<br>
+                5. Other devices (Ports 2, 3, 4) don't receive this frame at all<br>
+                <br>
+                <strong>🎯 Result:</strong> Efficient, collision-free, secure communication between specific devices!
+            </div>
+        </section>
+
+        <!-- Switch vs Hub vs Router -->
+        <section class="section">
+            <h2>⚖️ Switch vs Hub vs Router</h2>
+            <p>Understanding the differences between these three common network devices:</p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Hub</th>
+                    <th>Switch</th>
+                    <th>Router</th>
+                </tr>
+                <tr>
+                    <td><strong>OSI Layer</strong></td>
+                    <td>Layer 1 (Physical)</td>
+                    <td>Layer 2 (Data Link)</td>
+                    <td>Layer 3 (Network)</td>
+                </tr>
+                <tr>
+                    <td><strong>Addressing</strong></td>
+                    <td>None (broadcasts)</td>
+                    <td>MAC Addresses</td>
+                    <td>IP Addresses</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Forwarding</strong></td>
+                    <td>Broadcasts to all ports</td>
+                    <td>Forwards to specific port</td>
+                    <td>Routes between networks</td>
+                </tr>
+                <tr>
+                    <td><strong>Collision Domain</strong></td>
+                    <td>Single (entire network)</td>
+                    <td>Per port (isolated)</td>
+                    <td>N/A (Layer 3)</td>
+                </tr>
+                <tr>
+                    <td><strong>Intelligence</strong></td>
+                    <td>Dumb repeater</td>
+                    <td>MAC learning & filtering</td>
+                    <td>Routing decisions</td>
+                </tr>
+                <tr>
+                    <td><strong>Speed</strong></td>
+                    <td>Shared bandwidth</td>
+                    <td>Dedicated per port</td>
+                    <td>NAT/routing overhead</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Case</strong></td>
+                    <td>Obsolete (legacy)</td>
+                    <td>LAN connectivity</td>
+                    <td>Network interconnection</td>
+                </tr>
+                <tr>
+                    <td><strong>Price</strong></td>
+                    <td>Cheapest</td>
+                    <td>Moderate</td>
+                    <td>More expensive</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 25px;">
+                <h3>💡 Key Insight:</h3>
+                <p style="margin: 0;">
+                    <strong>Hub:</strong> "Shout to everyone" | 
+                    <strong>Switch:</strong> "Talk to specific person" | 
+                    <strong>Router:</strong> "Navigate between cities"
+                </p>
+            </div>
+        </section>
+
+        <!-- Types of Switches -->
+        <section class="section">
+            <h2>📦 Types of Switches</h2>
+
+            <div class="cards-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🏠</span>
+                    <h4>Unmanaged Switch</h4>
+                    <p>
+                        Plug-and-play devices with no configuration needed. Fixed configuration, no management interface. 
+                        Suitable for home networks and small offices. Cheap and simple. Just connect devices and it works. 
+                        No VLAN support, no monitoring, no QoS controls.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🏢</span>
+                    <h4>Managed Switch</h4>
+                    <p>
+                        Full configuration and monitoring capabilities via CLI or web interface. Supports VLANs, QoS, 
+                        port mirroring, SNMP, link aggregation. Can prioritize traffic, monitor network health, configure 
+                        security features. Essential for business networks. More expensive but highly flexible.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚙️</span>
+                    <h4>Smart/Web-Managed Switch</h4>
+                    <p>
+                        Middle ground between unmanaged and fully managed. Basic VLAN support, QoS, and monitoring through 
+                        simple web interface. Limited CLI access. Cost-effective for small businesses needing some control 
+                        without full enterprise features. Easier to configure than managed switches.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>PoE Switch</h4>
+                    <p>
+                        Power over Ethernet - supplies power through network cables to connected devices. Eliminates need 
+                        for separate power adapters. Powers IP cameras, VoIP phones, wireless access points, IoT devices. 
+                        Standards: PoE (15.4W), PoE+ (30W), PoE++ (60-100W). More expensive but cleaner installation.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Layer 3 Switch</h4>
+                    <p>
+                        Combines switching and routing capabilities. Can route packets between VLANs without external router. 
+                        Operates at both Layer 2 (switching) and Layer 3 (routing). Faster inter-VLAN routing than traditional 
+                        router. Used in enterprise core networks. More expensive but very powerful.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🏗️</span>
+                    <h4>Stackable Switch</h4>
+                    <p>
+                        Multiple physical switches that operate as single logical unit. Connected via special stacking cables. 
+                        Shared management, single IP address, expanded port count. Failover capability if one switch fails. 
+                        Easier management than multiple independent switches. Common in enterprise deployments.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Modular Switch</h4>
+                    <p>
+                        Chassis-based with hot-swappable modules. Can add/remove interface cards, power supplies, supervisor 
+                        modules without downtime. Highly flexible and scalable. Used in data centers and enterprise cores. 
+                        Expensive but provides maximum flexibility and redundancy. Long-term investment.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🖥️</span>
+                    <h4>KVM Switch</h4>
+                    <p>
+                        Special-purpose switch for Keyboard, Video, Mouse control. Allows one set of peripherals to control 
+                        multiple computers. Not a network switch - physical port switching. Useful for server rooms, data centers, 
+                        IT labs. Can be manual button or automatic. Saves space and cost on peripherals.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="section">
+            <h2>✅ Advantages of Network Switches</h2>
+
+            <div class="cards-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Targeted Data Delivery</h4>
+                    <p>
+                        Sends frames only to intended recipient port, not all devices. Reduces unnecessary network traffic 
+                        dramatically. Devices only receive data meant for them. More efficient bandwidth utilization. 
+                        Improves overall network performance. Better security as data isn't broadcast everywhere.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Full-Duplex Communication</h4>
+                    <p>
+                        Each port can send and receive simultaneously. No collisions - each port is separate collision domain. 
+                        Effectively doubles bandwidth per port. 1 Gbps port = 1 Gbps send + 1 Gbps receive = 2 Gbps total. 
+                        Much better than hub's half-duplex shared bandwidth. Enables faster file transfers.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Dedicated Bandwidth</h4>
+                    <p>
+                        Every port gets full rated speed. 24-port gigabit switch = 24 devices at 1 Gbps each. Not shared 
+                        like hub where bandwidth splits among all active devices. Consistent performance regardless of 
+                        network load. No speed degradation when multiple devices transmit. Predictable throughput.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🧠</span>
+                    <h4>MAC Address Learning</h4>
+                    <p>
+                        Automatically builds and maintains MAC address table. No manual configuration needed for basic 
+                        operation. Adapts to network changes dynamically. When device moves to different port, switch 
+                        updates its table. Self-optimizing and intelligent. Ages out unused entries automatically.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Enhanced Security</h4>
+                    <p>
+                        Traffic isolation between ports prevents eavesdropping. Port security can limit MAC addresses per 
+                        port. VLAN support for network segmentation. Can disable unused ports. 802.1X authentication support. 
+                        MAC filtering capabilities. Better than hub where all traffic visible to all.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h4>Scalability</h4>
+                    <p>
+                        Easily add more devices by connecting to available ports. Can cascade switches or use stackable 
+                        switches to expand. Performance doesn't degrade proportionally with device count like hub. 
+                        Can segment network with VLANs. Supports thousands of MAC addresses in table. Grows with your network.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Loop Prevention</h4>
+                    <p>
+                        Spanning Tree Protocol (STP) prevents network loops. Automatically blocks redundant paths to avoid 
+                        broadcast storms. Maintains loop-free topology. Provides path redundancy - if primary link fails, 
+                        backup activates. Critical for network reliability. Protects against accidental cable misconnections.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🎛️</span>
+                    <h4>VLAN Support</h4>
+                    <p>
+                        Virtual LANs allow logical network segmentation on same physical switch. Different departments can 
+                        be isolated. Broadcast domains separated. Improved security and performance. Flexible network design. 
+                        Can span VLANs across multiple switches. Reduces need for separate physical switches per department.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⏱️</span>
+                    <h4>Low Latency</h4>
+                    <p>
+                        Microsecond-level forwarding decisions. Hardware-based forwarding using ASICs. Much faster than 
+                        software-based routing. Cut-through switching for even lower latency. Important for real-time 
+                        applications like VoIP, video conferencing, gaming. Wire-speed performance at all ports simultaneously.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disadvantages -->
+        <section class="section">
+            <h2>❌ Disadvantages & Limitations</h2>
+
+            <div class="cards-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Cost</h4>
+                    <p>
+                        More expensive than hubs. Managed switches significantly pricier than unmanaged. Enterprise-grade 
+                        switches very costly. PoE switches cost more. Stackable and modular switches expensive. Small 
+                        networks may find cost prohibitive. However, hubs essentially obsolete so not real alternative.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔧</span>
+                    <h4>Complexity</h4>
+                    <p>
+                        Managed switches require configuration knowledge. VLANs, trunking, STP need understanding. CLI can 
+                        be intimidating. Misconfiguration can break network. Firmware updates needed. Troubleshooting more 
+                        complex. Need trained staff for enterprise switches. Unmanaged switches simple but limited.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Port Limitations</h4>
+                    <p>
+                        Fixed number of ports per switch. Need to buy larger switch or add more switches when ports exhausted. 
+                        Unused ports waste money. Oversubscription in cheaper switches - uplink may be slower than total 
+                        port bandwidth. Running out of ports means network expansion costs.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Single Point of Failure</h4>
+                    <p>
+                        If switch fails, all connected devices lose connectivity. No redundancy in simple setup. 
+                        Mission-critical networks need switch redundancy - additional cost. Power failure affects entire 
+                        switch. Requires UPS for uptime. Cascaded switches create dependency chain. Enterprise setups need 
+                        redundant switches and links.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🏠</span>
+                    <h4>Layer 2 Broadcast Domain</h4>
+                    <p>
+                        All ports in same VLAN share broadcast domain. Broadcast traffic reaches all devices in VLAN. 
+                        Broadcast storms can overwhelm network. ARP requests flood entire VLAN. Large Layer 2 domains have 
+                        performance issues. Need router or Layer 3 switch to segment further. Limited to ~300-500 devices 
+                        per flat network.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📚</span>
+                    <h4>MAC Table Limitations</h4>
+                    <p>
+                        Fixed-size MAC address table (CAM table). Typically 4K-16K entries for access switches. Table full 
+                        = flooding behavior (like hub). MAC flooding attacks can fill table. Large networks may exceed 
+                        capacity. Need to monitor table utilization. Age-out timers must be configured properly.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Security Vulnerabilities</h4>
+                    <p>
+                        VLAN hopping attacks possible if misconfigured. ARP spoofing/poisoning affects switched networks. 
+                        MAC flooding can degrade to hub behavior. Rogue DHCP servers can cause issues. Default credentials 
+                        often unchanged. Spanning tree manipulation attacks. Need proper security configurations to mitigate.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>No Inter-Network Routing</h4>
+                    <p>
+                        Layer 2 switch can't route between different networks/subnets. Need separate router for Internet 
+                        connection. Can't do NAT, DHCP for different subnets (basic switches). Must buy Layer 3 switch for 
+                        inter-VLAN routing. More expensive if routing needed. Additional device means more to manage.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔥</span>
+                    <h4>Heat & Power</h4>
+                    <p>
+                        Switches generate heat, especially larger ones. PoE switches generate more heat. Need adequate 
+                        cooling in network closets. Power consumption 24/7. PoE switches draw significant power. Rack-mounted 
+                        switches need proper ventilation. Fan noise in office environments. Electricity costs add up.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>Layer 2 Device:</strong> Operates at Data Link layer using MAC addresses for forwarding decisions</li>
+                    <li><strong>Intelligent Forwarding:</strong> Learns MAC addresses and sends data only to specific destination port</li>
+                    <li><strong>Full-Duplex:</strong> Each port can send and receive simultaneously - no collisions, double bandwidth</li>
+                    <li><strong>Dedicated Bandwidth:</strong> Every port gets full rated speed, not shared like hub</li>
+                    <li><strong>MAC Address Table:</strong> Automatically builds and maintains mapping of MAC addresses to ports</li>
+                    <li><strong>VLAN Support:</strong> Can segment network logically for security and performance (managed switches)</li>
+                    <li><strong>Replaced Hubs:</strong> Much more efficient, eliminated collision domains, vastly improved performance</li>
+                    <li><strong>Types Matter:</strong> Unmanaged (simple), Managed (full control), Smart (middle ground), PoE (power delivery)</li>
+                    <li><strong>Not a Router:</strong> Switch operates within single network (Layer 2), router connects different networks (Layer 3)</li>
+                    <li><strong>Foundation of LANs:</strong> Essential device in every modern local network - home, office, data center</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💚 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Data Packet Animation
+        function createPacket(wireClass, startDevice, endDevice) {
+            const wire = document.querySelector(`.wire-${wireClass}`);
+            const packet = document.createElement('div');
+            packet.className = 'packet';
+            
+            const wireRect = wire.getBoundingClientRect();
+            const containerRect = document.querySelector('.switch-illustration').getBoundingClientRect();
+            
+            // Position packet at start of wire
+            packet.style.left = (wireRect.left - containerRect.left) + 'px';
+            packet.style.top = (wireRect.top - containerRect.top + wireRect.height/2 - 8) + 'px';
+            
+            document.querySelector('.switch-illustration').appendChild(packet);
+            
+            // Animate packet along wire
+            const angle = parseFloat(window.getComputedStyle(wire).transform.split(',')[1]) || 0;
+            const distance = wireRect.width;
+            
+            packet.style.setProperty('--packet-distance', distance + 'px');
+            packet.style.animation = 'packetFlow 2s ease-in-out';
+            
+            setTimeout(() => packet.remove(), 2000);
+        }
+
+        // Generate random packets
+        setInterval(() => {
+            const wires = ['laptop1', 'laptop2', 'pc1', 'pc2', 'server'];
+            const randomWire = wires[Math.floor(Math.random() * wires.length)];
+            createPacket(randomWire);
+        }, 1500);
+
+        // Interactive hover effects
+        document.querySelectorAll('.network-device').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.15)';
+            });
+            element.addEventListener('mouseleave', function() {
+                const currentScale = this.className.includes('switch-device') ? 'scale(1)' : 'scale(1)';
+                this.style.transform = currentScale;
+            });
+        });
+    </script>
+</body>
+</html>

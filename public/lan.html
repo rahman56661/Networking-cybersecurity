@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAN - Local Area Network | Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: heroGlow 8s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            /*-webkit-text-fill-color: transparent;*/
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        /* Content Sections */
+        .section {
+            background: rgba(45, 45, 45, 0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            margin: 30px 0 15px 0;
+            color: #667eea;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* LAN Network Illustration - Office/Home Setup */
+        .lan-illustration {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 60px 20px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .router-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            z-index: 10;
+            animation: routerPulse 3s infinite;
+            box-shadow: 0 0 60px rgba(240, 147, 251, 0.6);
+        }
+
+        .router-label {
+            font-size: 0.9rem;
+            color: #fff;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .lan-device {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: deviceFloat 4s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lan-device:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 50px rgba(102, 126, 234, 0.8);
+        }
+
+        .device-name {
+            font-size: 0.75rem;
+            margin-top: 8px;
+            color: #fff;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Position devices in a circular pattern */
+        .lan-device:nth-child(1) {
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+
+        .lan-device:nth-child(2) {
+            top: 15%;
+            right: 8%;
+            animation-delay: 0.3s;
+        }
+
+        .lan-device:nth-child(3) {
+            top: 40%;
+            right: 3%;
+            animation-delay: 0.6s;
+        }
+
+        .lan-device:nth-child(4) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 0.9s;
+        }
+
+        .lan-device:nth-child(5) {
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 1.2s;
+        }
+
+        .lan-device:nth-child(6) {
+            bottom: 20%;
+            left: 10%;
+            animation-delay: 1.5s;
+        }
+
+        .lan-device:nth-child(7) {
+            top: 40%;
+            left: 3%;
+            animation-delay: 1.8s;
+        }
+
+        .lan-device:nth-child(8) {
+            top: 15%;
+            left: 8%;
+            animation-delay: 2.1s;
+        }
+
+        /* Network Signal Waves */
+        .network-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            animation: waveExpand 4s infinite;
+        }
+
+        .network-wave:nth-child(9) {
+            width: 250px;
+            height: 250px;
+            animation-delay: 0s;
+        }
+
+        .network-wave:nth-child(10) {
+            width: 350px;
+            height: 350px;
+            animation-delay: 0.8s;
+        }
+
+        .network-wave:nth-child(11) {
+            width: 450px;
+            height: 450px;
+            animation-delay: 1.6s;
+        }
+
+        .network-wave:nth-child(12) {
+            width: 550px;
+            height: 550px;
+            animation-delay: 2.4s;
+        }
+
+        /* Connection Lines Animation */
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            transform-origin: center;
+            opacity: 0;
+            animation: lineFlash 4s infinite;
+            z-index: 5;
+        }
+
+        /* Data Packets */
+        .data-packet {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            animation: packetMove 3s infinite;
+            z-index: 6;
+        }
+
+        /* Real-World Examples Grid */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .example-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .example-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .example-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .example-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .example-details strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Workflow Timeline */
+        .workflow-timeline {
+            position: relative;
+            padding: 40px 0;
+            margin: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            width: 45%;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            animation: slideIn 0.6s ease;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+            z-index: 10;
+        }
+
+        .timeline-content h4 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            font-size: 1rem;
+            color: #d0d0d0;
+            margin: 0;
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .info-card:hover::after {
+            opacity: 1;
+        }
+
+        .info-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: left;
+            margin: 0;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: #d0d0d0;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: #667eea;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d0d0d0;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* LAN Types Cards */
+        .lan-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .lan-type-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            padding: 35px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lan-type-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .lan-type-card:hover::before {
+            opacity: 1;
+        }
+
+        .lan-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        .lan-type-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .lan-type-card h3 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroGlow {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes routerPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 60px rgba(240, 147, 251, 0.6);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 90px rgba(240, 147, 251, 0.9);
+            }
+        }
+
+        @keyframes deviceFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes lineFlash {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes packetMove {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .nav-buttons {
+                justify-content: center;
+            }
+
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: row !important;
+                padding-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .timeline-dot {
+                left: 30px !important;
+            }
+
+            .lan-device {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+
+            .router-center {
+                width: 100px;
+                height: 100px;
+                font-size: 3rem;
+            }
+
+            .lan-illustration {
+                min-height: 500px;
+            }
+
+            .lan-types-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">🌐 Networking Hub</a>
+            <div class="nav-buttons">
+                <!--<a href="pan.html" class="nav-btn">← PAN</a>
+                <a href="what-is-network.html" class="nav-btn">Network Basics</a>-->
+                <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🏢 LAN - Local Area Network</h1>
+                <p class="hero-subtitle">Connecting Computers Within Buildings & Campuses</p>
+                <span class="hero-badge">Coverage: Building/Campus</span>
+                <span class="hero-badge">Speed: 100-1000 Mbps</span>
+                <span class="hero-badge">Most Common Network Type</span>
+            </div>
+        </section>
+
+        <!-- Introduction & Definition -->
+        <section class="section">
+            <h2>📖 What is LAN?</h2>
+            <p>
+                A <strong>Local Area Network (LAN)</strong> is a network that connects computers and devices within 
+                a limited geographical area such as a home, office building, school, or university campus. Unlike PAN 
+                which covers just one person's devices, LAN connects multiple users and their devices within the same 
+                location, allowing them to share resources, communicate, and access information together.
+            </p>
+
+            <div class="example-box">
+                <strong>🎯 Simple Definition:</strong>
+                Think of LAN as your building's internal network! It's like a digital neighborhood where all computers, 
+                printers, servers, and smart devices in your office or home can talk to each other and share resources 
+                like files, internet connection, and printers - all without needing to go through the Internet. Everyone 
+                connected is in the same physical location!
+            </p>
+            </div>
+
+            <p>
+                LANs are the backbone of most organizations and homes. Whether you're at work printing documents from 
+                your desk to the office printer, at home streaming movies to your TV, or at school accessing files from 
+                the library computer - you're using a LAN! It's the most common and widely deployed type of network in 
+                the world.
+            </p>
+
+            <div class="highlight-box">
+                <h3>🌟 Why is LAN So Popular?</h3>
+                <ul>
+                    <li><strong>High Speed:</strong> Much faster than internet connections - up to 1000 Mbps (1 Gbps) or even 10 Gbps!</li>
+                    <li><strong>Reliability:</strong> Since it's confined to one building, you have full control over the network</li>
+                    <li><strong>Cost-Effective:</strong> Share one internet connection and expensive equipment among many users</li>
+                    <li><strong>Security:</strong> Your network is isolated from the outside world, making it more secure</li>
+                    <li><strong>Low Latency:</strong> Data travels quickly because devices are physically close to each other</li>
+                </ul>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">100m-1km</div>
+                    <div class="stat-label">Coverage Range</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10-1000</div>
+                    <div class="stat-label">Typical Devices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100-1000</div>
+                    <div class="stat-label">Speed (Mbps)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">< 1ms</div>
+                    <div class="stat-label">Latency</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Ethernet</div>
+                    <div class="stat-label">Primary Technology</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Star/Tree</div>
+                    <div class="stat-label">Common Topology</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual LAN Network Illustration -->
+        <section class="section">
+            <h2>🏗️ Visual Representation: Office/Home LAN Setup</h2>
+            <p style="text-align: center; margin-bottom: 30px;">
+                Here's how a typical LAN looks - a central router/switch connecting multiple devices:
+            </p>
+
+            <div class="lan-illustration">
+                <!-- Center Router/Switch -->
+                <div class="router-center">
+                    🔀
+                    <div class="router-label">Router/Switch</div>
+                </div>
+
+                <!-- Network Signal Waves -->
+                <div class="network-wave"></div>
+                <div class="network-wave"></div>
+                <div class="network-wave"></div>
+                <div class="network-wave"></div>
+
+                <!-- Connected Devices (8 devices) -->
+                <div class="lan-device">
+                    💻
+                    <div class="device-name">Desktop PC</div>
+                </div>
+                <div class="lan-device">
+                    💼
+                    <div class="device-name">Laptop</div>
+                </div>
+                <div class="lan-device">
+                    🖨️
+                    <div class="device-name">Printer</div>
+                </div>
+                <div class="lan-device">
+                    📱
+                    <div class="device-name">Smartphone</div>
+                </div>
+                <div class="lan-device">
+                    🖥️
+                    <div class="device-name">Server</div>
+                </div>
+                <div class="lan-device">
+                    📺
+                    <div class="device-name">Smart TV</div>
+                </div>
+                <div class="lan-device">
+                    📷
+                    <div class="device-name">IP Camera</div>
+                </div>
+                <div class="lan-device">
+                    ☁️
+                    <div class="device-name">Cloud Storage</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Key Observations:</h3>
+                <ul>
+                    <li><strong>Central Hub:</strong> The router/switch is the heart of the network, managing all traffic</li>
+                    <li><strong>Star Topology:</strong> All devices connect to the central point (most common LAN design)</li>
+                    <li><strong>Mixed Devices:</strong> Computers, phones, printers, servers - all on the same network</li>
+                    <li><strong>Wired & Wireless:</strong> Devices can connect via Ethernet cables or Wi-Fi</li>
+                    <li><strong>Scalable:</strong> Easy to add or remove devices as needed</li>
+                    <li><strong>Resource Sharing:</strong> All devices can access shared printers, files, and internet</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Types of LAN -->
+        <section class="section">
+            <h2>🔧 Types of LAN Based on Connection</h2>
+            <p>
+                LANs can be categorized based on how devices are connected. Each type has its own advantages and use cases:
+            </p>
+
+            <div class="lan-types-grid">
+                <div class="lan-type-card">
+                    <span class="lan-type-icon">🔌</span>
+                    <h3>Wired LAN (Ethernet)</h3>
+                    <p style="margin-bottom: 20px;">
+                        Uses physical cables (usually Ethernet cables) to connect devices. The most traditional 
+                        and reliable form of LAN.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Characteristics:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Speed:</strong> 100 Mbps to 10 Gbps</li>
+                            <li><strong>Cables:</strong> Cat5e, Cat6, Cat6a, Cat7</li>
+                            <li><strong>Reliability:</strong> Very high - no interference</li>
+                            <li><strong>Security:</strong> Excellent - physical access needed</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Best For:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Desktop computers, servers, gaming PCs, network printers - anywhere speed and 
+                            stability are critical. Common in offices, data centers, and gaming setups.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lan-type-card">
+                    <span class="lan-type-icon">📡</span>
+                    <h3>Wireless LAN (Wi-Fi)</h3>
+                    <p style="margin-bottom: 20px;">
+                        Uses radio waves to connect devices without cables. The most convenient and popular 
+                        form of LAN in homes and modern offices.
+                    </p>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <strong style="color: #667eea; display: block; margin-bottom: 10px;">Characteristics:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li><strong>Speed:</strong> 50-1000 Mbps (Wi-Fi 6/6E)</li>
+                            <li><strong>Standards:</strong> 802.11ac, 802.11ax (Wi-Fi 6)</li>
+                            <li><strong>Range:</strong> 30-50 meters indoors</li>
+                            <li><strong>Flexibility:</strong> Very high - no cables needed</li>
+                        </ul>
+                        <strong style="color: #667eea; display: block; margin: 15px 0 10px 0;">Best For:</strong>
+                        <p style="margin: 0; font-size: 0.95rem;">
+                            Laptops, smartphones, tablets, IoT devices - anything that moves around. Perfect for 
+                            homes, cafes, schools, and modern offices where mobility is important.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>🏢 Modern Office Setup - Hybrid Approach:</strong>
+                Most modern offices use BOTH wired and wireless LANs together! Desktop computers and servers use 
+                Ethernet cables for maximum speed and reliability, while employees use Wi-Fi on their laptops and 
+                phones for flexibility and mobility. This gives you the best of both worlds!
+            </div>
+        </section>
+
+        <!-- Real-World Examples -->
+        <section class="section">
+            <h2>🌍 Real-World Examples of LAN</h2>
+            <p>
+                LANs are everywhere! Here are detailed real-world scenarios where LANs make life and work easier:
+            </p>
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <span class="example-icon">🏠</span>
+                    <h4>Home Network</h4>
+                    <p>
+                        Your home Wi-Fi is a LAN! All your family members' devices connect to one router, sharing 
+                        the internet connection. You can stream Netflix on TV while others browse on phones, 
+                        all simultaneously.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Laptops, smartphones, smart TVs, gaming consoles, 
+                        smart home devices (Alexa, Google Home), security cameras
+                        <br><strong>Benefits:</strong> Share internet, stream content, print wirelessly, smart home control
+                        <br><strong>Size:</strong> 5-20 devices typically
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🏢</span>
+                    <h4>Office Network</h4>
+                    <p>
+                        Corporate offices use LANs to connect all employee computers, printers, and servers. 
+                        Employees can access shared files, collaborate on documents, and use network printers 
+                        from any desk.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Desktop PCs, laptops, network printers, file servers, 
+                        conference room displays, VoIP phones
+                        <br><strong>Benefits:</strong> File sharing, collaboration, centralized data, resource sharing
+                        <br><strong>Size:</strong> 50-500+ devices depending on company
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <span class="example-icon">🎓</span>
+                    <h4>School/University Campus</h4>
+                    <p>
+                        Educational institutions use campus-wide LANs connecting classrooms, labs, libraries, 
+                        and administrative offices. Students access course materials, submit assignments, and 
+                        use digital resources.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Computer lab PCs, student laptops, library systems, 
+                        smart boards, admin servers, research equipment
+                        <br><strong>Benefits:</strong> Digital learning, resource access, online submissions, campus Wi-Fi
+                        <br><strong>Size:</strong> 500-10,000+ devices in large universities
+                    </div>
+                </div>
+
+                <!--<div class="example-card">
+                    <span class="example-icon">🏥</span>
+                    <h4>Hospital Network</h4>
+                    <p>
+                        Hospitals use LANs for critical systems - electronic health records, medical imaging, 
+                        patient monitoring devices, and communication between departments. Lives depend on 
+                        reliable networks!
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Medical equipment, workstations, imaging systems (MRI, CT), 
+                        patient monitors, pharmacy systems
+                        <br><strong>Benefits:</strong> Patient data access, medical imaging sharing, real-time monitoring
+                        <br><strong>Size:</strong> 1,000-5,000+ devices in large hospitals
+                    </div>
+                </div>-->
+
+                <div class="example-card">
+                    <span class="example-icon">☕</span>
+                    <h4>Cafe/Restaurant Wi-Fi</h4>
+                    <p>
+                        Coffee shops and restaurants offer Wi-Fi LANs to customers. The business also uses the 
+                        LAN for POS (Point of Sale) systems, inventory management, and digital menu boards.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Customer devices (phones, laptops), POS terminals, 
+                        kitchen displays, security cameras, music systems
+                        <br><strong>Benefits:</strong> Customer service, business operations, inventory tracking
+                        <br><strong>Size:</strong> 10-50 devices including customers
+                    </div>
+                </div>
+
+                <!--<div class="example-card">
+                    <span class="example-icon">🏭</span>
+                    <h4>Manufacturing Plant</h4>
+                    <p>
+                        Factories use Industrial LANs to connect assembly robots, quality control systems, 
+                        inventory trackers, and management systems. Everything is monitored and controlled 
+                        through the network.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Industrial robots, sensors, PLCs (controllers), 
+                        quality cameras, inventory systems, safety monitors
+                        <br><strong>Benefits:</strong> Automation, real-time monitoring, quality control, efficiency
+                        <br><strong>Size:</strong> 100-1,000+ devices in large plants
+                    </div>
+                </div>-->
+
+                <!--<div class="example-card">
+                    <span class="example-icon">🏨</span>
+                    <h4>Hotel Network</h4>
+                    <p>
+                        Hotels provide guest Wi-Fi while also running their own internal LAN for reservations, 
+                        check-in systems, room service, security cameras, and smart room controls.
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Guest devices, front desk systems, room phones, 
+                        smart locks, security cameras, entertainment systems
+                        <br><strong>Benefits:</strong> Guest experience, operations management, security, automation
+                        <br><strong>Size:</strong> 100-1,000+ devices depending on hotel size
+                    </div>
+                </div>-->
+
+                <div class="example-card">
+                    <span class="example-icon">🎮</span>
+                    <h4>Gaming Cafe/E-Sports Arena</h4>
+                    <p>
+                        Gaming centers need high-speed LANs for multiplayer gaming, tournaments, and streaming. 
+                        Low latency is critical for competitive gaming where milliseconds matter!
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Gaming PCs, consoles, streaming equipment, 
+                        tournament displays, VR systems, broadcasting gear
+                        <br><strong>Benefits:</strong> Low-latency gaming, LAN parties, tournaments, streaming
+                        <br><strong>Size:</strong> 20-100+ gaming stations
+                    </div>
+                </div>
+
+                <!--<div class="example-card">
+                    <span class="example-icon">📚</span>
+                    <h4>Library Network</h4>
+                    <p>
+                        Libraries use LANs for digital catalogs, public computers, e-book lending, research 
+                        databases, and self-checkout systems. Modern libraries are digital hubs!
+                    </p>
+                    <div class="example-details">
+                        <strong>Typical Devices:</strong> Public computers, catalog terminals, self-checkout kiosks, 
+                        staff workstations, digital archives, printers/scanners
+                        <br><strong>Benefits:</strong> Digital resources, automated systems, public internet access
+                        <br><strong>Size:</strong> 50-200+ devices in large libraries
+                    </div>
+                </div>-->
+            </div>
+        </section>
+
+        <!-- How LAN Works - Detailed Workflow -->
+        <section class="section">
+            <h2>⚙️ How Does LAN Work? - Complete Workflow</h2>
+            <p>
+                Let's understand the complete process of how data flows in a LAN using a practical example: 
+                sending a document from your computer to a network printer in an office.
+            </p>
+
+            <div class="workflow-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <h4>🖥️ User Initiates Action</h4>
+                        <p>
+                            You click the "Print" button on your computer to print a document. Your computer's 
+                            operating system creates a print job and needs to send it to the network printer. 
+                            Your computer knows the printer's network address (IP address) from previous connections.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <h4>📦 Data Preparation & Encapsulation</h4>
+                        <p>
+                            Your computer's network card (NIC) takes the document data and breaks it into small 
+                            pieces called "frames" or "packets." Each packet is labeled with: (1) Source address 
+                            (your computer's MAC address), (2) Destination address (printer's MAC address), 
+                            (3) The actual data, and (4) Error-checking information.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <h4>🔌 Physical Transmission Begins</h4>
+                        <p>
+                            If you're using Ethernet: The packets are converted into electrical signals and sent 
+                            through the cable at nearly the speed of light! If you're using Wi-Fi: The packets 
+                            are converted into radio waves and transmitted wirelessly at 2.4 GHz or 5 GHz frequency.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <h4>🔀 Switch Receives & Processes</h4>
+                        <p>
+                            The network switch (or router) receives your packets. It reads the destination MAC 
+                            address on each packet and checks its internal "MAC address table" - a list of which 
+                            devices are connected to which ports. It's like a traffic controller knowing exactly 
+                            which road leads to which destination!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">5</div>
+                    <div class="timeline-content">
+                        <h4>🎯 Smart Forwarding Decision</h4>
+                        <p>
+                            The switch makes an intelligent decision: It ONLY forwards the packets to the port 
+                            where the printer is connected - not to all ports! This is why switches are smarter 
+                            than old hubs. Other devices on the network don't even see your print job, maintaining 
+                            efficiency and privacy.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">6</div>
+                    <div class="timeline-content">
+                        <h4>📡 Packets Travel to Destination</h4>
+                        <p>
+                            The packets travel through the network cable (or wirelessly) to the printer. Multiple 
+                            packets might take slightly different routes or arrive out of order - this is normal! 
+                            Each packet contains a sequence number so they can be reassembled correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">7</div>
+                    <div class="timeline-content">
+                        <h4>🖨️ Printer Receives & Validates</h4>
+                        <p>
+                            The printer's network card receives the packets. It checks: (1) Is this packet 
+                            addressed to me? (Yes!), (2) Is the data corrupted? (Checks using error detection), 
+                            (3) Are packets missing? If any packet is corrupted or missing, the printer requests 
+                            your computer to resend it.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">8</div>
+                    <div class="timeline-content">
+                        <h4>🔄 Acknowledgment Sent Back</h4>
+                        <p>
+                            The printer sends an "ACK" (acknowledgment) packet back to your computer saying 
+                            "I got your data!" This travels the reverse path through the switch back to you. 
+                            Your computer now knows the print job was successfully delivered.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">9</div>
+                    <div class="timeline-content">
+                        <h4>🧩 Data Reassembly</h4>
+                        <p>
+                            The printer's processor takes all the received packets and reassembles them in the 
+                            correct order (using the sequence numbers). It's like completing a jigsaw puzzle - 
+                            all pieces come together to form the complete document. The data is now ready for 
+                            processing!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">10</div>
+                    <div class="timeline-content">
+                        <h4>🖨️ Processing & Printing</h4>
+                        <p>
+                            The printer converts the digital document into printable format (rasterization), 
+                            sends commands to its physical printing mechanism, and starts printing! Meanwhile, 
+                            it might send status updates back to your computer: "Printing page 1 of 5", 
+                            "Paper low", etc.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">11</div>
+                    <div class="timeline-content">
+                        <h4>✅ Completion Notification</h4>
+                        <p>
+                            Once printing is complete, the printer sends a final message to your computer: 
+                            "Print job completed successfully!" Your computer shows this notification, and the 
+                            network resources are freed up for other tasks. The entire process usually takes 
+                            just milliseconds!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">12</div>
+                    <div class="timeline-content">
+                        <h4>🔄 Continuous Monitoring</h4>
+                        <p>
+                            Throughout this process, the switch continuously monitors network traffic, manages 
+                            bandwidth allocation, prevents collisions (two devices sending at the same time), 
+                            and ensures quality of service. It's constantly working behind the scenes to keep 
+                            the network running smoothly!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="highlight-box">
+                <h3>🔬 Technical Details - What Makes LAN So Fast?</h3>
+                <ul>
+                    <li><strong>CSMA/CD (Ethernet):</strong> "Carrier Sense Multiple Access with Collision Detection" - 
+                    devices listen before transmitting to avoid collisions. If a collision occurs, they wait a 
+                    random time and retry.</li>
+                    <li><strong>Full-Duplex Communication:</strong> Modern switches allow devices to send and receive 
+                    simultaneously, doubling effective bandwidth!</li>
+                    <li><strong>Switching vs Broadcast:</strong> Switches intelligently forward data only to the 
+                    intended recipient, unlike old hubs that broadcasted to everyone.</li>
+                    <li><strong>Quality of Service (QoS):</strong> Priority can be given to important traffic like 
+                    video calls over less urgent tasks like file downloads.</li>
+                    <li><strong>VLANs:</strong> Virtual LANs can segment one physical network into multiple logical 
+                    networks for better organization and security.</li>
+                    <li><strong>Low Latency:</strong> Because devices are physically close and there are few hops 
+                    between source and destination, LANs have incredibly low latency (< 1ms)!</li>
+                </ul>
+            </div>-->
+        </section>
+
+        <!-- LAN Components -->
+        <section class="section">
+            <h2>🧩 Key Components of a LAN</h2>
+            <p>
+                Every LAN consists of several essential hardware and software components working together:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">🔀</span>
+                    <h4>Network Switch</h4>
+                    <p>
+                        The central hub connecting all wired devices. Intelligently forwards data only to the 
+                        intended recipient. Can have 5, 8, 16, 24, or 48 ports. Modern switches support Gigabit 
+                        speeds (1000 Mbps) or even 10 Gigabit.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">📡</span>
+                    <h4>Wireless Access Point (WAP)</h4>
+                    <p>
+                        Provides Wi-Fi connectivity for wireless devices. Connects to the switch via cable. 
+                        Supports multiple devices simultaneously (50-100+). Modern APs support Wi-Fi 6 for 
+                        faster speeds and better performance.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌐</span>
+                    <h4>Router</h4>
+                    <p>
+                        Connects your LAN to the internet (WAN). Assigns IP addresses to devices (DHCP). 
+                        Provides firewall protection and NAT (Network Address Translation). In home networks, 
+                        it's often combined with switch and WAP in one device.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Network Cables</h4>
+                    <p>
+                        Ethernet cables (Cat5e, Cat6, Cat6a, Cat7) carry data between devices. Different 
+                        categories support different speeds. Cat5e: up to 1 Gbps, Cat6: up to 10 Gbps, 
+                        Cat7: up to 10 Gbps with better shielding.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💳</span>
+                    <h4>Network Interface Card (NIC)</h4>
+                    <p>
+                        Hardware inside each computer/device that connects to the network. Has a unique MAC 
+                        address (like a fingerprint). Can be wired (Ethernet port) or wireless (Wi-Fi adapter). 
+                        Built into most modern devices.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🖥️</span>
+                    <h4>Server (Optional)</h4>
+                    <p>
+                        Provides centralized services: file storage, email, databases, applications, backups. 
+                        Not required for home LANs but essential for business networks. Can be physical hardware 
+                        or virtual machines.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🖨️</span>
+                    <h4>Network Devices</h4>
+                    <p>
+                        Shared resources connected to LAN: printers, scanners, storage (NAS), IP cameras, 
+                        VoIP phones. All accessible by multiple users on the network without direct connection 
+                        to any single computer.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔒</span>
+                    <h4>Firewall</h4>
+                    <p>
+                        Security device/software that monitors and controls network traffic. Blocks unauthorized 
+                        access while allowing legitimate communication. Can be hardware-based (network firewall) 
+                        or software-based (on each computer).
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Power over Ethernet (PoE)</h4>
+                    <p>
+                        Technology that delivers electrical power along with data over Ethernet cables. Useful 
+                        for IP cameras, WAPs, VoIP phones - no separate power adapters needed! PoE switches 
+                        can power multiple devices.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages of LAN -->
+        <section class="section">
+            <h2>✅ Advantages of LAN</h2>
+            <p>
+                LANs provide numerous benefits for homes, businesses, and organizations:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>High-Speed Data Transfer</h4>
+                    <p>
+                        LANs offer speeds from 100 Mbps to 10 Gbps - much faster than internet connections! 
+                        Transfer large files in seconds, stream 4K videos without buffering, and enjoy lag-free 
+                        online gaming. Perfect for data-intensive tasks.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🤝</span>
+                    <h4>Resource Sharing</h4>
+                    <p>
+                        Share expensive equipment like printers, scanners, and storage devices among all users. 
+                        No need to buy separate devices for each person. One network printer can serve an entire 
+                        office, saving money and space.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">📁</span>
+                    <h4>Centralized Data Storage</h4>
+                    <p>
+                        Store all important files on a central server or NAS. Easy access from any computer on 
+                        the network. Simplifies backups - backup one server instead of 50 individual computers! 
+                        Version control and collaboration made easy.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">💰</span>
+                    <h4>Cost-Effective</h4>
+                    <p>
+                        Share one internet connection among all devices. Share software licenses centrally. 
+                        Share hardware resources. Lower maintenance costs with centralized management. The 
+                        initial setup cost pays for itself quickly!
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔐</span>
+                    <h4>Enhanced Security</h4>
+                    <p>
+                        Centralized security management - configure firewall once for entire network. Control 
+                        who accesses what with user permissions. Monitor all network traffic from one point. 
+                        Easier to implement security policies across organization.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">💬</span>
+                    <h4>Easy Communication</h4>
+                    <p>
+                        Internal email systems, instant messaging, video conferencing - all happen within the 
+                        LAN without using internet bandwidth. Faster and more reliable communication between 
+                        team members. VoIP phone systems for internal calls.
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Automatic Backups</h4>
+                    <p>
+                        Set up automated backup systems that run overnight. All computers back up to central 
+                        storage automatically. No user intervention needed. Protects against data loss from 
+                        hard drive failures or user mistakes.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">👥</span>
+                    <h4>Multi-User Access</h4>
+                    <p>
+                        Multiple people can access the same files and applications simultaneously. Collaborate 
+                        on documents in real-time. Share databases without conflicts. Perfect for team projects 
+                        and collaborative work environments.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Centralized Management</h4>
+                    <p>
+                        IT administrators can manage all network devices from one location. Push software 
+                        updates to all computers simultaneously. Monitor network health and performance. 
+                        Troubleshoot issues remotely. Saves time and effort.
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Better Performance</h4>
+                    <p>
+                        Low latency (< 1ms) ensures responsive applications. Quality of Service (QoS) 
+                        prioritizes important traffic. Dedicated bandwidth not shared with internet traffic. 
+                        Consistent and predictable network performance.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">📈</span>
+                    <h4>Scalability</h4>
+                    <p>
+                        Easy to add new devices - just plug them in! Expand the network by adding more switches. 
+                        Upgrade speeds by replacing switches and cables. Grow the network as your business grows 
+                        without major redesign.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🛡️</span>
+                    <h4>Reliability</h4>
+                    <p>
+                        Not dependent on external internet connection - LAN works even if internet is down! 
+                        Modern switches have redundancy features. Wired connections are very stable. Less 
+                        interference compared to wireless-only networks.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🎮</span>
+                    <h4>Low Latency Gaming</h4>
+                    <p>
+                        Perfect for LAN gaming parties and e-sports. Near-zero latency means instant response. 
+                        No lag, no buffering, no dropped connections. Gamers love LANs for competitive 
+                        multiplayer gaming!
+                    </p>
+                </div>-->
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🏢</span>
+                    <h4>Increased Productivity</h4>
+                    <p>
+                        Fast file transfers save time. Easy collaboration speeds up projects. Less downtime 
+                        due to reliable connections. Employees can access resources instantly. Overall work 
+                        efficiency improves significantly.
+                    </p>
+                </div>-->
+            </div>
+        </section>
+
+        <!-- Disadvantages of LAN -->
+        <section class="section">
+            <h2>⚠️ Disadvantages of LAN</h2>
+            <p>
+                While LANs are highly beneficial, they come with certain limitations and challenges:
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-card-icon">📏</span>
+                    <h4>Limited Coverage Area</h4>
+                    <p>
+                        LANs are confined to a building or campus (typically up to 1 km). Can't connect offices 
+                        in different cities. Ethernet cables have distance limitations (100m for Cat5e/6). 
+                        Wi-Fi signals don't penetrate thick walls well. Not suitable for geographically 
+                        distributed organizations.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">💵</span>
+                    <h4>Initial Setup Cost</h4>
+                    <p>
+                        Requires investment in switches, routers, cables, access points. Professional 
+                        installation may be needed for cable runs. Large networks need expensive enterprise-grade 
+                        equipment. Cabling infrastructure in buildings can be costly. Home LANs are cheap, but 
+                        office LANs can be expensive.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🔧</span>
+                    <h4>Maintenance Required</h4>
+                    <p>
+                        Needs regular monitoring and maintenance. Firmware updates for switches and routers. 
+                        Cable damage needs repair. Failed components must be replaced. May require dedicated 
+                        IT staff for larger networks. Ongoing operational costs.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🎯</span>
+                    <h4>Single Point of Failure</h4>
+                    <p>
+                        If the main switch fails, the entire network goes down! Server failure affects all 
+                        users. Power outages disrupt the entire LAN. Critical infrastructure needs backup 
+                        systems (expensive). Redundancy increases costs and complexity.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🦠</span>
+                    <h4>Security Risks</h4>
+                    <p>
+                        One infected computer can spread malware to entire network quickly. Insider threats - 
+                        employees with physical access can cause damage. Unauthorized physical access to network 
+                        ports is a risk. Requires strong security policies and monitoring.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">😰</span>
+                    <h4>Network Congestion</h4>
+                    <p>
+                        Too many devices or heavy traffic can slow down the network. Bandwidth is shared among 
+                        all users. Large file transfers can impact other users. Video conferences consume 
+                        significant bandwidth. Needs proper capacity planning and QoS configuration.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🏗️</span>
+                    <h4>Installation Complexity</h4>
+                    <p>
+                        Running cables through walls and ceilings is difficult. Cable management can be messy. 
+                        Proper network design requires expertise. Must follow building codes and regulations. 
+                        Retrofitting old buildings with network infrastructure is challenging.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">👨‍💻</span>
+                    <h4>Requires Technical Expertise</h4>
+                    <p>
+                        Setting up VLANs, QoS, and security requires knowledge. Troubleshooting network issues 
+                        needs skills. Configuration errors can cause outages. May need to hire IT professionals. 
+                        Training staff costs time and money.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔌</span>
+                    <h4>Cable Limitations (Wired)</h4>
+                    <p>
+                        Ethernet cables have 100-meter length limit. Cable clutter under desks and in walls. 
+                        Cables can be damaged by construction or pests. Moving devices requires reconnecting 
+                        cables. Not flexible for hot-desking or reorganization.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">📶</span>
+                    <h4>Wi-Fi Interference (Wireless)</h4>
+                    <p>
+                        Other Wi-Fi networks cause interference. Microwave ovens, Bluetooth devices affect 
+                        2.4 GHz band. Walls and obstacles reduce signal strength. Dead zones in large buildings. 
+                        Performance varies based on location and interference.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">⚡</span>
+                    <h4>Power Dependency</h4>
+                    <p>
+                        All network devices need continuous power. Power outages shut down the entire LAN. 
+                        Needs UPS (battery backup) for critical systems. Increases electricity costs. Power 
+                        surges can damage expensive network equipment.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-card-icon">🌍</span>
+                    <h4>Not for Remote Access</h4>
+                    <p>
+                        LANs are local - can't directly access from home or other locations. Needs VPN setup 
+                        for remote access (adds complexity). Remote workers can't access LAN resources easily. 
+                        Pandemic highlighted this limitation when everyone worked from home.
+                    </p>
+                </div>
+
+                <!--<div class="info-card">
+                    <span class="info-card-icon">🔄</span>
+                    <h4>Protocol Compatibility</h4>
+                    <p>
+                        Different devices may use different network protocols. Legacy equipment might not work 
+                        with new systems. Mixing vendors can cause compatibility issues. Standards compliance 
+                        is important but not always guaranteed.
+                    </p>
+                </div>-->
+
+                <div class="info-card">
+                    <span class="info-card-icon">📊</span>
+                    <h4>Monitoring Overhead</h4>
+                    <p>
+                        Network needs constant monitoring for performance and security. Analyzing logs and 
+                        traffic patterns is time-consuming. Requires specialized monitoring software. False 
+                        alerts can waste time. 24/7 monitoring for critical networks is expensive.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAN vs Other Networks -->
+        <section class="section">
+            <h2>🔄 LAN Compared to Other Networks</h2>
+            <p>
+                Let's see how LAN compares to PAN, MAN, and WAN in detail:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>PAN</th>
+                        <th>LAN</th>
+                        <th>MAN</th>
+                        <th>WAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Coverage Area</strong></td>
+                        <td>~10 meters</td>
+                        <td>100m - 1 km (building/campus)</td>
+                        <td>Up to 50 km (city)</td>
+                        <td>Countries/Global</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>1-3 Mbps</td>
+                        <td>100-10,000 Mbps</td>
+                        <td>10-100 Mbps</td>
+                        <td>1-100 Mbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Latency</strong></td>
+                        <td>~10 ms</td>
+                        <td>< 1 ms</td>
+                        <td>5-10 ms</td>
+                        <td>50-300 ms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technology</strong></td>
+                        <td>Bluetooth, Zigbee</td>
+                        <td>Ethernet, Wi-Fi</td>
+                        <td>Fiber optic, Metro Ethernet</td>
+                        <td>Fiber, Satellite, Leased lines</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ownership</strong></td>
+                        <td>Individual</td>
+                        <td>Individual/Organization</td>
+                        <td>Telecom companies</td>
+                        <td>Telecom companies</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Setup Cost</strong></td>
+                        <td>Very Low ($0-$50)</td>
+                        <td>Low-Medium ($100-$10,000)</td>
+                        <td>High ($50,000+)</td>
+                        <td>Very High ($100,000+)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td>Minimal</td>
+                        <td>Low-Medium</td>
+                        <td>High (Professional)</td>
+                        <td>Very High (Professional)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typical Users</strong></td>
+                        <td>1 person</td>
+                        <td>10-1000</td>
+                        <td>1,000-100,000</td>
+                        <td>Millions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reliability</strong></td>
+                        <td>Medium</td>
+                        <td>High</td>
+                        <td>High</td>
+                        <td>Medium-High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Transfer Error</strong></td>
+                        <td>Low-Medium</td>
+                        <td>Very Low</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Use</strong></td>
+                        <td>Personal devices</td>
+                        <td>Office/Home networking</td>
+                        <td>City-wide services</td>
+                        <td>Internet, Global connectivity</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example</strong></td>
+                        <td>Phone to earbuds</td>
+                        <td>Office network, Home Wi-Fi</td>
+                        <td>Cable TV network</td>
+                        <td>Internet, Bank ATM network</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>💡 Key Insight:</h3>
+                <p>
+                    LAN strikes the perfect balance between speed, cost, and functionality! It's faster than PAN 
+                    but covers more area. It's cheaper than MAN/WAN but serves most organizational needs. This is 
+                    why LAN is the most widely deployed network type in the world - from tiny home networks to 
+                    massive enterprise campuses!
+                </p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="highlight-box">
+                <h3>Remember These Important Points:</h3>
+                <ul>
+                    <li><strong>LAN = Local:</strong> Covers a building or campus (100m to 1km), connecting multiple users and devices</li>
+                    <li><strong>Speed King:</strong> Much faster than internet (100-10,000 Mbps vs typical 10-100 Mbps internet)</li>
+                    <li><strong>Two Types:</strong> Wired LAN (Ethernet cables) and Wireless LAN (Wi-Fi) - most places use both!</li>
+                    <li><strong>Star Topology:</strong> Central switch/router connects all devices - most popular and reliable design</li>
+                    <li><strong>Resource Sharing:</strong> Share internet, printers, files, and applications among all users</li>
+                    <li><strong>Low Latency:</strong> Less than 1 millisecond delay - perfect for gaming, video calls, and real-time apps</li>
+                    <li><strong>Cost-Effective:</strong> Initial setup costs pay for themselves through shared resources and efficiency</li>
+                    <li><strong>Everywhere:</strong> Used in homes, offices, schools, hospitals, factories - the backbone of modern organizations</li>
+                    <li><strong>Scalable:</strong> Easy to add more devices as needs grow - just plug them in!</li>
+                    <li><strong>Foundation:</strong> Understanding LAN is essential for networking - it's the most common type you'll encounter</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Navigation to Other Topics -->
+        <!--<section class="section">
+            <h2>🚀 Continue Your Learning Journey</h2>
+            <p>
+                Great job mastering LAN! Ready to explore more network types and concepts?
+            </p>
+            
+            <div style="text-align: center; margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                <a href="pan.html" class="nav-btn" style="display: inline-block; padding: 15px 35px; font-size: 1.05rem;">
+                    ← PAN (Smaller)
+                </a>
+                <a href="dashboard.html" class="nav-btn" style="display: inline-block; padding: 15px 35px; font-size: 1.05rem;">
+                    📚 Dashboard
+                </a>
+                <a href="what-is-network.html" class="nav-btn" style="display: inline-block; padding: 15px 35px; font-size: 1.05rem;">
+                    🌐 Network Basics
+                </a>
+            </div>
+
+            <div class="example-box" style="margin-top: 30px;">
+                <strong>💡 Next Recommended Topics:</strong>
+                <br>• <strong>MAN (Metropolitan Area Network)</strong> - Learn about city-wide networks
+                <br>• <strong>WAN (Wide Area Network)</strong> - Understand global networking and the Internet
+                <br>• <strong>Network Topologies</strong> - Explore different network designs (Star, Bus, Ring, Mesh)
+                <br>• <strong>OSI Model</strong> - Deep dive into the 7 layers of networking
+                <br>• <strong>IP Addressing</strong> - How devices find each other on networks
+                <br>• <strong>Ethernet Technology</strong> - The protocol that powers most LANs
+                <br>• <strong>Wi-Fi Standards</strong> - Understanding wireless LAN technology in depth
+            </div>
+        </section>-->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">
+            Keep exploring, keep learning! 🚀
+        </p>
+    </footer>
+
+    <script>
+        // Progress bar on scroll
+        window.addEventListener('scroll', function() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+            
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Interactive device hover effect
+        document.querySelectorAll('.lan-device').forEach(device => {
+            device.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.2)';
+            });
+            
+            device.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add tooltip on hover for statistics
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Topology - Network Topology | Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .navbar {
+            background: rgba(30,30,30,0.95);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .back-btn {
+            padding: 10px 25px;
+            background: rgba(102,126,234,0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 50px;
+            background: rgba(45,45,45,0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(102,126,234,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-subtitle { font-size: 1.3rem; color: #b0b0b0; animation: fadeInUp 0.8s ease; }
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .section {
+            background: rgba(45,45,45,0.6);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .section h3 { font-size: 1.6rem; margin: 30px 0 15px 0; color: #667eea; }
+        .section p  { font-size: 1.1rem; color: #d0d0d0; margin-bottom: 20px; text-align: justify; }
+
+        .animation-box {
+            background: rgba(12,12,22,0.97);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(102,126,234,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== HYBRID CANVAS ===== */
+        .hybrid-canvas {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+        .hybrid-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* Zone labels */
+        .zone-label {
+            position: absolute;
+            font-size: 0.72rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 5;
+            letter-spacing: 0.05em;
+        }
+        .zone-star   { background: rgba(249,115,22,0.15);  border:1px solid rgba(249,115,22,0.4);  color:#fb923c; }
+        .zone-ring   { background: rgba(34,197,94,0.12);   border:1px solid rgba(34,197,94,0.4);   color:#4ade80; }
+        .zone-bus    { background: rgba(234,179,8,0.12);   border:1px solid rgba(234,179,8,0.4);   color:#fbbf24; }
+        .zone-mesh   { background: rgba(139,92,246,0.12);  border:1px solid rgba(139,92,246,0.4);  color:#a78bfa; }
+
+        /* Zone boundary boxes drawn via SVG rects */
+        .zone-rect {
+            fill: none;
+            stroke-width: 1.5;
+            rx: 18;
+            ry: 18;
+            stroke-dasharray: 7 4;
+            opacity: 0.35;
+        }
+        .zone-rect-star   { stroke: #fb923c; fill: rgba(249,115,22,0.03); }
+        .zone-rect-ring   { stroke: #4ade80; fill: rgba(34,197,94,0.03);  }
+        .zone-rect-bus    { stroke: #fbbf24; fill: rgba(234,179,8,0.03);  }
+        .zone-rect-mesh   { stroke: #a78bfa; fill: rgba(139,92,246,0.03); }
+
+        /* Links */
+        .h-link {
+            fill: none;
+            stroke: rgba(102,126,234,0.2);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .h-link.active     { stroke: #00ff88; stroke-width: 4.5; filter: drop-shadow(0 0 6px #00ff88); }
+        .h-link.alt        { stroke: #f8b400; stroke-width: 4;   filter: drop-shadow(0 0 6px #f8b400); }
+        .h-link.fail       { stroke: #ef4444; stroke-width: 3;   stroke-dasharray: 7 4; opacity: 0.6; }
+        .h-link.inter      { stroke: rgba(167,139,250,0.35); stroke-width: 3; stroke-dasharray: 5 3; }
+        .h-link.ring-cable { stroke: rgba(74,222,128,0.22);  stroke-width: 3; }
+        .h-link.bus-cable  { stroke: rgba(234,179,8,0.22);   stroke-width: 3.5; }
+
+        /* Backbone bus line */
+        .bus-backbone {
+            stroke: rgba(234,179,8,0.35);
+            stroke-width: 6;
+            stroke-linecap: round;
+            fill: none;
+            filter: drop-shadow(0 0 4px rgba(234,179,8,0.25));
+        }
+        .bus-backbone.active { stroke: #fbbf24; stroke-width: 7; filter: drop-shadow(0 0 10px #fbbf24); }
+
+        /* Devices */
+        .h-device {
+            position: absolute;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            z-index: 20;
+            border: 2px solid rgba(102,126,234,0.35);
+            box-shadow: 0 0 15px rgba(102,126,234,0.4);
+            transform: translate(-50%,-50%);
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .h-device:hover { transform: translate(-50%,-50%) scale(1.1); box-shadow: 0 0 30px rgba(102,126,234,0.8); }
+        .h-device.sz-lg { width:62px; height:62px; }
+        .h-device.sz-md { width:54px; height:54px; font-size:1.2rem; }
+        .h-device.sz-sm { width:46px; height:46px; font-size:1.1rem; }
+
+        /* Zone colour overrides */
+        .h-device.star-dev  { background: linear-gradient(135deg,#f97316,#c2410c); border-color:rgba(249,115,22,0.5); box-shadow:0 0 14px rgba(249,115,22,0.35); }
+        .h-device.ring-dev  { background: linear-gradient(135deg,#22c55e,#15803d); border-color:rgba(34,197,94,0.5);  box-shadow:0 0 14px rgba(34,197,94,0.35);  }
+        .h-device.bus-dev   { background: linear-gradient(135deg,#eab308,#92400e); border-color:rgba(234,179,8,0.5);  box-shadow:0 0 14px rgba(234,179,8,0.35);  }
+        .h-device.mesh-dev  { background: linear-gradient(135deg,#8b5cf6,#4c1d95); border-color:rgba(139,92,246,0.5); box-shadow:0 0 14px rgba(139,92,246,0.35); }
+        .h-device.core-dev  { background: linear-gradient(135deg,#667eea,#764ba2); border-color:rgba(102,126,234,0.7); box-shadow:0 0 22px rgba(102,126,234,0.6); }
+
+        /* Active states */
+        .h-device.dev-src  { border-color:#00ff88!important; box-shadow:0 0 45px rgba(0,255,136,0.9)!important; animation:devSrc 0.55s infinite; }
+        .h-device.dev-dst  { border-color:#a78bfa!important; box-shadow:0 0 45px rgba(167,139,250,0.9)!important; animation:devDst 0.55s infinite; }
+        .h-device.dev-fwd  { border-color:#f8b400!important; box-shadow:0 0 38px rgba(248,180,0,0.8)!important; animation:devFwd 0.55s infinite; }
+        .h-device.dev-fail { opacity:0.35!important; filter:grayscale(80%)!important; border-color:#ef4444!important; animation:none!important; }
+
+        .h-label {
+            position: absolute;
+            font-size: 0.67rem;
+            color: #94a3b8;
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 25;
+        }
+
+        /* Hub icons in star zone */
+        .hub-node {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#f97316,#c2410c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            z-index: 20;
+            border: 2px solid rgba(249,115,22,0.6);
+            box-shadow: 0 0 20px rgba(249,115,22,0.5);
+            transform: translate(-50%,-50%);
+            transition: all 0.3s;
+        }
+        .hub-node.dev-src  { border-color:#00ff88!important; box-shadow:0 0 45px rgba(0,255,136,0.9)!important; animation:devSrc 0.55s infinite; }
+        .hub-node.dev-fwd  { border-color:#f8b400!important; box-shadow:0 0 38px rgba(248,180,0,0.8)!important; animation:devFwd 0.55s infinite; }
+        .hub-node.dev-fail { opacity:0.3!important; filter:grayscale(80%)!important; animation:none!important; }
+
+        /* Packet dot */
+        .hpkt { opacity: 0; }
+
+        /* Info pill */
+        .route-pill {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(102,126,234,0.15);
+            border: 1px solid rgba(102,126,234,0.4);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.78rem;
+            color: #a5b4fc;
+            z-index: 30;
+            white-space: nowrap;
+        }
+
+        /* Controls */
+        .hybrid-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .h-btn {
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .h-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .h-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .h-btn.orange { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .h-btn.green  { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .h-btn.yellow { background: linear-gradient(135deg, #eab308, #92400e); }
+        .h-btn.purple { background: linear-gradient(135deg, #8b5cf6, #4c1d95); }
+        .h-btn.red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .h-btn.ghost  { background: rgba(255,255,255,0.08); color: #aaa; border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+
+        .h-status {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82rem;
+            color: #c0c0c0;
+        }
+        .legend-dot {
+            width: 14px; height: 14px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .info-card {
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .info-card-icon { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+        .info-card h4   { color: #667eea; font-size: 1.2rem; margin-bottom: 12px; }
+        .info-card p    { font-size: 1rem; line-height: 1.7; color: #c0c0c0; text-align: left; }
+
+        .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        @media(max-width:700px){ .adv-grid { grid-template-columns: 1fr; } }
+        .adv-card { border-radius: 12px; padding: 25px; border: 1px solid; }
+        .adv-card.green { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.3); }
+        .adv-card.red   { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.3); }
+        .adv-card h4.green-title { color: #4ade80; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card h4.red-title   { color: #f87171; margin-bottom: 14px; font-size: 1.15rem; }
+        .adv-card ul { list-style: none; padding: 0; }
+        .adv-card ul li { padding: 6px 0; color: #d0d0d0; font-size: 0.97rem; }
+        .adv-card.green ul li::before { content: "✅ "; }
+        .adv-card.red   ul li::before { content: "❌ "; }
+
+        .highlight-box {
+            background: rgba(102,126,234,0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .highlight-box ul { list-style-position: inside; color: #d0d0d0; margin-left: 20px; }
+        .highlight-box li { margin: 10px 0; }
+
+        .example-box {
+            background: rgba(30,30,30,0.6);
+            border: 2px dashed rgba(102,126,234,0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            color: #d0d0d0;
+            font-size: 0.97rem;
+            line-height: 1.9;
+        }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: rgba(30,30,30,0.6); border-radius: 12px; overflow: hidden; }
+        .comparison-table th { background: rgba(102,126,234,0.2); color: #667eea; padding: 15px; text-align: left; font-size: 1rem; }
+        .comparison-table td { padding: 13px 15px; border-bottom: 1px solid rgba(255,255,255,0.07); color: #d0d0d0; font-size: 0.95rem; }
+        .comparison-table tr:hover { background: rgba(102,126,234,0.08); }
+
+        .timeline { position: relative; padding-left: 30px; margin: 25px 0; }
+        .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#667eea,#764ba2); }
+        .timeline-item { position: relative; margin-bottom: 28px; }
+        .timeline-item::before { content:''; position:absolute; left:-24px; top:6px; width:14px; height:14px; border-radius:50%; background:#667eea; border:2px solid #764ba2; box-shadow:0 0 10px rgba(102,126,234,0.6); }
+        .timeline-item h4 { color: #a5b4fc; font-size: 1rem; margin-bottom: 5px; }
+        .timeline-item p  { font-size: 0.95rem; color: #c0c0c0; margin: 0; text-align: left; }
+
+        footer { background: rgba(30,30,30,0.95); text-align: center; padding: 30px 20px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); }
+        footer p { color: #b0b0b0; font-size: 1rem; }
+
+        .progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); z-index:9999; width:0%; transition:width 0.2s; }
+
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes fadeInUp   { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes devSrc { 0%,100%{box-shadow:0 0 28px rgba(0,255,136,0.6);}  50%{box-shadow:0 0 60px rgba(0,255,136,1);} }
+        @keyframes devDst { 0%,100%{box-shadow:0 0 28px rgba(167,139,250,0.7);} 50%{box-shadow:0 0 60px rgba(167,139,250,1);} }
+        @keyframes devFwd { 0%,100%{box-shadow:0 0 22px rgba(248,180,0,0.6);}  50%{box-shadow:0 0 50px rgba(248,180,0,1);} }
+
+        @media(max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .section{padding:25px;}
+            .hybrid-canvas{height:380px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="dashboard.html" class="nav-logo">🌐 Network Learning Hub</a>
+        <a href="dashboard.html" class="back-btn">🔙 Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>🔀 Hybrid Topology</h1>
+        <p class="hero-subtitle">Best of Every World — Combining Star, Ring, Bus & Mesh into One Powerful Network!</p>
+        <span class="hero-badge">📡 Enterprise Networks | Campus LAN | ISP Backbone | Real-World Standard</span>
+    </section>
+
+    <!-- ============ LIVE ANIMATION ============ -->
+    <section class="section" id="animation">
+        <h2>⚡ Hybrid Topology — Live Interactive Visualization</h2>
+        <p>
+            This canvas shows a <strong>real-world hybrid network</strong> combining four zones —
+            <span style="color:#fb923c;font-weight:bold;">Star (Office LAN)</span>,
+            <span style="color:#4ade80;font-weight:bold;">Ring (Backbone)</span>,
+            <span style="color:#fbbf24;font-weight:bold;">Bus (Lab Segment)</span>, and
+            <span style="color:#a78bfa;font-weight:bold;">Mesh (Core Routers)</span> —
+            all interconnected through central switches. Watch how data crosses zone boundaries!
+        </p>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Star Zone (Office)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#22c55e;border-radius:50%;"></div> Ring Zone (Backbone)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#eab308;border-radius:2px;"></div> Bus Zone (Lab)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div> Mesh Zone (Core)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#667eea;"></div> Core Switch / Router</div>
+        </div>
+
+        <div class="animation-box">
+            <div class="route-pill" id="routePill">🔀 Hybrid Network — All zones connected</div>
+
+            <div class="hybrid-canvas" id="hybridCanvas">
+                <svg class="hybrid-svg" id="hybridSvg" viewBox="0 0 860 500" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <filter id="glow-g"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="glow-y"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="glow-p"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+
+                    <!-- Zone boundaries -->
+                    <rect class="zone-rect zone-rect-star"  x="18"  y="18"  width="220" height="260" rx="18"/>
+                    <rect class="zone-rect zone-rect-ring"  x="18"  y="300" width="220" height="185" rx="18"/>
+                    <rect class="zone-rect zone-rect-bus"   x="620" y="18"  width="225" height="200" rx="18"/>
+                    <rect class="zone-rect zone-rect-mesh"  x="620" y="240" width="225" height="245" rx="18"/>
+
+                    <!-- ── BUS BACKBONE LINE (yellow horizontal) ── -->
+                    <line class="bus-backbone" id="busLine" x1="645" y1="118" x2="838" y2="118"/>
+
+                    <!-- ── RING CIRCLE ── -->
+                    <circle id="ringCircle" cx="128" cy="388" r="72"
+                            fill="none" stroke="rgba(34,197,94,0.28)" stroke-width="3.5"/>
+
+                    <!-- All inter-device links drawn by JS -->
+
+                    <!-- Packet dots -->
+                    <circle class="hpkt" id="hpkt0" r="9" fill="#00ff88" filter="url(#glow-g)"/>
+                    <circle class="hpkt" id="hpkt1" r="9" fill="#00ff88" filter="url(#glow-g)"/>
+                    <circle class="hpkt" id="hpkt2" r="9" fill="#f8b400" filter="url(#glow-y)"/>
+                    <circle class="hpkt" id="hpkt3" r="9" fill="#a78bfa" filter="url(#glow-p)"/>
+                </svg>
+
+                <!-- ── ZONE LABELS ── -->
+                <div class="zone-label zone-star" style="top:22px; left:28px;">⭐ STAR — Office LAN</div>
+                <div class="zone-label zone-ring" style="top:306px; left:28px;">🔄 RING — Backbone</div>
+                <div class="zone-label zone-bus"  style="top:22px; right:10px;">🚌 BUS — Lab Segment</div>
+                <div class="zone-label zone-mesh" style="top:246px; right:10px;">🕸️ MESH — Core Routers</div>
+
+                <!-- ── STAR ZONE devices: Central Switch + 4 PCs ── -->
+                <!-- Core Switch (star hub) -->
+                <div class="hub-node" id="starSwitch" style="left:0;top:0;">🔌<div class="h-label" id="lbl-starSwitch" style="bottom:-22px;left:50%;transform:translateX(-50%);">SW-1</div></div>
+                <!-- PC A1 -->
+                <div class="h-device sz-sm star-dev" id="devA1" style="">💻<div class="h-label" id="lbl-A1"></div></div>
+                <!-- PC A2 -->
+                <div class="h-device sz-sm star-dev" id="devA2" style="">💻<div class="h-label" id="lbl-A2"></div></div>
+                <!-- PC A3 -->
+                <div class="h-device sz-sm star-dev" id="devA3" style="">💻<div class="h-label" id="lbl-A3"></div></div>
+                <!-- Printer A -->
+                <div class="h-device sz-sm star-dev" id="devA4" style="">🖨️<div class="h-label" id="lbl-A4"></div></div>
+
+                <!-- ── RING ZONE: 4 nodes on ring ── -->
+                <div class="h-device sz-sm ring-dev" id="devR1" style="">🖥️<div class="h-label" id="lbl-R1"></div></div>
+                <div class="h-device sz-sm ring-dev" id="devR2" style="">🖥️<div class="h-label" id="lbl-R2"></div></div>
+                <div class="h-device sz-sm ring-dev" id="devR3" style="">🖥️<div class="h-label" id="lbl-R3"></div></div>
+                <div class="h-device sz-sm ring-dev" id="devR4" style="">🖥️<div class="h-label" id="lbl-R4"></div></div>
+
+                <!-- ── BUS ZONE: 4 devices on bus ── -->
+                <div class="h-device sz-sm bus-dev"  id="devB1" style="">💻<div class="h-label" id="lbl-B1"></div></div>
+                <div class="h-device sz-sm bus-dev"  id="devB2" style="">💻<div class="h-label" id="lbl-B2"></div></div>
+                <div class="h-device sz-sm bus-dev"  id="devB3" style="">💻<div class="h-label" id="lbl-B3"></div></div>
+                <div class="h-device sz-sm bus-dev"  id="devB4" style="">🖨️<div class="h-label" id="lbl-B4"></div></div>
+
+                <!-- ── MESH ZONE: 3 core routers ── -->
+                <div class="h-device sz-md mesh-dev" id="devM1" style="">🌐<div class="h-label" id="lbl-M1"></div></div>
+                <div class="h-device sz-md mesh-dev" id="devM2" style="">🌐<div class="h-label" id="lbl-M2"></div></div>
+                <div class="h-device sz-md mesh-dev" id="devM3" style="">🌐<div class="h-label" id="lbl-M3"></div></div>
+
+                <!-- ── CENTRAL CORE SWITCH (interconnects all zones) ── -->
+                <div class="h-device sz-lg core-dev" id="devCore" style="">🏛️<div class="h-label" id="lbl-Core"></div></div>
+
+            </div><!-- hybrid-canvas -->
+        </div><!-- animation-box -->
+
+        <div class="hybrid-controls">
+            <button class="h-btn orange" id="btnStar"   onclick="hybridDemo('star')">⭐ Star Zone TX</button>
+            <button class="h-btn green"  id="btnRing"   onclick="hybridDemo('ring')">🔄 Ring Zone TX</button>
+            <button class="h-btn yellow" id="btnBus"    onclick="hybridDemo('bus')">🚌 Bus Broadcast</button>
+            <button class="h-btn purple" id="btnMesh"   onclick="hybridDemo('mesh')">🕸️ Mesh Reroute</button>
+            <button class="h-btn"        id="btnCross"  onclick="hybridDemo('cross')">🔀 Cross-Zone TX</button>
+            <button class="h-btn red"    id="btnFail"   onclick="hybridDemo('fail')">💥 Zone Failure</button>
+            <button class="h-btn ghost"  onclick="hybridReset()">↺ Reset</button>
+            <div class="h-status" id="hybridStatus">👆 Click a button to simulate traffic across the Hybrid Network!</div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:25px;">
+            <h3>🎯 Key Observations:</h3>
+            <ul>
+                <li><strong>Zone Independence:</strong> Each topology zone operates under its own rules — Star uses MAC switching, Ring uses token passing, Bus uses CSMA/CD, Mesh uses dynamic routing</li>
+                <li><strong>Central Core Switch:</strong> Acts as the interconnection point between all zones — the "glue" of the hybrid network</li>
+                <li><strong>Cross-Zone Traffic:</strong> Data entering from a Star zone travels through the Core Switch before entering the Mesh or Bus zone — zone boundaries are transparent to end users</li>
+                <li><strong>Best of All Worlds:</strong> Star's easy management + Ring's reliability + Bus's simplicity + Mesh's redundancy — all in one network</li>
+                <li><strong>Selective Redundancy:</strong> Critical paths (Mesh Core) have full redundancy; access zones (Star, Bus) use simpler, cheaper topologies</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ============ WHAT IS HYBRID ============ -->
+    <section class="section" id="what">
+        <h2>🔍 What is Hybrid Topology?</h2>
+        <p>
+            <strong>Hybrid Topology</strong> is a network design that combines two or more different network topologies
+            into a single unified network. Instead of forcing the entire network to follow one topology's rules,
+            hybrid topology lets each segment use the topology <em>best suited</em> to its specific needs —
+            then interconnects these segments into one cohesive network.
+        </p>
+        <p>
+            In practice, <strong>almost every real-world network is a hybrid topology</strong>. Your company's office
+            LAN connects PCs via Star topology, the campus backbone might use Ring or Mesh between buildings,
+            the data centre uses Mesh for servers, and the WAN connection to the internet uses Partial Mesh.
+            None of these is "one topology" — they're all hybrids.
+        </p>
+
+        <div class="example-box">
+            <strong>📡 Real Analogy — A University Campus Network! 🏫</strong><br><br>
+            🏢 <strong>Admin Block</strong>  → Star Topology: All staff PCs connect to a central switch. Easy management.<br>
+            🔬 <strong>Lab Block</strong>    → Bus Topology: Computer lab machines share one backbone segment. Cost-effective.<br>
+            🏛️ <strong>Library</strong>     → Ring Topology: Library terminals in a loop — deterministic, fair access.<br>
+            🌐 <strong>Core Network</strong> → Mesh Topology: Core routers fully meshed — no single point of failure.<br>
+            🔌 <strong>All Connected</strong> → Central distribution switch links all blocks together.<br><br>
+            Result: Each block gets the RIGHT topology for its needs. Total cost optimized.<br>
+            This is Hybrid Topology — the standard for every real-world enterprise network! ✅
+        </div>
+
+        <h3>🔧 Core Components of Hybrid Topology</h3>
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🔌</span>
+                <h4>Core / Distribution Switches</h4>
+                <p>The backbone devices that interconnect different topology zones. Core switches typically run at Layer 3 (routing) and connect all sub-networks. They must support high throughput since ALL inter-zone traffic passes through them. Cisco Catalyst, Juniper EX — these are typical core switches in hybrid networks.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🌐</span>
+                <h4>Routers / Layer-3 Switches</h4>
+                <p>Handle routing between different topology zones, which may be on different subnets or VLANs. A packet from the Star zone (192.168.1.x) to the Mesh zone (10.0.0.x) must be routed. Layer-3 switches combine switching speed with routing intelligence — perfect for hybrid zone boundaries.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🛡️</span>
+                <h4>Firewalls / DMZ Zones</h4>
+                <p>In hybrid networks, firewalls sit at zone boundaries to control traffic between segments. A DMZ (Demilitarized Zone) is a classic hybrid pattern — a separate network segment sitting between the internal Star/Mesh network and the public internet, using its own topology rules.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>Media Converters / Gateways</h4>
+                <p>Different topology zones often use different physical media. Star zones use UTP Cat6, Ring zones use fiber, Bus zones use coaxial. Media converters translate between cable types at zone boundaries. Gateways translate between protocols when incompatible topology technologies must interconnect.</p>
+            </div>
+        </div>
+
+        <h3>🏗️ Common Hybrid Topology Combinations</h3>
+        <div class="info-grid">
+            <div class="info-card" style="border-color:rgba(249,115,22,0.4);">
+                <span class="info-card-icon">⭐🕸️</span>
+                <h4>Star + Mesh (Enterprise LAN + WAN)</h4>
+                <p>Most common enterprise hybrid. Office floors use Star (switches + PCs). Building cores and WAN connections use Mesh (redundant routers). Used by banks, hospitals, and corporates. Star provides easy access-layer management; Mesh provides WAN redundancy.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(34,197,94,0.4);">
+                <span class="info-card-icon">⭐🔄</span>
+                <h4>Star + Ring (Campus Network)</h4>
+                <p>Access layer: Star topology for each building (all PCs → switch). Distribution layer: Ring or Dual Ring fiber connecting switches between buildings. FDDI or SONET ring backbone. Campus networks of universities and hospitals often use this combination.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(234,179,8,0.4);">
+                <span class="info-card-icon">⭐🚌</span>
+                <h4>Star + Bus (Mixed Office)</h4>
+                <p>Main office uses Star (managed switch + modern PCs). Legacy lab segment uses Bus (old coaxial network kept for budget). Both connected through a central router. Common during network upgrades when old Bus segments are gradually replaced by new Star segments.</p>
+            </div>
+            <div class="info-card" style="border-color:rgba(139,92,246,0.4);">
+                <span class="info-card-icon">⭐🕸️🔄</span>
+                <h4>Star + Mesh + Ring (ISP Network)</h4>
+                <p>Customer access: Star (DSLAM → CPE devices). City backbone: Ring (SONET/SDH fiber). Core backbone: Mesh (routers with full redundancy). This 3-tier hybrid is how major ISPs like Airtel, Jio, and BSNL build their networks across India.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ADVANTAGES & DISADVANTAGES ============ -->
+    <section class="section" id="advdis">
+        <h2>⚖️ Advantages & Disadvantages</h2>
+        <p>Hybrid Topology inherits strengths from each component topology — but also inherits some of their management complexity.</p>
+
+        <div class="adv-grid">
+            <div class="adv-card green">
+                <h4 class="green-title">✅ Advantages</h4>
+                <ul>
+                    <li>Flexible — each zone uses the best topology for its needs</li>
+                    <li>Scalable — add new zones without redesigning everything</li>
+                    <li>Fault tolerance — failures in one zone don't affect others</li>
+                    <li>Cost-optimized — cheap Bus/Star for access, Mesh only where needed</li>
+                    <li>Performance-optimized — right topology for each traffic type</li>
+                    <li>Supports legacy & modern equipment simultaneously</li>
+                    <li>Used in every real-world enterprise and ISP network</li>
+                    <li>Easy to troubleshoot — zone boundaries isolate faults</li>
+                    <li>Highly customizable to match any organization's needs</li>
+                    <li>Can grow from small to massive scale incrementally</li>
+                </ul>
+            </div>
+            <div class="adv-card red">
+                <h4 class="red-title">❌ Disadvantages</h4>
+                <ul>
+                    <li>Complex design — requires expert network architects</li>
+                    <li>Expensive to set up and maintain</li>
+                    <li>Core switch/router becomes a potential single point of failure</li>
+                    <li>Multiple topology protocols increase management overhead</li>
+                    <li>Troubleshooting across zone boundaries can be challenging</li>
+                    <li>Requires staff skilled in multiple topology types</li>
+                    <li>Documentation critical — hard to understand without good diagrams</li>
+                    <li>Upgrades require planning across multiple zones simultaneously</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 The Golden Rule of Hybrid Topology:</strong> Use the <strong>simplest and cheapest topology</strong>
+            that meets the requirements at each layer. Star at the access layer (cheap, easy). Partial Mesh at the 
+            distribution layer (redundancy where needed). Full Mesh or Ring at the core (maximum reliability for 
+            critical backbone). This is exactly the <strong>Cisco 3-Tier Hierarchical Model</strong> — the industry 
+            standard for enterprise network design.
+        </div>
+    </section>
+
+    <!-- ============ CISCO 3-TIER MODEL ============ -->
+    <section class="section" id="cisco">
+        <h2>🏗️ Cisco 3-Tier Hierarchical Model — Industry Standard Hybrid</h2>
+        <p>
+            The most widely deployed Hybrid Topology in the world is the <strong>Cisco 3-Tier Hierarchical Model</strong>.
+            Every enterprise network architect learns this model. It divides the network into three layers,
+            each using the optimal topology for its role.
+        </p>
+
+        <div class="example-box">
+            <strong>🏢 Cisco 3-Tier Model — Layer by Layer:</strong><br><br>
+
+            <strong style="color:#fb923c;">LAYER 1 — Access Layer (Star Topology)</strong><br>
+            • End devices: PCs, laptops, IP phones, printers, IP cameras<br>
+            • Connected via UTP Cat6 cables to Access Switches<br>
+            • Star Topology — each device gets its own dedicated port<br>
+            • Switches: Cisco Catalyst 2960, 3560 series<br>
+            • Functions: Port security, VLAN assignment, PoE for phones<br><br>
+
+            <strong style="color:#fbbf24;">LAYER 2 — Distribution Layer (Partial Mesh / Ring)</strong><br>
+            • Access switches uplink to Distribution Switches<br>
+            • Partial Mesh between Distribution switches — redundant uplinks<br>
+            • Runs STP/RSTP or Layer 3 routing between VLANs<br>
+            • Switches: Cisco Catalyst 4500, 6500 series<br>
+            • Functions: Inter-VLAN routing, QoS, ACL enforcement, summarization<br><br>
+
+            <strong style="color:#a78bfa;">LAYER 3 — Core Layer (Full Mesh / Ring)</strong><br>
+            • Distribution switches connect to Core Routers/Switches<br>
+            • Full Mesh or redundant links — maximum throughput and reliability<br>
+            • High-speed fiber: 10G/40G/100G Ethernet<br>
+            • Switches: Cisco Nexus 9000, Catalyst 9500 series<br>
+            • Functions: Fast packet forwarding, no filtering — speed only!<br><br>
+
+            Result: Star (access) + Partial Mesh (distribution) + Full Mesh (core) = Hybrid Topology! 🎯
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🎯</span>
+                <h4>Access Layer Design Rules</h4>
+                <p>
+                    Never put routing logic at the access layer — keep it simple.<br>
+                    Assign VLANs here to segregate traffic types.<br>
+                    Enable port security to prevent rogue device connections.<br>
+                    Use PoE ports for IP phones, cameras, and wireless APs.<br>
+                    Uplink to distribution with redundant dual cables (LAG/LACP).
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🔀</span>
+                <h4>Distribution Layer Design Rules</h4>
+                <p>
+                    Always deploy in pairs — two distribution switches per zone.<br>
+                    Use Layer 3 routing (not STP) between distribution switches.<br>
+                    Apply QoS policies here for voice, video, data prioritization.<br>
+                    Filter and summarize routes before sending to core.<br>
+                    Connect each access switch to BOTH distribution switches (redundancy).
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🚀</span>
+                <h4>Core Layer Design Rules</h4>
+                <p>
+                    NEVER apply ACLs, QoS, or filtering at the core — kills performance.<br>
+                    Always use redundant links and devices — this is mission-critical.<br>
+                    Use the fastest switches money can buy — no bottlenecks here.<br>
+                    Connect every distribution pair to every core switch (full mesh).<br>
+                    Design for sub-second failover — use BFD (Bidirectional Forwarding Detection).
+                </p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">☁️</span>
+                <h4>2-Tier Collapsed Core (Small Networks)</h4>
+                <p>
+                    For smaller organisations, combine Distribution + Core into one layer.<br>
+                    Called "Collapsed Core" or 2-tier model.<br>
+                    Fewer devices = lower cost, but less scalability.<br>
+                    Distribution switches also act as core — partial mesh between them.<br>
+                    Suitable for networks with fewer than ~1,000 users.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ REAL WORLD ============ -->
+    <section class="section" id="realworld">
+        <h2>🌍 Real World Examples & Usage</h2>
+        <p>
+            Hybrid Topology is not just a theory — it is <em>literally</em> what every major network in 
+            the world looks like. Here are real examples you interact with every day.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <span class="info-card-icon">🏢</span>
+                <h4>Corporate Enterprise Networks</h4>
+                <p>Infosys, TCS, Wipro — every IT company's campus network is a hybrid. Star at each floor (PCs → access switch), Partial Mesh between floors (distribution), Full Mesh at core, Ring or Mesh WAN to other campuses. Managed by a dedicated NOC (Network Operations Centre) team 24×7.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏥</span>
+                <h4>Hospital Networks</h4>
+                <p>ICU monitors, X-ray machines, pharmacy systems, and admin PCs all on one network — but separated by VLANs on a hybrid topology. Star at wards, Mesh core with redundant switches (critical — patient life depends on uptime!), Ring backbone between buildings. No downtime is acceptable.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🎓</span>
+                <h4>University Campus Networks</h4>
+                <p>IIT, NIT, IIM campuses — Star topology for hostel rooms and classrooms, Ring or Mesh fiber backbone connecting all buildings, Bus for older lab segments, Mesh for the data centre. Students experience seamless wifi across the campus — all powered by a carefully designed hybrid network.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">📡</span>
+                <h4>ISP Networks (Jio, Airtel, BSNL)</h4>
+                <p>Your mobile internet travels through a 4-tier hybrid: your phone connects via WiFi Star to an AP, AP connects via fiber to a DSLAM/aggregator (Star/Bus), aggregators connect via SONET Ring to city PoPs, city PoPs connect via Mesh backbone to internet exchanges. Every call and byte traverses this hybrid architecture.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🛒</span>
+                <h4>Retail Chains (Amazon, Flipkart Warehouses)</h4>
+                <p>Amazon warehouses use hybrid topology: WiFi Star for handheld scanners, Bus-like conveyor control networks, Mesh for warehouse management servers, and WAN Mesh connecting to fulfilment centres nationwide. When you order on Amazon, the order data traverses this hybrid network from click to doorstep.</p>
+            </div>
+            <div class="info-card">
+                <span class="info-card-icon">🏦</span>
+                <h4>Banking Infrastructure (SBI, HDFC, ICICI)</h4>
+                <p>Each bank branch uses Star (teller PCs → switch), branch switches connect via MPLS Mesh WAN to regional hubs (Partial Mesh), regional hubs connect to data centres via Full Mesh redundant links. ATM networks, SWIFT international transfers, UPI — all run on this hybrid banking network infrastructure.</p>
+            </div>
+        </div>
+
+        <h3>📅 Evolution of Hybrid Topology</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>🗓️ 1980s — First Hybrid Networks Emerge</h4>
+                <p>As Bus Topology LANs and Token Ring networks grew, organisations needed to connect different segments together. The first hybrid networks were created by connecting Bus segments and Ring segments through bridges and routers. Networks became hybrid out of necessity — different departments had different standards.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1990 — Cisco Defines 3-Tier Hierarchical Model</h4>
+                <p>Cisco introduced the Access-Distribution-Core hierarchical design model. This formalized the concept of intentional hybrid topology — using Star at access, Partial Mesh at distribution, and full redundancy at core. This model became the industry standard that network engineers learn to this day.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 1995–2000 — Ethernet Everywhere Accelerates Hybrid</h4>
+                <p>As Fast Ethernet replaced Token Ring and Bus, organisations didn't rip out all their old cabling. New Star segments were connected to old Ring/Bus segments — creating organic hybrids. 10/100/1000 switches became the glue connecting different topology zones. The hybrid era was fully underway.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2000s — MPLS Creates Global Hybrid WAN</h4>
+                <p>MPLS (Multiprotocol Label Switching) allowed ISPs to create virtual private networks (VPNs) that connected enterprise sites in a hybrid WAN topology. Site A could have Star LAN, Site B could have Mesh core, and MPLS WAN connected them all transparently. The corporate WAN became a massive global hybrid.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ 2010s — SD-WAN and Software-Defined Hybrid</h4>
+                <p>Software-Defined Networking (SDN) and SD-WAN brought programmable hybrid topologies. Enterprises could now define their topology rules in software — dynamically changing which paths are active based on traffic, cost, and performance. The hybrid network became intelligent and self-managing.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>🗓️ Today — Cloud-Native Hybrid (On-Premise + Cloud)</h4>
+                <p>Modern hybrid topology extends beyond physical networks. On-premise Star/Mesh networks connect to AWS/Azure cloud via Direct Connect or VPN tunnels — creating a hybrid of physical and virtual networks. Kubernetes clusters form Mesh topologies inside cloud. The hybrid network now spans physical data centres, cloud regions, and even satellite links (Starlink).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ COMPARISON TABLE ============ -->
+    <section class="section" id="comparison">
+        <h2>📊 Hybrid vs Pure Topologies — Full Comparison</h2>
+        <p>Why Hybrid Topology wins in real-world deployments across every metric that matters.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Feature</th>
+                <th>🔀 Hybrid</th>
+                <th>⭐ Star</th>
+                <th>🕸️ Mesh</th>
+                <th>🔄 Ring</th>
+                <th>🚌 Bus</th>
+            </tr>
+            <tr>
+                <td><strong>Real-World Usage</strong></td>
+                <td>⭐ Standard for ALL large networks</td>
+                <td>🟢 Small-medium LAN</td>
+                <td>🟢 Core/WAN only</td>
+                <td>🟡 Specialized legacy</td>
+                <td>🔴 Nearly obsolete</td>
+            </tr>
+            <tr>
+                <td><strong>Fault Tolerance</strong></td>
+                <td>⭐ Zone-isolated — failures contained</td>
+                <td>🟡 Hub failure = all fail</td>
+                <td>⭐ Maximum</td>
+                <td>🟡 Dual ring only</td>
+                <td>❌ One break = total</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>⭐ Add zones without redesign</td>
+                <td>⭐ Easy per zone</td>
+                <td>🟡 Links grow fast</td>
+                <td>🟡 Disrupts ring</td>
+                <td>❌ Very limited</td>
+            </tr>
+            <tr>
+                <td><strong>Cost Efficiency</strong></td>
+                <td>⭐ Optimal — right topology per zone</td>
+                <td>🟡 Moderate</td>
+                <td>❌ Very expensive</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Cheapest</td>
+            </tr>
+            <tr>
+                <td><strong>Performance</strong></td>
+                <td>⭐ Best per zone + inter-zone routing</td>
+                <td>⭐ Good (switch)</td>
+                <td>⭐ Excellent</td>
+                <td>⭐ Consistent</td>
+                <td>❌ Degrades fast</td>
+            </tr>
+            <tr>
+                <td><strong>Management</strong></td>
+                <td>🟡 Complex but structured</td>
+                <td>⭐ Simplest</td>
+                <td>❌ Complex routing</td>
+                <td>🟡 Moderate</td>
+                <td>⭐ Simplest</td>
+            </tr>
+            <tr>
+                <td><strong>Flexibility</strong></td>
+                <td>⭐ Maximum — mix any topologies</td>
+                <td>🟡 Fixed star model</td>
+                <td>🟡 Fixed mesh model</td>
+                <td>🟡 Fixed ring model</td>
+                <td>🟡 Fixed bus model</td>
+            </tr>
+            <tr>
+                <td><strong>Legacy Support</strong></td>
+                <td>⭐ Can integrate old topology zones</td>
+                <td>❌ Star only</td>
+                <td>❌ Mesh only</td>
+                <td>❌ Ring only</td>
+                <td>❌ Bus only</td>
+            </tr>
+            <tr>
+                <td><strong>Used By</strong></td>
+                <td>Enterprises, ISPs, Banks, Hospitals</td>
+                <td>Homes, Small offices</td>
+                <td>Data centres, WAN</td>
+                <td>Industrial, MAN</td>
+                <td>Embedded, legacy</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- ============ KEY TAKEAWAYS ============ -->
+    <section class="section">
+        <h2>🎯 Key Takeaways</h2>
+        <div class="highlight-box">
+            <ul>
+                <li>Hybrid Topology <strong>combines two or more different topologies</strong> into a single unified network — each zone uses the best fit</li>
+                <li><strong>Almost all real-world networks are hybrid</strong> — pure topologies exist only in textbooks and very small networks</li>
+                <li>Common combinations: <strong>Star + Mesh</strong> (enterprise LAN+WAN), <strong>Star + Ring</strong> (campus), <strong>Star + Mesh + Ring</strong> (ISP networks)</li>
+                <li>The <strong>Cisco 3-Tier Hierarchical Model</strong> is the industry-standard hybrid: Star (Access) → Partial Mesh (Distribution) → Full Mesh (Core)</li>
+                <li>Zone isolation is a key benefit — <strong>a failure in the Bus zone doesn't affect the Star or Mesh zones</strong></li>
+                <li>The <strong>Core Switch / Router</strong> is the interconnection glue — it must be highly available (usually deployed in pairs)</li>
+                <li>Hybrid allows <strong>legacy integration</strong> — old Bus or Ring segments can coexist with modern Star or Mesh zones during upgrades</li>
+                <li>Modern hybrid extends to <strong>cloud</strong> — on-premise networks connect to AWS/Azure, creating physical-virtual hybrid topology</li>
+                <li><strong>SD-WAN</strong> creates software-defined hybrid overlays — topology rules defined in software, not cables</li>
+                <li>Designing a hybrid network requires understanding ALL topologies — which is why studying Bus, Star, Ring, and Mesh individually is essential before designing hybrid! 🎓</li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2024 Networking Learning Hub | Built with 💜 for Learning</p>
+    <p style="margin-top:10px; font-size:0.9rem;">Keep exploring, keep learning! 🚀</p>
+</footer>
+
+<script>
+// ── PROGRESS BAR ──────────────────────────────────────────
+window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ── FADE IN ────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.section').forEach(s => {
+    s.style.opacity='0'; s.style.transform='translateY(20px)';
+    s.style.transition='opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(s);
+});
+
+// ── LAYOUT DEFINITIONS (SVG ViewBox 860×500) ──────────────
+// All positions in SVG coordinate space
+const VW = 860, VH = 500;
+
+// Named node IDs and their SVG positions
+const NODES = {
+    // Star zone (top-left)
+    starSwitch: { x:128, y:148, el:'starSwitch', lbl:'lbl-starSwitch' },
+    A1: { x:42,  y:60,  el:'devA1', lbl:'lbl-A1', labelTxt:'PC-A1', labelPos:'top' },
+    A2: { x:42,  y:148, el:'devA2', lbl:'lbl-A2', labelTxt:'PC-A2', labelPos:'left' },
+    A3: { x:42,  y:238, el:'devA3', lbl:'lbl-A3', labelTxt:'PC-A3', labelPos:'left' },
+    A4: { x:128, y:248, el:'devA4', lbl:'lbl-A4', labelTxt:'Print', labelPos:'bottom' },
+
+    // Ring zone (bottom-left)  — ring circle cx=128 cy=388 r=72
+    R1: { x:128, y:316, el:'devR1', lbl:'lbl-R1', labelTxt:'Node-1', labelPos:'top'   },
+    R2: { x:200, y:388, el:'devR2', lbl:'lbl-R2', labelTxt:'Node-2', labelPos:'right' },
+    R3: { x:128, y:460, el:'devR3', lbl:'lbl-R3', labelTxt:'Node-3', labelPos:'bottom'},
+    R4: { x:56,  y:388, el:'devR4', lbl:'lbl-R4', labelTxt:'Node-4', labelPos:'left'  },
+
+    // Bus zone (top-right) — bus line y=118 from x=645 to x=838
+    B1: { x:672, y:58,  el:'devB1', lbl:'lbl-B1', labelTxt:'Lab-1', labelPos:'top'   },
+    B2: { x:732, y:58,  el:'devB2', lbl:'lbl-B2', labelTxt:'Lab-2', labelPos:'top'   },
+    B3: { x:793, y:58,  el:'devB3', lbl:'lbl-B3', labelTxt:'Lab-3', labelPos:'top'   },
+    B4: { x:838, y:165, el:'devB4', lbl:'lbl-B4', labelTxt:'Lab-Pr',labelPos:'right' },
+
+    // Mesh zone (bottom-right)
+    M1: { x:672, y:298, el:'devM1', lbl:'lbl-M1', labelTxt:'Core-R1', labelPos:'left'  },
+    M2: { x:800, y:298, el:'devM2', lbl:'lbl-M2', labelTxt:'Core-R2', labelPos:'right' },
+    M3: { x:736, y:445, el:'devM3', lbl:'lbl-M3', labelTxt:'Core-R3', labelPos:'bottom'},
+
+    // Central core switch
+    Core: { x:390, y:250, el:'devCore', lbl:'lbl-Core', labelTxt:'CORE SW', labelPos:'bottom' },
+};
+
+// Static links to draw initially
+const STATIC_LINKS = [
+    // Star zone spokes
+    { a:'starSwitch', b:'A1',  cls:'h-link', id:'lnk-swA1'  },
+    { a:'starSwitch', b:'A2',  cls:'h-link', id:'lnk-swA2'  },
+    { a:'starSwitch', b:'A3',  cls:'h-link', id:'lnk-swA3'  },
+    { a:'starSwitch', b:'A4',  cls:'h-link', id:'lnk-swA4'  },
+
+    // Ring zone arcs handled by SVG circle — just ring-to-ring links for animation
+    { a:'R1', b:'R2', cls:'h-link ring-cable', id:'lnk-r1r2' },
+    { a:'R2', b:'R3', cls:'h-link ring-cable', id:'lnk-r2r3' },
+    { a:'R3', b:'R4', cls:'h-link ring-cable', id:'lnk-r3r4' },
+    { a:'R4', b:'R1', cls:'h-link ring-cable', id:'lnk-r4r1' },
+
+    // Bus zone stubs (vertical from bus backbone to devices)
+    { a:'B1', b:'busAnchor1', virtual:true },
+    { a:'B2', b:'busAnchor2', virtual:true },
+    { a:'B3', b:'busAnchor3', virtual:true },
+    { a:'B4', b:'busAnchor4', virtual:true },
+
+    // Mesh zone full mesh
+    { a:'M1', b:'M2', cls:'h-link', id:'lnk-m1m2' },
+    { a:'M2', b:'M3', cls:'h-link', id:'lnk-m2m3' },
+    { a:'M1', b:'M3', cls:'h-link', id:'lnk-m1m3' },
+
+    // Inter-zone links (to Core)
+    { a:'starSwitch', b:'Core', cls:'h-link inter', id:'lnk-sw-core'  },
+    { a:'R1',         b:'Core', cls:'h-link inter', id:'lnk-r1-core'  },
+    { a:'M1',         b:'Core', cls:'h-link inter', id:'lnk-m1-core'  },
+    { a:'M2',         b:'Core', cls:'h-link inter', id:'lnk-m2-core'  },
+    { a:'Core',       b:'B1',   cls:'h-link inter', id:'lnk-core-b1'  },  // bus zone gateway
+];
+
+// Bus stub line y positions
+const BUS_Y = 118;
+const BUS_STUBS = [
+    { id:'stub-b1', x: 672, devY: NODES.B1.y },
+    { id:'stub-b2', x: 732, devY: NODES.B2.y },
+    { id:'stub-b3', x: 793, devY: NODES.B3.y },
+    { id:'stub-b4', x: 838, devY: NODES.B4.y },
+];
+
+// ── SCALE HELPER ──────────────────────────────────────────
+function getCanvas() { return document.getElementById('hybridCanvas'); }
+function getSvg()    { return document.getElementById('hybridSvg');    }
+
+function s(svgCoord, axis) {
+    const c = getCanvas();
+    return axis === 'x'
+        ? svgCoord * c.offsetWidth  / VW
+        : svgCoord * c.offsetHeight / VH;
+}
+function sc(n) { return { x: s(n.x,'x'), y: s(n.y,'y') }; }
+
+// ── DRAW LAYOUT ────────────────────────────────────────────
+function drawLayout() {
+    const svg = getSvg();
+    // Remove existing dynamic elements
+    svg.querySelectorAll('.dyn-link, .dyn-stub').forEach(e => e.remove());
+
+    // Place HTML device elements
+    Object.entries(NODES).forEach(([key, n]) => {
+        const el = document.getElementById(n.el);
+        if (!el) return;
+        el.style.left = s(n.x,'x') + 'px';
+        el.style.top  = s(n.y,'y') + 'px';
+
+        if (n.labelTxt) {
+            const lbl = document.getElementById(n.lbl);
+            if (!lbl) return;
+            lbl.textContent = n.labelTxt;
+            lbl.style.top = lbl.style.bottom = lbl.style.left = lbl.style.right = '';
+            lbl.style.transform = '';
+            if (n.labelPos === 'top')    { lbl.style.bottom='-20px'; lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+            if (n.labelPos === 'bottom') { lbl.style.top='-20px';    lbl.style.left='50%'; lbl.style.transform='translateX(-50%)'; }
+            if (n.labelPos === 'left')   { lbl.style.right='-54px';  lbl.style.top='50%';  lbl.style.transform='translateY(-50%)'; }
+            if (n.labelPos === 'right')  { lbl.style.left='-54px';   lbl.style.top='50%';  lbl.style.transform='translateY(-50%)'; }
+        }
+    });
+
+    // Set core label
+    const coreLbl = document.getElementById('lbl-Core');
+    if (coreLbl) { coreLbl.textContent='CORE SW'; coreLbl.style.bottom='-20px'; coreLbl.style.left='50%'; coreLbl.style.transform='translateX(-50%)'; }
+    const swLbl  = document.getElementById('lbl-starSwitch');
+    if (swLbl)  { swLbl.textContent='SW-1'; swLbl.style.bottom='-22px'; swLbl.style.left='50%'; swLbl.style.transform='translateX(-50%)'; }
+
+    // Draw static SVG links
+    STATIC_LINKS.forEach(lnk => {
+        if (lnk.virtual) return;
+        const na = NODES[lnk.a], nb = NODES[lnk.b];
+        if (!na || !nb) return;
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', s(na.x,'x')); line.setAttribute('y1', s(na.y,'y'));
+        line.setAttribute('x2', s(nb.x,'x')); line.setAttribute('y2', s(nb.y,'y'));
+        line.setAttribute('class', (lnk.cls || 'h-link') + ' dyn-link');
+        if (lnk.id) line.setAttribute('id', lnk.id);
+        svg.insertBefore(line, svg.firstChild);
+    });
+
+    // Draw bus stubs
+    BUS_STUBS.forEach(st => {
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute('x1', s(st.x,'x')); line.setAttribute('y1', s(BUS_Y,'y'));
+        line.setAttribute('x2', s(st.x,'x')); line.setAttribute('y2', s(st.devY,'y'));
+        line.setAttribute('class','h-link bus-cable dyn-stub');
+        line.setAttribute('id', st.id);
+        svg.insertBefore(line, svg.firstChild);
+    });
+
+    // Reposition bus backbone line
+    const busLine = document.getElementById('busLine');
+    if (busLine) {
+        busLine.setAttribute('x1', s(645,'x')); busLine.setAttribute('y1', s(BUS_Y,'y'));
+        busLine.setAttribute('x2', s(838,'x')); busLine.setAttribute('y2', s(BUS_Y,'y'));
+    }
+
+    // Reposition ring circle
+    const ringCircle = document.getElementById('ringCircle');
+    if (ringCircle) {
+        ringCircle.setAttribute('cx', s(128,'x'));
+        ringCircle.setAttribute('cy', s(388,'y'));
+        ringCircle.setAttribute('r',  s(72,'x'));
+    }
+}
+
+window.addEventListener('resize', drawLayout);
+window.addEventListener('load',   drawLayout);
+setTimeout(drawLayout, 120);
+
+// ── UTILITIES ──────────────────────────────────────────────
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function setStatus(msg) { document.getElementById('hybridStatus').innerHTML = msg; }
+function setPill(msg)   { document.getElementById('routePill').textContent  = msg;  }
+
+function lockBtns(lock) {
+    ['btnStar','btnRing','btnBus','btnMesh','btnCross','btnFail'].forEach(id => {
+        document.getElementById(id).disabled = lock;
+    });
+}
+
+function setDev(nodeKey, state) {
+    const n = NODES[nodeKey];
+    if (!n) return;
+    const el = document.getElementById(n.el);
+    if (!el) return;
+    el.classList.remove('dev-src','dev-dst','dev-fwd','dev-fail');
+    if (state) el.classList.add(state);
+}
+
+function setLink(id, cls) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Remove all state classes
+    ['active','alt','fail'].forEach(c => el.classList.remove(c));
+    if (cls) el.classList.add(cls);
+}
+
+// Animate a packet along a sequence of node keys
+function animPkt(pktId, fromKey, toKey, duration, color) {
+    return new Promise(resolve => {
+        const pkt  = document.getElementById(pktId);
+        const na   = NODES[fromKey], nb = NODES[toKey];
+        if (!na || !nb) { resolve(); return; }
+        pkt.setAttribute('fill', color || '#00ff88');
+        pkt.setAttribute('cx', s(na.x,'x'));
+        pkt.setAttribute('cy', s(na.y,'y'));
+        pkt.style.opacity = '1';
+        const t0 = performance.now();
+        const fx = s(na.x,'x'), fy = s(na.y,'y');
+        const tx = s(nb.x,'x'), ty = s(nb.y,'y');
+        function frame(now) {
+            const t  = Math.min((now - t0) / duration, 1);
+            const et = 1 - Math.pow(1-t, 2);
+            pkt.setAttribute('cx', fx + (tx-fx)*et);
+            pkt.setAttribute('cy', fy + (ty-fy)*et);
+            if (t < 1) requestAnimationFrame(frame);
+            else { pkt.style.opacity='0'; resolve(); }
+        }
+        requestAnimationFrame(frame);
+    });
+}
+
+async function animPath(pktId, path, color, linkIds, linkCls) {
+    for (let i = 0; i < path.length - 1; i++) {
+        if (linkIds && linkIds[i]) setLink(linkIds[i], linkCls || 'active');
+        await animPkt(pktId, path[i], path[i+1], 520, color);
+        await sleep(60);
+    }
+}
+
+// ── DEMOS ──────────────────────────────────────────────────
+let hybridAnimating = false;
+
+async function hybridDemo(mode) {
+    if (hybridAnimating) return;
+    hybridAnimating = true;
+    lockBtns(true);
+    hybridReset(true);
+
+    if (mode === 'star') {
+        // PC-A1 → Printer inside Star zone via Switch
+        setPill('⭐ Star Zone: PC-A1 → Switch → Printer');
+        setStatus('⭐ <strong>PC-A1</strong> sends data to <strong>Printer</strong> inside the Star Zone. Switch forwards directly to the correct port!');
+        setDev('A1','dev-src');
+        await sleep(600);
+        setLink('lnk-swA1','active');
+        await animPkt('hpkt0','A1','starSwitch',520,'#00ff88');
+        setDev('starSwitch','dev-fwd');
+        setStatus('🔌 <strong>Switch SW-1</strong> looks up MAC table → Printer is on Port 4 → forwarding directly!');
+        await sleep(500);
+        setLink('lnk-swA4','active');
+        setDev('A4','dev-dst');
+        await animPkt('hpkt0','starSwitch','A4',520,'#00ff88');
+        await sleep(400);
+        setStatus('✅ <strong>Printer received the data!</strong> PC-A2, PC-A3 saw ZERO traffic — Switch kept it isolated. Star topology efficiency in action!');
+
+    } else if (mode === 'ring') {
+        // Node-1 → Node-3 via ring, passing through Node-2
+        setPill('🔄 Ring Zone: Node-1 → Node-2 → Node-3 (Token Passing)');
+        setStatus('🔄 <strong>Node-1</strong> captured the Token in the Ring zone. Sending data to <strong>Node-3</strong> — data travels hop-by-hop around the ring!');
+        setDev('R1','dev-src');
+        await sleep(700);
+        setLink('lnk-r1r2','active');
+        setDev('R2','dev-fwd');
+        await animPkt('hpkt0','R1','R2',500,'#4ade80');
+        setStatus('🔄 Node-2 receives frame → reads destination MAC → Not for me → Relays forward...');
+        await sleep(300);
+        setLink('lnk-r2r3','active');
+        setDev('R3','dev-dst');
+        await animPkt('hpkt0','R2','R3',500,'#4ade80');
+        await sleep(300);
+        setStatus('✅ <strong>Node-3 received the data!</strong> Frame continues back to Node-1 for ACK, then Token is released. Ring topology — sequential, deterministic, no collisions!');
+        setLink('lnk-r3r4','active');
+        await animPkt('hpkt0','R3','R4',400,'#4ade80');
+        setLink('lnk-r4r1','active');
+        await animPkt('hpkt0','R4','R1',400,'#4ade80');
+        setDev('R1','dev-src');
+        setStatus('✅ <strong>Frame returned to Node-1!</strong> ACK verified → Token released → Next device in ring can now transmit.');
+
+    } else if (mode === 'bus') {
+        // Broadcast on Bus zone — all lab devices receive
+        setPill('🚌 Bus Zone: Lab-1 broadcasts to ALL lab devices');
+        setStatus('🚌 <strong>Lab-1</strong> sends a broadcast on the Bus zone backbone. ALL devices connected to the bus will receive it!');
+        setDev('B1','dev-src');
+        const busLine = document.getElementById('busLine');
+        if (busLine) busLine.className.baseVal = 'bus-backbone active';
+        await sleep(700);
+
+        setStatus('📡 Broadcast traveling along the bus backbone in both directions — ALL lab devices receive simultaneously!');
+        setDev('B2','dev-fwd'); setDev('B3','dev-fwd'); setDev('B4','dev-fwd');
+
+        // Animate packets to each device simultaneously
+        await Promise.all([
+            animPkt('hpkt0','B1','B2',520,'#fbbf24'),
+            animPkt('hpkt1','B1','B3',650,'#fbbf24'),
+        ]);
+        await animPkt('hpkt2','B1','B4',600,'#fbbf24');
+        await sleep(400);
+        setStatus('✅ <strong>All Bus zone devices received the broadcast!</strong> Lab-2, Lab-3, Lab-Printer all got the message. CSMA/CD prevents collisions when multiple devices want to reply simultaneously.');
+
+    } else if (mode === 'mesh') {
+        // Core-R1 → Core-R3 direct, then simulate link fail and reroute via R2
+        setPill('🕸️ Mesh Zone: Core-R1 → Core-R3 with failover');
+        setStatus('🕸️ <strong>Core-R1</strong> sends data to <strong>Core-R3</strong> via the Mesh zone. Primary path: R1 → R3 (direct).');
+        setDev('M1','dev-src'); setDev('M3','dev-dst');
+        await sleep(700);
+        setLink('lnk-m1m3','active');
+        await animPkt('hpkt0','M1','M3',600,'#a78bfa');
+        await sleep(400);
+        setStatus('💥 <strong>Direct link R1 ↔ R3 FAILS!</strong> OSPF detects the failure in milliseconds. Recalculating...');
+        setLink('lnk-m1m3','fail');
+        setDev('M1','dev-src'); setDev('M3','dev-dst');
+        await sleep(900);
+        setStatus('🔄 <strong>Alternate path found:</strong> R1 → R2 → R3. Rerouting automatically — no manual intervention!');
+        setLink('lnk-m1m2','active');
+        setDev('M2','dev-fwd');
+        await animPkt('hpkt0','M1','M2',500,'#f8b400');
+        setLink('lnk-m2m3','active');
+        await animPkt('hpkt0','M2','M3',500,'#f8b400');
+        setDev('M3','dev-dst');
+        await sleep(400);
+        setStatus('✅ <strong>Traffic rerouted via R1 → R2 → R3!</strong> Zero downtime. Mesh zone redundancy ensures the core never fails. This is why enterprise core networks always use mesh!');
+
+    } else if (mode === 'cross') {
+        // Cross-zone: PC-A2 → Core-R3 (Star → Core → Mesh)
+        setPill('🔀 Cross-Zone: PC-A2 (Star) → Core SW → Core-R3 (Mesh)');
+        setStatus('🔀 <strong>PC-A2</strong> in the Star zone wants to reach <strong>Core-R3</strong> in the Mesh zone. Data must cross zone boundaries via the Core Switch!');
+        setDev('A2','dev-src');
+        await sleep(700);
+
+        // Step 1: A2 → StarSwitch
+        setLink('lnk-swA2','active');
+        setStatus('📦 Step 1: PC-A2 sends frame to <strong>Switch SW-1</strong> in Star zone...');
+        await animPkt('hpkt0','A2','starSwitch',500,'#00ff88');
+        setDev('starSwitch','dev-fwd');
+        await sleep(400);
+
+        // Step 2: StarSwitch → Core
+        setLink('lnk-sw-core','active');
+        setStatus('🔌 Step 2: SW-1 routes inter-zone traffic UP to the <strong>Core Switch</strong>...');
+        await animPkt('hpkt0','starSwitch','Core',580,'#00ff88');
+        setDev('Core','dev-fwd');
+        await sleep(400);
+
+        // Step 3: Core → M1 (gateway to mesh)
+        setLink('lnk-m1-core','active');
+        setStatus('🌐 Step 3: Core Switch routes to <strong>Core-R1</strong> — gateway into the Mesh zone...');
+        await animPkt('hpkt0','Core','M1',560,'#a78bfa');
+        setDev('M1','dev-fwd');
+        await sleep(400);
+
+        // Step 4: M1 → M3 (within mesh)
+        setLink('lnk-m1m3','active');
+        setStatus('🕸️ Step 4: Inside Mesh zone — Core-R1 routes to <strong>Core-R3</strong> via direct mesh link...');
+        setDev('M3','dev-dst');
+        await animPkt('hpkt0','M1','M3',520,'#a78bfa');
+        await sleep(500);
+        setStatus('✅ <strong>Cross-zone delivery complete!</strong> PC-A2 (Star) → SW-1 → Core Switch → Core-R1 → Core-R3 (Mesh). 4 hops, transparent to the user. This is Hybrid Topology power — any zone, any device, any path!');
+
+    } else if (mode === 'fail') {
+        // Star Switch fails — star zone isolated, other zones still work
+        setPill('💥 SW-1 Fails — Star zone isolated, others continue!');
+        setStatus('💥 <strong>Switch SW-1 in the Star zone has failed!</strong> Watch how the failure is isolated — Ring, Bus, and Mesh zones continue operating!');
+        await sleep(700);
+
+        // Fail star switch and all star devices
+        ['starSwitch','A1','A2','A3','A4'].forEach(k => setDev(k,'dev-fail'));
+        setLink('lnk-swA1','fail'); setLink('lnk-swA2','fail');
+        setLink('lnk-swA3','fail'); setLink('lnk-swA4','fail');
+        setLink('lnk-sw-core','fail');
+
+        setStatus('❌ Star zone DOWN. PC-A1, A2, A3, Printer — all offline. But look — Mesh zone still routing normally!');
+        await sleep(900);
+
+        // Mesh zone still works
+        setLink('lnk-m1m2','active'); setLink('lnk-m2m3','active');
+        setDev('M1','dev-src'); setDev('M3','dev-dst'); setDev('M2','dev-fwd');
+        await animPkt('hpkt0','M1','M2',480,'#a78bfa');
+        await animPkt('hpkt0','M2','M3',480,'#a78bfa');
+        await sleep(300);
+
+        // Ring zone still works
+        setLink('lnk-r1r2','active'); setLink('lnk-r2r3','active');
+        setDev('R1','dev-src'); setDev('R3','dev-dst'); setDev('R2','dev-fwd');
+        await animPkt('hpkt1','R1','R2',480,'#4ade80');
+        await animPkt('hpkt1','R2','R3',480,'#4ade80');
+
+        await sleep(400);
+        setStatus('✅ <strong>Zone isolation in action!</strong> Star zone failed → only Star zone affected. Ring zone ✅ Bus zone ✅ Mesh zone ✅ — all continue normally. This is Hybrid Topology\'s greatest strength — failure containment!');
+    }
+
+    hybridAnimating = false;
+    lockBtns(false);
+}
+
+function hybridReset(silent) {
+    hybridAnimating = false;
+    lockBtns(false);
+
+    // Reset all device states
+    Object.keys(NODES).forEach(k => setDev(k, null));
+
+    // Reset all links
+    document.querySelectorAll('.dyn-link, .dyn-stub').forEach(el => {
+        ['active','alt','fail'].forEach(c => el.classList.remove(c));
+    });
+    document.querySelectorAll('.h-link').forEach(el => {
+        ['active','alt','fail'].forEach(c => el.classList.remove(c));
+    });
+    // Reset bus backbone
+    const busLine = document.getElementById('busLine');
+    if (busLine) busLine.className.baseVal = 'bus-backbone';
+
+    // Hide packets
+    ['hpkt0','hpkt1','hpkt2','hpkt3'].forEach(id => {
+        const p = document.getElementById(id);
+        if (p) p.style.opacity = '0';
+    });
+
+    setPill('🔀 Hybrid Network — All zones connected');
+    if (!silent) setStatus('👆 Click a button to simulate traffic across the Hybrid Network!');
+}
+</script>
+</body>
+</html>
